@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using MicroTaskTracker.Data;
 namespace MicroTaskTracker
 {
     public class Program
@@ -8,6 +10,10 @@ namespace MicroTaskTracker
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Configure Entity Framework Core with SQL Server(DI)
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
