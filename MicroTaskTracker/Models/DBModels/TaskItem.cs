@@ -17,9 +17,8 @@ namespace MicroTaskTracker.Models.DBModels
         public DateTime CreatedOn{ get; set; }
         public DateTime? DueDate { get; set; }
 
-        [Required]
-        public string UserId { get; set; } = null!;
-        [Required]
-        public ApplicationUser User { get; set; } = null!;
+        public string? UserId { get; set; }
+
+        public ApplicationUser? User { get; set; }
     }
 }
