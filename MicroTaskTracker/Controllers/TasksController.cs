@@ -15,9 +15,9 @@ namespace MicroTaskTracker.Controllers
         {
             _taskService = taskService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(TaskQueryModel queryModel)
         {
-            var model = await _taskService.GetAllTasksAsync();
+            var model = await _taskService.GetAllTasksAsync(queryModel);
             return View(model);
         }
 
@@ -118,6 +118,18 @@ namespace MicroTaskTracker.Controllers
 
             var model = await _taskService.GetDetailsAsync(id);
             return View(model);
+        }
+
+        public async Task<IActionResult> MarkTaskStatus(int id)
+        {
+            await _taskService.MarkTaskStatusAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> UpdatePriority(int id, TaskPriority priority)
+        {
+            await _taskService.UpdatePriorityAsync(id,priority);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

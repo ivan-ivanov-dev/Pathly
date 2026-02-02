@@ -9,7 +9,7 @@ namespace MicroTaskTracker.Models.ViewModels
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime CreatedOn { get; set; }
-        public TaskPriority Priority { get; set; }
+        public TaskPriority Priority { get; set; } = TaskPriority.Low;
         public bool IsCompleted { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace MicroTaskTracker.Models.DBModels
         [StringLength(500)]
         public string? Description { get; set; }
 
-        public TaskPriority Priority { get; set; }
+        public TaskPriority Priority { get; set; } = TaskPriority.Low;
         public bool IsCompleted { get; set; }
 
         public DateTime CreatedOn{ get; set; }

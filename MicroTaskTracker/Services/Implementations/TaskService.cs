@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels;
@@ -23,7 +24,7 @@ namespace MicroTaskTracker.Services.Implementations
                 DueDate = model.DueDate,
                 CreatedOn = DateTime.UtcNow,
                 IsCompleted = false,
-                Priority = model.Priority
+                Priority = TaskPriority.Low,
             };
 
             _context.Tasks.Add(task);
@@ -43,9 +44,40 @@ namespace MicroTaskTracker.Services.Implementations
             return true;
         }
 
-        public async Task<TaskListViewModel> GetAllTasksAsync()
+        public async Task<TaskListViewModel> GetAllTasksAsync(TaskQueryModel queryModel)
         {
-            var tasks = await _context.Tasks
+            var tasksQuery = _context.Tasks.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(queryModel.SearchByTitle))
+            {
+                tasksQuery = tasksQuery.Where(t => t.Title.ToLower().Contains(queryModel.SearchByTitle.ToLower()));
+            }
+
+            if (queryModel.IsCompleted.HasValue)
+            {
+                tasksQuery = tasksQuery.Where(t => t.IsCompleted == queryModel.IsCompleted.Value);
+            }
+
+            if (queryModel.Priority.HasValue)
+            {
+                tasksQuery = tasksQuery.Where(t => t.Priority == queryModel.Priority.Value);
+            }
+
+            if (queryModel.DueDate.HasValue)
+            {
+                tasksQuery = tasksQuery.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == queryModel.DueDate.Value.Date);
+            }
+
+            if (queryModel.Ascending.HasValue && queryModel.Ascending.Value)
+            {
+                tasksQuery = tasksQuery.OrderBy(t => t.CreatedOn);
+            }
+            else
+            {
+                tasksQuery = tasksQuery.OrderByDescending(t => t.CreatedOn);
+            }
+
+            var tasks = await tasksQuery
                 .Select(t => new TaskViewModel
                 {
                     Id = t.Id,
@@ -58,11 +90,10 @@ namespace MicroTaskTracker.Services.Implementations
                 })
                 .ToListAsync();
 
-            var result =  new TaskListViewModel
+            var result = new TaskListViewModel
             {
                 Tasks = tasks
             };
-
             return result;
         }
 
@@ -83,6 +114,20 @@ namespace MicroTaskTracker.Services.Implementations
                 .FirstOrDefaultAsync();
         }
 
+        public async Task MarkTaskStatusAsync(int id)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+
+            if (task == null)
+            {
+                throw new InvalidOperationException("Task not found");
+            }
+
+            task.IsCompleted = !task.IsCompleted;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<bool> UpdateAsync(int id, TaskEditViewModel model)
         {
             var task = await _context.Tasks.FindAsync(id);
@@ -97,6 +142,19 @@ namespace MicroTaskTracker.Services.Implementations
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task UpdatePriorityAsync(int id, TaskPriority priority)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+
+            if (task == null)
+            {
+                throw new InvalidOperationException("Task not found");
+            }
+
+            task.Priority =priority;
+            await _context.SaveChangesAsync();
         }
     }
 }
