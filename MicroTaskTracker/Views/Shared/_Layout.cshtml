@@ -23,13 +23,6 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     @* Main navigation — varies by authentication state *@
                     <ul class="navbar-nav flex-grow-1">
-                        @if (!(User?.Identity?.IsAuthenticated ?? false))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                        }
-
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
@@ -37,15 +30,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Tasks" asp-action="Index">Tasks</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                         }
                     </ul>
