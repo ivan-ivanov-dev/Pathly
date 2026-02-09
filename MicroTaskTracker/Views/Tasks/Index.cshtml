@@ -130,8 +130,13 @@
                         Delete
                     </a>
 
-                    <!-- Details kept as full page navigation -->
-                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info">Details</a>
+                    <!-- Details opens modal loading Details partial -->
+                    <a href="#"
+                       class="btn btn-sm btn-info me-1"
+                       data-modal-url="@Url.Action("Details", "Tasks", new { id = task.Id })"
+                       data-modal-title="See Details">
+                        Details
+                    </a>
                 </td>
             </tr>
 

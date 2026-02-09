@@ -172,7 +172,7 @@ namespace MicroTaskTracker.Controllers
             {
                 return NotFound();
             }
-            return PartialView("DeletePartialView", model);
+            return PartialView("DetailsPartialView", model);
         }
 
         [HttpPost]
