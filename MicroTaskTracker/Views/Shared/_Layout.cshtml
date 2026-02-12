@@ -14,17 +14,15 @@
 </head>
 
 @{
-        // Check if we are on Login or Register pages
-        var isAuthPage = ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" &&
-                                          (ViewContext.RouteData.Values["Action"]?.ToString() == "Login" ||
-                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Register");
+       var controller = ViewContext.RouteData.Values["Controller"]?.ToString();
+       var action = ViewContext.RouteData.Values["Action"]?.ToString();
 
-        // Check if we are on the Landing Page
-        var isLandingPage = ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" &&
-                                                ViewContext.RouteData.Values["Action"]?.ToString() == "Index";
+       var isAuthPage = controller == "Account" && (action == "Login" || action == "Register");
+       var isDashboard = controller == "Dashboard" && action == "Index";
+       var isLandingPage = controller == "Home" && action == "Index";
 }
 
-<body class="@(isAuthPage ? "auth-page-body" : "")">
+<body class="@(isAuthPage ? "auth-page-body" : "") @(isDashboard ? "dashboard-page-body" : "")">
     @* Header: ONLY on Landing Page for anonymous users *@
     @if (!User.Identity.IsAuthenticated && isLandingPage)
     {
@@ -171,7 +169,7 @@
         </aside>
     }
 
-    <div class="@(isAuthPage ? "auth-container-centered" : "container")">
+    <div class="@(isAuthPage ? "auth-container-centered" : isDashboard ? "dashboard-wrapper" : "container")">
         <main role="main" class="main-content pb-3">
             @RenderBody()
         </main>
