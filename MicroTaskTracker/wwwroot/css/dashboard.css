@@ -6,11 +6,22 @@
     flex-direction: column;
     justify-content: center; /* vertical centering */
     align-items: center; /* horizontal centering */
-    min-height: 100vh; /* full viewport height */
+    min-height: calc(100vh - 60px); /* full viewport height */
+
     padding: 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+
     text-align: center;
     background-color: var(--pathly-bg); /* match landing page theme */
 }
+    .dashboard-wrapper .row{
+        width: 100%;
+    }
+    .dashboard-wrapper .card {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 
 /* ============================================
    PAGE TITLE & MOTIVATION
