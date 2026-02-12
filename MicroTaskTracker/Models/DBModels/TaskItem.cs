@@ -21,5 +21,6 @@ namespace MicroTaskTracker.Models.DBModels
         public string? UserId { get; set; }
 
         public ApplicationUser? User { get; set; }
+        public ICollection<TaskTag> TaskTags { get; set; } = new List<TaskTag>();
     }
 }
