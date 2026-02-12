@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
 using MicroTaskTracker.Models.DBModels;
@@ -15,10 +16,12 @@ namespace MicroTaskTracker.Controllers
     public class TasksController : Controller
     {
         private readonly ITaskService _taskService;
+        private readonly ITagService _tagService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TasksController(ITaskService taskService, UserManager<ApplicationUser> userManager)
+        public TasksController(ITaskService taskService, ITagService tagService, UserManager<ApplicationUser> userManager)
         {
             _taskService = taskService;
+            _tagService = tagService;
             _userManager = userManager;
         }
 
@@ -35,9 +38,21 @@ namespace MicroTaskTracker.Controllers
         /*Create Tasks*/
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            var model = new TaskCreateViewModel();
+            var userId = _userManager.GetUserId(User);
+            var tags = await _tagService.GetUserTagsAsync(userId);
+
+            var model = new TaskCreateViewModel
+            {
+                AvailableTags = tags.Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.Name
+                }).ToList()
+            };
+
+
             return PartialView("CreatePartialView",model);
         }
         [HttpPost]
@@ -54,12 +69,26 @@ namespace MicroTaskTracker.Controllers
                 ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
             }
 
-            if (!ModelState.IsValid)
+            if(model.SelectedTagIds.Count > 4)
             {
-                return PartialView("CreatePartialView", model);
+                ModelState.AddModelError("SelectedTagIds", "You can select up to 4 tags.");
             }
 
             var userId = _userManager.GetUserId(User);
+
+            if (!ModelState.IsValid)
+            {
+                var tags = await _tagService.GetUserTagsAsync(userId);
+
+                model.AvailableTags = tags.Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.Name
+                }).ToList();
+
+                return PartialView("CreatePartialView", model);
+            }
+
             try
             {
                 await _taskService.CreateAsync(model,userId);
@@ -86,12 +115,21 @@ namespace MicroTaskTracker.Controllers
                 return NotFound();
             }
 
+            var tags = await _tagService.GetUserTagsAsync(userId);
+            var selectedTagIds = await _taskService.GetTaskTagIdsAsync(id, userId);
+
             var editModel = new TaskEditViewModel
             {
                 Id = model.Id,
                 Title = model.Title,
                 Description = model.Description,
                 DueDate = model.DueDate,
+                SelectedTagIds = selectedTagIds,
+                AvailableTags = tags.Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.Name
+                }).ToList()
             };
 
 
@@ -114,19 +152,31 @@ namespace MicroTaskTracker.Controllers
                 ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
             }
 
+            if (model.SelectedTagIds.Count > 4)
+            {
+                ModelState.AddModelError("SelectedTagIds", "You can select up to 4 tags.");
+            }
+
             if (!ModelState.IsValid)
             {
+                var tags = await _tagService.GetUserTagsAsync(userId);
+
+                model.AvailableTags = tags.Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.Name
+                }).ToList();
+
                 return PartialView("EditPartialView", model);
             }
 
-            await _taskService.UpdateAsync(id, model, userId);
+            await _taskService.UpdateWithTagsAsync(id, model, userId);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return Ok(); // JS will see this and reload the Index
+                return Ok(); 
             }
 
-            // Fallback for traditional form submission
             return RedirectToAction("Index", "Tasks");
         }
 

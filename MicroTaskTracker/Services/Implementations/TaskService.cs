@@ -5,6 +5,7 @@ using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels;
 using MicroTaskTracker.Models.ViewModels.TasksViewModels;
 using MicroTaskTracker.Services.Interfaces;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace MicroTaskTracker.Services.Implementations
@@ -129,10 +130,26 @@ namespace MicroTaskTracker.Services.Implementations
 
             if (task == null)
             {
-                return null;
+                throw new UnauthorizedAccessException();
             }
 
             return task;
+        }
+
+        public async Task<List<int>> GetTaskTagIdsAsync(int taskId, string userId)
+        {
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+
+            if (task == null)
+            {
+                throw new InvalidOperationException("Task not found");
+            }
+
+            return await _context.TaskTags
+                .Where(tt => tt.TaskId == taskId)
+                .Select(tt => tt.TagId)
+                .ToListAsync();
         }
 
         public async Task MarkTaskStatusAsync(int id, string userId)
@@ -153,27 +170,6 @@ namespace MicroTaskTracker.Services.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(int id, TaskEditViewModel model,string userId)
-        {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
-            {
-                return false;
-            }
-
-            if(task.UserId != userId)
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            task.Title = model.Title;
-            task.Description = model.Description;
-            task.DueDate = model.DueDate;
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task UpdatePriorityAsync(int id, TaskPriority priority, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
@@ -190,5 +186,34 @@ namespace MicroTaskTracker.Services.Implementations
             task.Priority =priority;
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateWithTagsAsync(int id, TaskEditViewModel model, string userId)
+        {
+            var task = await _context.Tasks
+                .Include(t=>t.TaskTags)
+                .FirstOrDefaultAsync(t=>t.Id == id );
+            if(task == null)
+            {
+                throw new InvalidOperationException("Task not found");
+            }
+
+            if(task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            task.Title = model.Title;
+            task.Description = model.Description;
+            task.DueDate = model.DueDate;
+            _context.TaskTags.RemoveRange(task.TaskTags);
+
+            task.TaskTags = model.SelectedTagIds.Select(tagId => new TaskTag
+            {
+                TaskId = task.Id,
+                TagId = tagId
+            }).ToList();
+
+            await _context.SaveChangesAsync();
+        } 
     }
 }
