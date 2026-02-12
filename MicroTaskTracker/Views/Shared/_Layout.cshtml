@@ -6,7 +6,10 @@
     <title>@ViewData["Title"] - MicroTaskTracker</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
     <partial name="_Favicons" />
 </head>
 
@@ -70,6 +73,33 @@
                        asp-controller="Goals" asp-action="Index">Goals</a>
                 </nav>
             </div>
+            <div class="sidebar-footer">
+                <div class="d-flex align-items-center user-profile-wrapper mb-3">
+                    <div class="user-avatar-circle">
+                        <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
+                    </div>
+
+                    <div class="ms-3 sidebar-link-text user-info-text">
+                        <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                            @User.Identity?.Name
+                        </p>
+                        <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
+                            Account Settings
+                        </a>
+                    </div>
+                </div>
+
+                <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                        </svg>
+                        <span class="sidebar-link-text">Logout</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
         @* Sidebar (Desktop) *@
@@ -95,15 +125,36 @@
                     <span class="sidebar-link-text">Tasks</span>
                 </a>
                 <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Goals" ? "active" : "")"
-                   asp-controller="Goals" asp-action="Index">Goals</a>
+                   asp-controller="Goals" asp-action="Index">
+                    <span class="sidebar-link-text">Goals</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="small fw-bold mb-2">@User.Identity?.Name</div>
-                <a class="sidebar-link" asp-controller="Account" asp-action="Manage">Account</a>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                <div class="d-flex align-items-center user-profile-wrapper mb-3">
+                    <div class="user-avatar-circle">
+                        <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
+                    </div>
+
+                    <div class="ms-3 sidebar-link-text user-info-text">
+                        <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                            @User.Identity?.Name
+                        </p>
+                        <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
+                            Account Settings
+                        </a>
+                    </div>
+                </div>
+
+                <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                        </svg>
+                        <span class="sidebar-link-text">Logout</span>
+                    </button>
                 </form>
             </div>
         </aside>
@@ -115,16 +166,35 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-auto py-3">
         <div class="container">
-            &copy; @DateTime.UtcNow.Year - MicroTaskTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row align-items-center">
+                @* Copyright Info *@
+                <div class="col-md-4 text-center text-md-start">
+                    &copy; @DateTime.UtcNow.Year - <span class="fw-bold text-primary">Pathly</span>
+                </div>
+
+                @* Productivity Tip (The Dynamic Part) *@
+                <div class="col-md-8 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                    <div id="tip-container" class="me-3 p-2 bg-light rounded border-start border-primary border-4 shadow-sm" style="font-size: 0.85rem; max-width: 400px;">
+                        <span id="productivity-tip">Small steps lead to big changes.</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="reroll-tip" title="New Tip">
+                        <span style="font-size: 1.1rem;">↻</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/sidebar.js" asp-append-version="true"></script>   
+    <script src="~/js/app-constants.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/auth.js"></script>
+    <script src="~/js/tasks.js"></script>
+    <script src="~/js/sidebar.js"></script>
+    <script src="~/js/dashboard.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>

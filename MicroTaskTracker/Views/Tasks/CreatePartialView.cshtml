@@ -23,7 +23,7 @@
         <span asp-validation-for="DueDate" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label">Tags (max 3)</label>
+        <label class="form-label fw-bold">Select Tag (Only 1 allowed)</label>
 
         @if (!Model.AvailableTags.Any())
         {
@@ -34,16 +34,21 @@
         }
         else
         {
-            @foreach (var tag in Model.AvailableTags)
-            {
-                <div class="form-check">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           name="SelectedTagIds"
-                           value="@tag.Value" />
-                    <label class="form-check-label">@tag.Text</label>
-                </div>
-            }
+            <div class="tag-checkbox-group">
+                @foreach (var tag in Model.AvailableTags)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input tag-checker"
+                               type="checkbox"
+                               name="SelectedTagIds"
+                               value="@tag.Value" />
+                        <label class="form-check-label">@tag.Text</label>
+                    </div>
+                }
+            </div>
+            <span id="TagError" class="text-danger small d-none mt-2">
+                <i class="bi bi-exclamation-circle"></i> Please select only one tag per task.
+            </span>
         }
     </div>
 

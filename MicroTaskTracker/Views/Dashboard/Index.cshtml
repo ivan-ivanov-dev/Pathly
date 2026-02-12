@@ -1,106 +1,80 @@
 ﻿@model MicroTaskTracker.Models.ViewModels.Dashboard.DashboardViewModel
 
-@{
-    ViewData["Title"] = "Dashboard";
-}
+<div class="main-content">
+    <div class="container py-5">
 
-<div class="dashboard-wrapper">
-    <div class="container">
-
-        <div class="mb-5 text-center">
-            <h1 class="display-4 fw-bold">@ViewData["Title"]</h1>
-            <p class="lead text-muted mt-2">
-                Let's make progress today! Track your tasks and goals, and take action to move forward.
-            </p>
-            <div class="d-flex justify-content-center">
-                <p class="dashboard-motivation">Keep your momentum going! Track your tasks, focus on your current goal, and take meaningful steps today.</p>
-            </div>
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-dark">Welcome back, @User.Identity.Name!</h1>
+            <p class="lead text-muted" id="dashboard-greeting">Your journey is 1% better every day.</p>
         </div>
 
-        <div class="dashboard-progress mx-auto">
-            <div class="mb-5" style="max-width: 600px; margin: 0 auto;">
-                @if (Model.Stats.TotalTasksDueToday > 0)
-                {
-                    <div class="mb-4 text-start">
-                        <h6 class="fw-semibold">Today's Tasks Progress</h6>
-                        <div class="progress" style="height: 24px;">
-                            <div class="progress-bar bg-primary" role="progressbar"
-                                 style="width: @(Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday)%"
-                                 aria-valuenow="@Model.Stats.CompletedTasksDueToday"
-                                 aria-valuemin="0"
-                                 aria-valuemax="@Model.Stats.TotalTasksDueToday">
-                                @Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday Completed
+        <div class="card border-0 shadow-sm rounded-4 mb-5">
+            <div class="card-body p-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 border-md-end">
+                        <div class="px-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold small text-uppercase text-primary">Today's Focus</span>
+                                <span class="fw-bold small text-dark">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday</span>
+                            </div>
+                            <div class="progress" style="height: 12px; border-radius: 50px; background-color: #f0f2f5;">
+                                @{
+                                    var todayPct = Model.Stats.TotalTasksDueToday > 0 ? (Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday) : 0;
+                                }
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: @todayPct%; border-radius: 50px;"></div>
                             </div>
                         </div>
-                        <small class="text-muted">You have @(Model.Stats.TotalTasksDueToday - Model.Stats.CompletedTasksDueToday) tasks left for today.</small>
                     </div>
-                }
-                else
-                {
-                    <div class="mb-4 text-center">
-                        <p class="text-muted">No tasks scheduled for today!</p>
-                        <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary">Plan Your Day</a>
-                    </div>
-                }
-            </div>
-        </div>
-
-                <div class="mb-4 text-start">
-                    <h6 class="fw-semibold">Weekly Progress</h6>
-                    @if (Model.Stats.TotalTasks > 0)
-                    {
-                        <div class="progress" style="height: 24px;">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                 style="width: @(Model.Stats.CompletedTasks * 100 / Model.Stats.TotalTasks)%"
-                                 aria-valuenow="@Model.Stats.CompletedTasks"
-                                 aria-valuemin="0"
-                                 aria-valuemax="@Model.Stats.TotalTasks">
-                                @Model.Stats.CompletedTasks / @Model.Stats.TotalTasks
+                    <div class="col-md-6">
+                        <div class="px-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold small text-uppercase text-success">Overall Momentum</span>
+                                @{
+                                    var totalPct = Model.Stats.TotalTasks > 0 ? (Model.Stats.CompletedTasks * 100 / Model.Stats.TotalTasks) : 0;
+                                }
+                                <span class="fw-bold small text-dark">@totalPct%</span>
+                            </div>
+                            <div class="progress" style="height: 12px; border-radius: 50px; background-color: #f0f2f5;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: @totalPct%; border-radius: 50px;"></div>
                             </div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-3 text-muted">
-                            No tasks found. Start planning your week to see progress!
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <hr class="dashboard-divider my-5" />
-
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-4">
-                <div class="card h-100 text-center hover-card">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Create a Goal</h5>
-                        <p class="card-text text-muted">Define your ambitions and take the first step toward achieving them.</p>
-                        <a href="#" class="dashboard-card dashboard-card-goal d-block py-2 rounded text-white text-decoration-none">Coming Soon</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 text-center hover-card">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Build a Roadmap</h5>
-                        <p class="card-text text-muted">Break your goals into actionable steps and stay on track.</p>
-                        <a href="#" class="dashboard-card dashboard-card-roadmap d-block py-2 rounded text-white text-decoration-none">Coming Soon</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 text-center hover-card">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Plan Your Day</h5>
-                        <p class="card-text text-muted">Organize your tasks and ensure progress every day.</p>
-                        <a asp-controller="Tasks" asp-action="Index" class="dashboard-card dashboard-card-daily d-block py-2 rounded text-white text-decoration-none">Go to Tasks</a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+                    <div class="card-body text-center p-4 d-flex flex-column">
+                        <div class="path-card-icon-circle bg-purple-soft mx-auto mb-3">🎯</div>
+                        <h5 class="card-title fw-bold">Set a Goal</h5>
+                        <p class="card-text text-muted small flex-grow-1">Define your destination. Big dreams start with clear targets.</p>
+                        <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
+                    <div class="card-body text-center p-4 d-flex flex-column">
+                        <div class="path-card-icon-circle bg-teal-soft mx-auto mb-3">🗺️</div>
+                        <h5 class="card-title fw-bold text-primary">Build Roadmap</h5>
+                        <p class="card-text text-muted small flex-grow-1">Trace the steps. Break mountains into manageable hills.</p>
+                        <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+                    <div class="card-body text-center p-4 d-flex flex-column">
+                        <div class="path-card-icon-circle bg-orange-soft mx-auto mb-3">⚡</div>
+                        <h5 class="card-title fw-bold">Take Action</h5>
+                        <p class="card-text text-muted small flex-grow-1">The daily grind. Small habits built today lead to success.</p>
+                        <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Go to Tasks</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

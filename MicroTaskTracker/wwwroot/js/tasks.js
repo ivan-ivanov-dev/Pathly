@@ -1,88 +1,109 @@
-﻿// 1. MODAL LOADING LOGIC
-document.addEventListener("click", function (e) {
-    const btn = e.target.closest("[data-modal-url]");
-    if (!btn) return;
+﻿const TaskManager = {
+    init: function () {
+        this.bindEvents();
+        this.initFooterTips();
+    },
 
-    e.preventDefault();
-    const url = btn.getAttribute("data-modal-url");
+    bindEvents: function () {
+        // Modal Loading
+        document.addEventListener("click", (e) => this.handleModalClick(e));
 
-    fetch(url, { credentials: "same-origin" })
-        .then(r => {
-            if (!r.ok) throw new Error("Failed to load");
-            return r.text();
+        // Tag Validation (Checkboxes)
+        document.addEventListener("change", (e) => this.handleTagValidation(e));
+
+        // Form Submission
+        document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
+    },
+
+    handleModalClick: function (e) {
+        const btn = e.target.closest("[data-modal-url]");
+        if (!btn) return;
+        e.preventDefault();
+
+        fetch(btn.getAttribute("data-modal-url"))
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("taskModalBody").innerHTML = html;
+                document.getElementById("taskModalTitle").textContent = btn.getAttribute("data-modal-title") || "Task";
+
+                const modalEl = document.getElementById("taskModal");
+                let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+
+                this.rebindValidation();
+            })
+            .catch(() => alert(AppConfig.Errors.LoadFailed));
+    },
+
+    handleTagValidation: function (e) {
+        if (e.target.classList.contains('tag-checker')) {
+            const group = e.target.closest('.tag-checkbox-group');
+            const checkedCount = group.querySelectorAll('.tag-checker:checked').length;
+            const errorSpan = document.getElementById('TagError');
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            const isInvalid = checkedCount > 1;
+            errorSpan.classList.toggle('d-none', !isInvalid);
+            if (submitBtn) submitBtn.disabled = isInvalid;
+        }
+    },
+
+    handleFormSubmit: function (e) {
+        const form = e.target.closest(".task-form");
+        if (!form) return;
+
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute("action"), {
+            method: "POST",
+            body: formData,
+            headers: { "X-Requested-With": "XMLHttpRequest" }
         })
-        .then(html => {
-            const bodyEl = document.getElementById("taskModalBody");
-            const titleEl = document.getElementById("taskModalTitle");
-            const modalEl = document.getElementById("taskModal");
+            .then(async response => {
+                const isHtml = response.headers.get("content-type")?.includes("text/html");
 
-            bodyEl.innerHTML = html;
-            titleEl.textContent = btn.getAttribute("data-modal-title") || "Task";
-
-            // Initialize and show the Bootstrap modal
-            let modal = bootstrap.Modal.getInstance(modalEl);
-            if (!modal) modal = new bootstrap.Modal(modalEl);
-            modal.show();
-
-            // Re-bind validation if using jQuery Unobtrusive
-            if (window.jQuery && $.validator && $.validator.unobtrusive) {
-                const form = bodyEl.querySelector("form");
-                if (form) $.validator.unobtrusive.parse(form);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Failed to load dialog.");
-        });
-});
-
-// 2. FORM SUBMISSION LOGIC
-document.addEventListener("submit", function (e) {
-    const form = e.target.closest(".task-form");
-    if (!form) return;
-
-    // STOP the browser from doing a traditional page reload
-    e.preventDefault();
-    e.stopPropagation();
-
-    const formData = new FormData(form);
-    const actionUrl = form.getAttribute("action");
-
-    fetch(actionUrl, {
-        method: "POST",
-        body: formData,
-        headers: { "X-Requested-With": "XMLHttpRequest" }
-    })
-        .then(async response => {
-            const contentType = response.headers.get("content-type");
-
-            // SUCCESS: Server returned 200 OK (from our return Ok() in Controller)
-            if (response.ok && (!contentType || !contentType.includes("text/html"))) {
-                const modalEl = document.getElementById('taskModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                if (modal) modal.hide();
-
-                // Redirect back to Index
-                window.location.href = '/Tasks/Index';
-                return;
-            }
-
-            // FAILURE: Server returned PartialView HTML (validation errors)
-            if (contentType && contentType.includes("text/html")) {
-                const html = await response.text();
-                const bodyEl = document.getElementById("taskModalBody");
-                bodyEl.innerHTML = html;
-
-                // CRITICAL: Re-bind validation to the new HTML so errors show up
-                if (window.jQuery && $.validator && $.validator.unobtrusive) {
-                    $.validator.unobtrusive.parse(bodyEl.querySelector("form"));
+                if (response.ok && !isHtml) {
+                    window.location.href = '/Tasks/Index';
+                } else if (isHtml) {
+                    const html = await response.text();
+                    const bodyEl = document.getElementById("taskModalBody");
+                    bodyEl.innerHTML = html;
+                    this.rebindValidation();
                 }
-            } else {
-                throw new Error("Unexpected response from server");
+            })
+            .catch(() => alert(AppConfig.Errors.SaveFailed));
+    },
+
+    rebindValidation: function () {
+        if (window.jQuery && $.validator) {
+            const form = document.querySelector("#taskModalBody form");
+            if (form) {
+                $.validator.unobtrusive.parse(form);
             }
-        })
-        .catch(err => {
-            console.error("Save error:", err);
-            alert("An error occurred. Check the console for details.");
+        }
+    },
+
+    initFooterTips: function () {
+        const tipText = document.getElementById("productivity-tip");
+        const rerollBtn = document.getElementById("reroll-tip");
+
+        if (!rerollBtn || !tipText) return;
+
+        rerollBtn.addEventListener("click", () => {
+            let newTip;
+            do {
+                newTip = AppConfig.ProductivityTips[Math.floor(Math.random() * AppConfig.ProductivityTips.length)];
+            } while (newTip === tipText.innerText);
+
+            tipText.style.opacity = 0;
+            setTimeout(() => {
+                tipText.innerText = newTip;
+                tipText.style.opacity = 1;
+            }, 200);
         });
-}, true); // 'true' helps catch the event before other handlers
+    }
+};
+
+// Initialize on Load
+document.addEventListener("DOMContentLoaded", () => TaskManager.init());

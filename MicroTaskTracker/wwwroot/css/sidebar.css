@@ -142,26 +142,52 @@
 /* ============================================
    FOOTER & MOBILE
    ============================================ */
+/* Footer Container */
 .sidebar-footer {
     margin-top: auto;
-    padding-top: 1rem;
+    padding: 1.25rem 0;
     border-top: 1px solid rgba(0,0,0,0.08);
 }
 
-.sidebar-toggle-fixed {
-    position: fixed;
-    top: 0.75rem;
-    left: 0.75rem;
-    z-index: 2000;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.offcanvas.offcanvas-start {
-    border-right: 2px solid var(--pathly-primary);
-}
-
-.offcanvas-body {
+/* User Avatar Styling */
+.user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--pathly-primary), var(--pathly-accent));
+    color: white;
+    border-radius: 12px; /* Matches your themed buttons */
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Logic for the Collapsed/Folded State */
+body.sidebar-collapsed .user-profile-wrapper {
+    justify-content: center;
+}
+
+body.sidebar-collapsed .user-info-text {
+    display: none; /* Hide name and settings link */
+}
+
+body.sidebar-collapsed .logout-btn {
+    padding: 0.5rem 0;
+    border: none; /* Cleaner look when collapsed */
+}
+
+    body.sidebar-collapsed .logout-btn .sidebar-link-text {
+        display: none; /* Hide 'Logout' text */
+    }
+
+body.sidebar-collapsed .logout-icon {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* Mobile Adjustments (Offcanvas usually doesn't collapse, it just closes) */
+.offcanvas-body .sidebar-footer {
+    padding-bottom: 2rem;
 }

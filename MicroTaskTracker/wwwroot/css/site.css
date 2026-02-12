@@ -123,15 +123,43 @@ h1, h2, h3, h4, h5, h6 {
    FOOTER
    ============================================ */
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px;
-    background-color: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-    font-size: 0.875rem;
-    color: #6b7280;
+    background-color: var(--pathly-bg);
+    border-top: 1px solid rgba(0,0,0,0.05);
+    color: var(--pathly-text);
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+}
+
+    .footer a {
+        color: var(--pathly-primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+#tip-container {
+    transition: opacity 0.3s ease;
+    min-width: 200px;
+    background-color: #fdfdfd !important;
+    font-style: italic;
+    color: #444;
+}
+
+#reroll-tip {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease;
+}
+
+    #reroll-tip:active {
+        transform: rotate(180deg);
+    }
+
+.footer a {
+    transition: color 0.2s ease;
 }
 
 /* ============================================

@@ -1,171 +1,61 @@
-﻿/* ============================================
-   DASHBOARD WRAPPER
-   ============================================ */
-.dashboard-wrapper {
+﻿/* Dashboard Layout Spacing */
+.main-content {
+    transition: margin-left 0.3s ease;
+    min-width: 0; /* Prevents flex items from overflowing */
+}
+
+/* Card Styling */
+.rounded-4 {
+    border-radius: 1.25rem !important;
+}
+
+.path-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    background: #ffffff;
+}
+
+    .path-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+    }
+
+/* Icon Circles */
+.path-card-icon-circle {
+    width: 64px;
+    height: 64px;
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* vertical centering */
-    align-items: center; /* horizontal centering */
-    min-height: calc(100vh - 60px); /* full viewport height */
-
-    padding: 2rem;
-    margin: 0 auto;
-    max-width: 1200px;
-
-    text-align: center;
-    background-color: var(--pathly-bg); /* match landing page theme */
-}
-    .dashboard-wrapper .row{
-        width: 100%;
-    }
-    .dashboard-wrapper .card {
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-/* ============================================
-   PAGE TITLE & MOTIVATION
-   ============================================ */
-.dashboard-title {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: var(--pathly-primary);
-    margin-bottom: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    border-radius: 18px;
 }
 
-.dashboard-motivation {
-    font-size: 1.1rem;
-    color: var(--pathly-text);
-    margin-bottom: 2rem;
-    max-width: 600px;
+.bg-purple-soft {
+    background-color: #f3ebff;
 }
 
-/* ============================================
-   PROGRESS BARS
-   ============================================ */
-.dashboard-progress {
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 2rem;
+.bg-teal-soft {
+    background-color: #e6fffa;
 }
 
-    .dashboard-progress .progress {
-        height: 28px;
-        border-radius: 12px;
-        background-color: #e9ecef;
-        overflow: hidden;
-        margin-bottom: 1.25rem;
-    }
+.bg-orange-soft {
+    background-color: #fffaf0;
+}
 
-    .dashboard-progress .progress-bar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #fff;
-        transition: width 0.6s ease;
+/* Responsive Divider */
+@media (min-width: 768px) {
+    .border-md-end {
+        border-right: 1px solid #edf2f7 !important;
     }
+}
 
-    .dashboard-progress .tasks-bar {
-        background-color: var(--pathly-accent);
-    }
+/* Button & Progress Fixes */
+.progress-bar {
+    transition: width 0.8s ease-in-out;
+}
 
-    .dashboard-progress .goal-bar {
-        background-color: var(--pathly-primary);
-    }
-
-/* ============================================
-   DIVIDER LINE
-   ============================================ */
-.dashboard-divider {
+.btn-primary {
+    background: var(--pathly-primary) !important;
     border: none;
-    height: 2px;
-    width: 80%;
-    background: linear-gradient(to right, var(--pathly-accent), var(--pathly-primary));
-    margin: 3rem auto;
-    border-radius: 1px;
-}
-
-/* ============================================
-   ACTION CARDS
-   ============================================ */
-.dashboard-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
-    overflow: hidden;
-    color: #fff;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-    .dashboard-card h5 {
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .dashboard-card p {
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
-
-/* Example card colors */
-.dashboard-card-goal {
-    background: linear-gradient(135deg, #6f42c1, #8a2be2);
-}
-
-.dashboard-card-roadmap {
-    background: linear-gradient(135deg, #0dcaf0, #20c997);
-}
-
-.dashboard-card-daily {
-    background: linear-gradient(135deg, #ffc107, #fd7e14);
-}
-
-/* Hover effects */
-.dashboard-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-}
-
-/* ============================================
-   EMPTY STATES / BUTTONS
-   ============================================ */
-.dashboard-empty {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-    .dashboard-empty a.btn {
-        padding: 0.7rem 1.4rem;
-        font-weight: 600;
-        border-radius: 8px;
-        color: #fff;
-        background-color: var(--pathly-accent);
-        transition: background 0.3s ease;
-    }
-
-        .dashboard-empty a.btn:hover {
-            background-color: var(--pathly-primary);
-        }
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 768px) {
-    .dashboard-wrapper {
-        padding: 1rem;
-    }
-
-    .dashboard-title {
-        font-size: 1.8rem;
-    }
-
-    .dashboard-motivation {
-        font-size: 1rem;
-    }
-
-    .dashboard-progress .progress {
-        height: 24px;
-    }
+    padding: 0.75rem;
 }
