@@ -9,7 +9,7 @@ namespace MicroTaskTracker.Models.DBModels
         
         public int Id { get; set; }
         [Required]
-        [MaxLength(30)]
+        [StringLength(30,ErrorMessage ="Tag name cannot exceed 30 characters")]
         public string Name { get; set; } = null!;
 
         [Required]

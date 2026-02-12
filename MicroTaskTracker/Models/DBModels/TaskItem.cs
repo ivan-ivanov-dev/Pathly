@@ -18,9 +18,13 @@ namespace MicroTaskTracker.Models.DBModels
         public DateTime CreatedOn{ get; set; }
         public DateTime? DueDate { get; set; }
 
-        public string? UserId { get; set; }
+        [Required]
+        public string UserId { get; set; } = null!;
 
         public ApplicationUser? User { get; set; }
         public ICollection<TaskTag> TaskTags { get; set; } = new List<TaskTag>();
+
+        public int? ActionId { get; set; }
+        public ActionItem? Action { get; set; }
     }
 }
