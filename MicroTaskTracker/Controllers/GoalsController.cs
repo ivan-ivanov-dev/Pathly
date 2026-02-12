@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels.Goals;
 using MicroTaskTracker.Services.Interfaces;
@@ -40,12 +41,13 @@ namespace MicroTaskTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(GoalCreateViewModel model)
         {
+            var today = DateTime.UtcNow.Date;
             if (String.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
             }
 
-            if (model.TargetDate.HasValue && model.TargetDate.Value < DateTime.Now)
+            if (model.TargetDate.HasValue && model.TargetDate.Value < today)
             {
                 ModelState.AddModelError("TargetDate", "Target date cannot be in the past.");
             }
@@ -95,11 +97,12 @@ namespace MicroTaskTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(GoalEditViewModel model)
         {
+            var today = DateTime.UtcNow.Date;
             if (String.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
             }
-            if (model.TargetDate.HasValue && model.TargetDate.Value < DateTime.Now)
+            if (model.TargetDate.HasValue && model.TargetDate.Value < today)
             {
                 ModelState.AddModelError("TargetDate", "Target date cannot be in the past.");
             }
