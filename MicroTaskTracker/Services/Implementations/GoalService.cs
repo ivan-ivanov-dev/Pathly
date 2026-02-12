@@ -61,6 +61,28 @@ namespace MicroTaskTracker.Services.Implementations
             return goals;
         }
 
+        public Task<GoalDetailsViewModel?> GetDetailsAsync(int id, string userId)
+        {
+           var goal = _context.Goals
+                .Where(g => g.Id == id && g.UserId == userId)
+                .Select(g => new GoalDetailsViewModel
+                {
+                    Id = g.Id,
+                    Title = g.Title,
+                    ShortDescription = g.ShortDescription,
+                    TargetDate = g.TargetDate,
+                    IsActive = g.IsActive
+                })
+                .FirstOrDefaultAsync();
+
+            if (goal == null)
+            {
+                throw new UnauthorizedAccessException("You do not have permission to view this goal.");
+            }
+
+            return goal;
+        }
+
         public async Task UpdateAsync(int id, GoalEditViewModel model, string userId)
         {
             var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == id);
