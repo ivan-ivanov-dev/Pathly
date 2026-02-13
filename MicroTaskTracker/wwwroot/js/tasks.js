@@ -6,20 +6,14 @@
     },
 
     bindEvents: function () {
-        // Modal Loading
         document.addEventListener("click", (e) => this.handleModalClick(e));
-
-        // Tag Validation (Checkboxes)
         document.addEventListener("change", (e) => this.handleTagValidation(e));
-
-        // Form Submission
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
     },
 
     initModalFocus: function () {
         const modalEl = document.getElementById('taskModal');
         if (!modalEl) return;
-
         modalEl.addEventListener('shown.bs.modal', () => {
             const titleInput = document.querySelector('#taskModalBody input[name="Title"], #taskModalBody #Title');
             if (titleInput) titleInput.focus();
@@ -36,27 +30,12 @@
             .then(html => {
                 document.getElementById("taskModalBody").innerHTML = html;
                 document.getElementById("taskModalTitle").textContent = btn.getAttribute("data-modal-title") || "Task";
-
                 const modalEl = document.getElementById("taskModal");
                 let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 modal.show();
-
                 this.rebindValidation();
             })
-            .catch(() => alert(AppConfig.Errors.LoadFailed));
-    },
-
-    handleTagValidation: function (e) {
-        if (e.target.classList.contains('tag-checker')) {
-            const group = e.target.closest('.tag-checkbox-group');
-            const checkedCount = group.querySelectorAll('.tag-checker:checked').length;
-            const errorSpan = document.getElementById('TagError');
-            const submitBtn = document.querySelector('button[type="submit"]');
-
-            const isInvalid = checkedCount > 4;
-            errorSpan.classList.toggle('d-none', !isInvalid);
-            if (submitBtn) submitBtn.disabled = isInvalid;
-        }
+            .catch(() => alert("Failed to load modal."));
     },
 
     handleFormSubmit: function (e) {
@@ -75,26 +54,38 @@
                 const isHtml = response.headers.get("content-type")?.includes("text/html");
 
                 if (response.ok && !isHtml) {
-                    window.location.href = '/Tasks/Index';
+                    // If we are on the Roadmap page, just close modal and refresh the Roadmap
+                    if (window.location.pathname.includes("Roadmap")) {
+                        location.reload();
+                    } else {
+                        window.location.href = '/Tasks/Index';
+                    }
                 } else if (isHtml) {
                     const html = await response.text();
-                    const bodyEl = document.getElementById("taskModalBody");
-                    bodyEl.innerHTML = html;
+                    document.getElementById("taskModalBody").innerHTML = html;
                     this.rebindValidation();
                 }
-            })
-            .catch(() => alert(AppConfig.Errors.SaveFailed));
+            });
     },
 
     rebindValidation: function () {
         if (window.jQuery && $.validator) {
             const form = document.querySelector("#taskModalBody form");
-            if (form) {
-                $.validator.unobtrusive.parse(form);
-            }
+            if (form) $.validator.unobtrusive.parse(form);
         }
     },
 
+    handleTagValidation: function (e) {
+        if (e.target.classList.contains('tag-checker')) {
+            const group = e.target.closest('.tag-checkbox-group');
+            const checkedCount = group.querySelectorAll('.tag-checker:checked').length;
+            const errorSpan = document.getElementById('TagError');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const isInvalid = checkedCount > 4;
+            errorSpan.classList.toggle('d-none', !isInvalid);
+            if (submitBtn) submitBtn.disabled = isInvalid;
+        }
+    },
     initFooterTips: function () {
         const tipText = document.getElementById("productivity-tip");
         const rerollBtn = document.getElementById("reroll-tip");
@@ -113,16 +104,7 @@
                 tipText.style.opacity = 1;
             }, 200);
         });
-    }
-    focusTitleInput: function () {
-            const taskModalEl = document.getElementById('taskModal');
-            if (!taskModalEl) return;
-
-            taskModalEl.addEventListener('shown.bs.modal', function () {
-                const titleInput = document.querySelector('#taskModalBody input[name="Title"], #taskModalBody #Title');
-                if (titleInput) titleInput.focus();
-            });
-        });
+    }  
 };
 
 // Initialize on Load
