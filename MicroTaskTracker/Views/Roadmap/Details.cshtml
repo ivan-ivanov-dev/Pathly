@@ -90,17 +90,15 @@
                                                 @foreach (var task in action.AssignedTasks)
                                                 {
                                                     <li class="small py-2 d-flex align-items-center justify-content-between border-bottom-dashed" id="task-item-@task.Id">
-                                                        <div class="d-flex align-items-center overflow-hidden me-2">
+                                                        <div class="d-flex align-items-center overflow-hidden">
                                                             <i class="bi bi-dot text-primary fs-4 flex-shrink-0"></i>
-                                                            <span class="text-truncate" title="@task.Title">@task.Title</span>
+                                                            <span class="text-truncate">@task.Title</span>
                                                         </div>
 
-                                                        @* The visible Red Container with the Red X *@
                                                         <button type="button"
-                                                                class="unlink-action-btn"
-                                                                onclick="RoadmapDetails.unlinkTask(@task.Id)"
-                                                                title="Unlink Task">
-                                                            <i class="bi bi-x-lg fw-bold"></i>
+                                                                class="unlink-action-btn ms-auto"
+                                                                onclick="RoadmapDetails.unlinkTask(@task.Id)">
+                                                            <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     </li>
                                                 }
@@ -170,12 +168,20 @@
             new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
         }
 
-        var RoadmapDetails = {
+                var RoadmapDetails = {
             unlinkTask: function(taskId) {
-                if (!confirm("Remove this task from this milestone?")) return;
+                // Instead of confirm(), we just proceed.
+                // If you want a delay/undo, that's possible,
+                // but for now let's just make it work smoothly.
 
                 const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                // Ensure the URL is built correctly using the helper
                 const url = '@Url.Action("UnlinkTask", "Roadmaps")' + '?taskId=' + taskId;
+
+                // Visual feedback: Dim the item immediately
+                const element = document.getElementById(`task-item-${taskId}`);
+                element.style.opacity = "0.5";
 
                 fetch(url, {
                     method: 'POST',
@@ -186,16 +192,20 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        const element = document.getElementById(`task-item-${taskId}`);
-                        element.style.transition = "all 0.3s ease";
+                        // Success animation
+                        element.style.transition = "all 0.4s ease";
+                        element.style.transform = "translateX(50px)";
                         element.style.opacity = "0";
-                        element.style.transform = "scale(0.9)";
-                        setTimeout(() => element.remove(), 300);
+                        setTimeout(() => element.remove(), 400);
                     } else {
-                        alert("Could not unlink task.");
+                        element.style.opacity = "1"; // Reset on error
+                        alert("Server error: Could not unlink.");
                     }
                 })
-                .catch(err => console.error("Error:", err));
+                .catch(err => {
+                    element.style.opacity = "1";
+                    console.error("Fetch error:", err);
+                });
             }
         };
     </script>
