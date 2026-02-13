@@ -5,6 +5,11 @@
     ViewData["Title"] = "Register";
 }
 
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+}
+
 <div class="auth-view-wrapper">
     <div class="back-link-wrapper">
         <a asp-controller="Home" asp-action="Index">← Back to Main</a>
@@ -54,4 +59,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js"></script>
 }
