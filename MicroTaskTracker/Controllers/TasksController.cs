@@ -208,8 +208,13 @@ namespace MicroTaskTracker.Controllers
         public async Task<IActionResult> DeleteAsync(TaskDeleteViewModel model)
         {
             var userId = _userManager.GetUserId(User);
+            var success = await _taskService.DeleteAsync(model.Id, userId);
 
-            await _taskService.DeleteAsync(model.Id, userId);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return success ? Json(new { success = true }) : BadRequest();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

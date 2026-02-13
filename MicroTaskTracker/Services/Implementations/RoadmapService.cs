@@ -215,6 +215,9 @@ namespace MicroTaskTracker.Services.Implementations
             var roadmap = await _context.Roadmaps
                 .Include(r => r.Goal)
                 .Include(r => r.Actions)
+                    .ThenInclude(a => a.Tasks)
+                        .ThenInclude(t => t.TaskTags)
+                            .ThenInclude(tt => tt.Tag)
                 .FirstOrDefaultAsync(r => r.Id == roadmapId && r.UserId == userId);
 
             if (roadmap == null) return null;
@@ -233,7 +236,19 @@ namespace MicroTaskTracker.Services.Implementations
                     Id = a.Id, // CRITICAL: This keeps tasks safe
                     Title = a.Title,
                     Resources = a.Resources,
-                    DueDate = a.DueDate
+                    DueDate = a.DueDate,
+                    AssignedTasks = a.Tasks
+                        .OrderBy(t => t.CreatedOn)
+                        .Select(t => new TaskViewModel
+                        {
+                            Id = t.Id,
+                            Title = t.Title,
+                            IsCompleted = t.IsCompleted,
+                            Priority = t.Priority,
+                            CreatedOn = t.CreatedOn,
+                            Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
+
+                        }).ToList()
                 }).ToList()
             };
         }
@@ -258,6 +273,29 @@ namespace MicroTaskTracker.Services.Implementations
                 .Where(t => t.UserId == userId && t.ActionId == null)
                 .OrderByDescending(t => t.CreatedOn)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UnlinkTaskFromActionAsync(int taskId, string userId)
+        {
+            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+
+            if (task == null)
+            {
+                return false;
+            }
+
+            if(task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            if (task.ActionId == null)
+            {
+                return false; // Already unlinked
+            }
+
+            task.ActionId = null; // Remove the link
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

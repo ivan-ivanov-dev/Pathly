@@ -1,45 +1,7 @@
-﻿/* Roadmap Visual Flow */
+﻿/* Roadmap Layout & BG */
 .roadmap-page-bg {
-    background: #fdfdfd; /* Or match your site.css background color */
+    background-color: #f8f9fa;
     min-height: 100vh;
-}
-
-.back-to-selection {
-    text-decoration: none;
-    color: #6c757d;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    font-weight: 500;
-}
-
-    .back-to-selection:hover {
-        color: #007bff;
-        transform: translateX(-3px);
-    }
-
-/* Ensure the wrapper from layout doesn't restrict the background */
-.roadmap-wrapper {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background: transparent !important;
-}
-
-    /* Force the main content area to be transparent only on roadmap pages */
-    .roadmap-wrapper .main-content {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
-    }
-
-/* Fix for the roadmap-page-bg to occupy full width and match app background */
-.roadmap-page-bg {
-    background-color: #f8f9fa; /* Change this to match your app's exact grey/bg color */
-    min-height: 100vh;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%); /* Centers the wide bg if still inside a container */
     padding-top: 2rem;
 }
 
@@ -50,6 +12,7 @@
     position: relative;
 }
 
+/* Nodes & Icons */
 .roadmap-node {
     width: 100%;
     max-width: 700px;
@@ -63,6 +26,11 @@
     .roadmap-node.wide-node {
         max-width: 1100px;
     }
+
+.node-content {
+    width: 100%;
+    border-radius: 15px;
+}
 
 .node-icon {
     width: 60px;
@@ -78,25 +46,16 @@
     z-index: 3;
 }
 
-.node-content {
-    width: 100%;
-    border: none;
-    border-radius: 20px;
-    transition: transform 0.3s ease;
-}
-
-    .node-content:hover {
-        transform: translateY(-5px);
-    }
-
+/* Line connecting nodes */
 .roadmap-line {
     width: 6px;
-    height: 80px;
-    background: linear-gradient(to bottom, #007bff, #17a2b8, #ffc107, #28a745);
-    opacity: 0.3;
+    height: 50px; /* Adjusted height for better flow */
+    background: linear-gradient(to bottom, #007bff, #0dcaf0, #ffc107, #198754);
+    opacity: 0.4;
     z-index: 1;
 }
 
+/* Action Cards */
 .action-card {
     border-radius: 15px;
     border-top: 5px solid #ffc107 !important;
@@ -114,29 +73,45 @@
     padding: 8px 24px;
     border-radius: 50px;
     margin-top: 35px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
     font-size: 0.8rem;
-    z-index: 2;
-}
-/* Form Plaintext Inputs */
-.form-control:focus {
-    box-shadow: none;
-    background: #fdfdfd;
 }
 
-.hover-up:hover {
-    transform: scale(1.05);
-    transition: 0.3s;
+/* Task Preview Logic */
+.task-preview-zone {
+    max-height: 180px;
+    overflow-y: auto;
+    border-top: 1px dashed #dee2e6;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
 }
 
-/* Animation */
-@@keyframes fadeIn {
+    .task-preview-zone::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .task-preview-zone::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 10px;
+    }
+
+.tiny-bold {
+    font-size: 0.65rem;
+    letter-spacing: 0.05rem;
+    font-weight: 800;
+}
+
+.border-bottom-dashed {
+    border-bottom: 1px dashed #f1f3f5 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(15px);
     }
 
     to {
@@ -146,5 +121,46 @@
 }
 
 .animate-fade-in {
-    animation: fadeIn 0.8s ease-out;
+    animation: fadeIn 0.6s ease-out;
+}
+/* Selection Animation & State */
+.planner-selection-card {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: visible;
+}
+
+    /* The "Pop" effect when selected */
+    .planner-selection-card.selected {
+        border-color: #0d6efd;
+        background-color: #f0f7ff;
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 10px 20px rgba(13, 110, 253, 0.15) !important;
+    }
+
+/* The Blue Checkmark Indicator */
+.planner-selection-indicator {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: #0d6efd;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    /* Animation for the indicator */
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+}
+
+.planner-selection-card.selected .planner-selection-indicator {
+    opacity: 1;
+    transform: scale(1);
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MicroTaskTracker.Models.ViewModels.TasksViewModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace MicroTaskTracker.Models.ViewModels.Roadmaps
 {
@@ -13,5 +14,7 @@ namespace MicroTaskTracker.Models.ViewModels.Roadmaps
 
         public DateTime? DueDate { get; set; }
         public bool IsCompleted { get; set; } = false;
+
+        public List<TaskViewModel> AssignedTasks { get; set; } = new();
     }
 }

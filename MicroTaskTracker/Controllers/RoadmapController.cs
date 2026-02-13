@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels.Roadmaps;
+using MicroTaskTracker.Models.ViewModels.TasksViewModels;
 using MicroTaskTracker.Services.Interfaces;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MicroTaskTracker.Controllers
 {
@@ -49,11 +51,16 @@ namespace MicroTaskTracker.Controllers
 
             for (int i = 0; i < 3; i++)
             {
-                model.Actions.Add(new ActionItemCreateViewModel());
+                model.Actions.Add(new ActionItemCreateViewModel
+                {
+                    // Initialize with an empty list so the .Any() check in the View works
+                    AssignedTasks = new List<TaskViewModel>()
+                });
             }
 
             return View("RoadmapForm", model);
         }
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = _userManager.GetUserId(User);
@@ -119,7 +126,6 @@ namespace MicroTaskTracker.Controllers
             return View(roadmap);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LinkTask(int taskId, int actionId)
         {
             var userId = _userManager.GetUserId(User);
@@ -143,6 +149,32 @@ namespace MicroTaskTracker.Controllers
                 return RedirectToAction("Selection");
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Planner(int actionId, int roadmapId)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var tasks = await _roadmapService.GetUnlinkedTasksAsync(userId);
+
+            var model = new RoadmapPlannerViewModel
+            {
+                TargetActionId = actionId,
+                RoadmapId = roadmapId,
+                UnlinkedTasks = tasks
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnlinkTask(int taskId)
+        {
+            var userId = _userManager.GetUserId(User);
+            var success = await _roadmapService.UnlinkTaskFromActionAsync(taskId, userId);
+            return success ? Json(new { success = true }) : BadRequest();
         }
     }
 }

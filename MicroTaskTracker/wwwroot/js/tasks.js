@@ -1,4 +1,7 @@
-﻿const TaskManager = {
+﻿/**
+ * TaskManager: Handles standard Task CRUD and Modals
+ */
+const TaskManager = {
     init: function () {
         this.bindEvents();
         this.initFooterTips();
@@ -54,7 +57,6 @@
                 const isHtml = response.headers.get("content-type")?.includes("text/html");
 
                 if (response.ok && !isHtml) {
-                    // If we are on the Roadmap page, just close modal and refresh the Roadmap
                     if (window.location.pathname.includes("Roadmap")) {
                         location.reload();
                     } else {
@@ -86,10 +88,10 @@
             if (submitBtn) submitBtn.disabled = isInvalid;
         }
     },
+
     initFooterTips: function () {
         const tipText = document.getElementById("productivity-tip");
         const rerollBtn = document.getElementById("reroll-tip");
-
         if (!rerollBtn || !tipText) return;
 
         rerollBtn.addEventListener("click", () => {
@@ -97,15 +99,74 @@
             do {
                 newTip = AppConfig.ProductivityTips[Math.floor(Math.random() * AppConfig.ProductivityTips.length)];
             } while (newTip === tipText.innerText);
-
             tipText.style.opacity = 0;
             setTimeout(() => {
                 tipText.innerText = newTip;
                 tipText.style.opacity = 1;
             }, 200);
         });
-    }  
+    }
 };
 
-// Initialize on Load
+/**
+ * RoadmapPlanner: Handles linking, unlinking, and permanent deletion of tasks
+ */
+const RoadmapPlanner = {
+    toggleTask: function (taskId, actionId) {
+        const card = document.getElementById(`planner-card-${taskId}`);
+        if (!card) return;
+
+        const isSelected = card.classList.contains('selected');
+        const url = isSelected ? '/Roadmap/UnlinkTask' : '/Roadmap/LinkTask';
+        const params = isSelected ? `taskId=${taskId}` : `taskId=${taskId}&actionId=${actionId}`;
+
+        fetch(`${url}?${params}`, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    card.classList.toggle('selected');
+                } else {
+                    alert("Failed to update task linkage.");
+                }
+            })
+            .catch(err => console.error("Planner Error:", err));
+    },
+
+    deleteTaskPermanently: function (taskId) {
+        if (!confirm("Are you sure? This will delete the task from your database entirely.")) return;
+
+        fetch(`/Tasks/Delete/${taskId}`, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    const item = document.getElementById(`task-item-${taskId}`);
+                    if (item) {
+                        item.style.opacity = '0';
+                        setTimeout(() => item.remove(), 300);
+                    }
+                    const plannerCard = document.getElementById(`task-wrapper-${taskId}`);
+                    if (plannerCard) {
+                        plannerCard.style.opacity = '0';
+                        setTimeout(() => plannerCard.remove(), 300);
+                    }
+                } else {
+                    alert("Could not delete task.");
+                }
+            });
+    },
+
+    dismissLocally: function (taskId) {
+        const wrapper = document.getElementById(`task-wrapper-${taskId}`);
+        if (wrapper) {
+            wrapper.style.opacity = '0';
+            wrapper.style.transform = 'scale(0.8)';
+            setTimeout(() => wrapper.remove(), 300);
+        }
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => TaskManager.init());
