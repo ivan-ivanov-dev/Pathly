@@ -218,3 +218,55 @@
 #task-item-@task.Id:hover {
     background-color: rgba(0,0,0,0.02);
 }
+/* Typography and Spacing */
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
+
+/* Make inputs feel integrated into the card */
+.node-content .form-control {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+    .node-content .form-control:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+    }
+
+/* Smooth fade-in animation */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style the date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5);
+}
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
+
+.node-content .form-control {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+    .node-content .form-control:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+    }
+
