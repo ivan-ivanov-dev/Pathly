@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="~/css/roadmap.css" asp-append-version="true" />
 }
 
-@Html.AntiForgeryToken()
 
 <div class="roadmap-page-bg">
+    @Html.AntiForgeryToken()
     <div class="container py-4">
 
         @* TOP NAVIGATION BAR *@
@@ -105,7 +105,7 @@
                                                             <i class="bi bi-dot text-primary fs-4 flex-shrink-0"></i>
                                                             <span class="text-truncate" title="@task.Title">@task.Title</span>
                                                         </div>
-                                                        <button type="button" class="unlink-action-btn" onclick="RoadmapDetails.unlinkTask(@task.Id)">
+                                                        <button type="button" class="unlink-action-btn" onclick="RoadmapDetails.unlinkTask('@task.Id', '@Url.Action("UnlinkTask", "Roadmaps")')">
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     </li>
@@ -188,42 +188,6 @@
 
 @section Scripts {
     <script src="~/js/tasks.js" asp-append-version="true"></script>
-    <script>
-        function showDeleteModal() {
-            new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
-        }
-
-        var RoadmapDetails = {
-            unlinkTask: function(taskId) {
-                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                const url = '@Url.Action("UnlinkTask", "Roadmaps")' + '?taskId=' + taskId;
-                const element = document.getElementById(`task-item-${taskId}`);
-
-                element.style.opacity = "0.5";
-
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'RequestVerificationToken': token,
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        element.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
-                        element.style.transform = "translateX(30px)";
-                        element.style.opacity = "0";
-                        setTimeout(() => element.remove(), 400);
-                    } else {
-                        element.style.opacity = "1";
-                        alert("Error unlinking task.");
-                    }
-                })
-                .catch(err => {
-                    element.style.opacity = "1";
-                    console.error("Fetch error:", err);
-                });
-            }
-        };
-    </script>
+    <script src="~/js/roadmap.js" asp-append-version="true"></script>
+    
 }
