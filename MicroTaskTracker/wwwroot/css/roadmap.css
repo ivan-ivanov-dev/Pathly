@@ -164,3 +164,57 @@
     opacity: 1;
     transform: scale(1);
 }
+.border-bottom-dashed {
+    border-bottom: 1px dashed #dee2e6;
+}
+
+    .border-bottom-dashed:last-child {
+        border-bottom: none;
+    }
+
+.unlink-btn {
+    transition: transform 0.2s ease;
+}
+
+    .unlink-btn:hover {
+        transform: scale(1.2);
+    }
+
+/* The Unlink Button Base State */
+.unlink-action-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center; /* Vertical Center */
+    justify-content: center; /* Horizontal Center */
+    background-color: transparent;
+    color: #dc3545; /* Red X */
+    border: 2px solid #dc3545; /* Red Border */
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
+    .unlink-action-btn i.bi-x-lg {
+        -webkit-text-stroke: 1px #dc3545; /* Makes the X thicker and more visible */
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Hover State: Colors turn around */
+    .unlink-action-btn:hover {
+        background-color: #dc3545; /* Container becomes Red */
+        color: #ffffff !important; /* X becomes White */
+    }
+    .unlink-action-btn i {
+        font-size: 14px; /* Adjust this to make the X bigger or smaller */
+        line-height: 1;
+        display: block;
+    }
+/* Optional: add a slight fade to the list item on hover so the button pops more */
+#task-item-@task.Id:hover {
+    background-color: rgba(0,0,0,0.02);
+}

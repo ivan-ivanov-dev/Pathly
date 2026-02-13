@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="~/css/roadmap.css" asp-append-version="true" />
 }
 
+@Html.AntiForgeryToken() @* Required for the AJAX Unlink call *@
+
 <div class="roadmap-page-bg">
     <div class="container py-4">
-        
+
         <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
             <a asp-action="Selection" class="back-to-selection text-decoration-none">
                 <i class="bi bi-arrow-left-circle-fill fs-4 align-middle"></i>
@@ -29,6 +31,7 @@
         </div>
 
         <div class="roadmap-flow-container">
+            @* DESTINATION NODE *@
             <div class="roadmap-node" data-aos="fade-up">
                 <div class="node-icon bg-primary shadow"><i class="bi bi-geo-alt-fill"></i></div>
                 <div class="node-content card shadow-sm border-0">
@@ -42,6 +45,7 @@
 
             <div class="roadmap-line"></div>
 
+            @* MOTIVATION NODE *@
             <div class="roadmap-node" data-aos="fade-up">
                 <div class="node-icon bg-info shadow"><i class="bi bi-lightning-charge-fill"></i></div>
                 <div class="node-content card shadow-sm border-0">
@@ -54,6 +58,7 @@
 
             <div class="roadmap-line"></div>
 
+            @* MILESTONES NODE *@
             <div class="roadmap-node wide-node" data-aos="fade-up">
                 <div class="node-icon bg-warning text-dark shadow"><i class="bi bi-stack"></i></div>
                 <div class="action-header-pill">Current Milestones</div>
@@ -72,24 +77,37 @@
                                         }
                                     </div>
 
+                                    @* Inside your foreach (var action in Model.Actions) loop *@
                                     <div class="task-branch-section mt-3 flex-grow-1">
                                         <div class="small fw-bold text-muted mb-2">
                                             <i class="bi bi-list-check me-1"></i> Tasks:
                                         </div>
+
                                         <ul class="list-unstyled mb-3">
+                                            @* Check the property on the ACTION, not the MODEL *@
                                             @if (action.AssignedTasks != null && action.AssignedTasks.Any())
                                             {
                                                 @foreach (var task in action.AssignedTasks)
                                                 {
-                                                    <li class="small py-1 d-flex align-items-center">
-                                                        <i class="bi bi-dot text-primary fs-4"></i>
-                                                        <span class="text-truncate">@task.Title</span>
+                                                    <li class="small py-2 d-flex align-items-center justify-content-between border-bottom-dashed" id="task-item-@task.Id">
+                                                        <div class="d-flex align-items-center overflow-hidden me-2">
+                                                            <i class="bi bi-dot text-primary fs-4 flex-shrink-0"></i>
+                                                            <span class="text-truncate" title="@task.Title">@task.Title</span>
+                                                        </div>
+
+                                                        @* The visible Red Container with the Red X *@
+                                                        <button type="button"
+                                                                class="unlink-action-btn"
+                                                                onclick="RoadmapDetails.unlinkTask(@task.Id)"
+                                                                title="Unlink Task">
+                                                            <i class="bi bi-x-lg fw-bold"></i>
+                                                        </button>
                                                     </li>
                                                 }
                                             }
                                             else
                                             {
-                                                <li class="small text-muted fst-italic py-1">No tasks linked yet...</li>
+                                                <li class="small text-muted fst-italic py-1">No tasks linked.</li>
                                             }
                                         </ul>
                                     </div>
@@ -113,6 +131,7 @@
 
             <div class="roadmap-line"></div>
 
+            @* VICTORY NODE *@
             <div class="roadmap-node" data-aos="fade-up">
                 <div class="node-icon bg-success shadow"><i class="bi bi-trophy-fill"></i></div>
                 <div class="node-content card shadow-sm border-0">
@@ -126,6 +145,7 @@
     </div>
 </div>
 
+@* DELETE MODAL *@
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -149,5 +169,34 @@
         function showDeleteModal() {
             new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
         }
+
+        var RoadmapDetails = {
+            unlinkTask: function(taskId) {
+                if (!confirm("Remove this task from this milestone?")) return;
+
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const url = '@Url.Action("UnlinkTask", "Roadmaps")' + '?taskId=' + taskId;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        const element = document.getElementById(`task-item-${taskId}`);
+                        element.style.transition = "all 0.3s ease";
+                        element.style.opacity = "0";
+                        element.style.transform = "scale(0.9)";
+                        setTimeout(() => element.remove(), 300);
+                    } else {
+                        alert("Could not unlink task.");
+                    }
+                })
+                .catch(err => console.error("Error:", err));
+            }
+        };
     </script>
 }

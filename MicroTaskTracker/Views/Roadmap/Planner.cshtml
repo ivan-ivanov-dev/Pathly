@@ -102,5 +102,34 @@
                 document.getElementById('selectedTaskIds').value = Array.from(selectedSet).join(',');
             }
         };
+                var RoadmapDetails = {
+            unlinkTask: function(taskId) {
+                if (!confirm("Are you sure you want to remove this task from this milestone?")) return;
+
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const url = '@Url.Action("UnlinkTask", "Roadmaps")' + '?taskId=' + taskId;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': token,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Fade out and remove the element from the list
+                        const element = document.getElementById(`task-item-${taskId}`);
+                        element.style.transition = "all 0.3s ease";
+                        element.style.opacity = "0";
+                        element.style.transform = "translateX(20px)";
+                        setTimeout(() => element.remove(), 300);
+                    } else {
+                        alert("Could not unlink task. Please try again.");
+                    }
+                })
+                .catch(err => console.error("Error:", err));
+            }
+        };
     </script>
 }

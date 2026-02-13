@@ -173,6 +173,11 @@ namespace MicroTaskTracker.Services.Implementations
         public async Task<RoadmapDeatailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId)
         {
             var roadmap = await _context.Roadmaps
+                .Include(r => r.Goal)
+                .Include(r => r.Actions)
+                    .ThenInclude(a => a.Tasks)
+                        .ThenInclude(t => t.TaskTags)
+                            .ThenInclude(tt => tt.Tag)
                 .Where(r => r.Id == roadmapId && r.UserId == userId)
                 .Select(r => new RoadmapDeatailsViewModel
                 {
@@ -180,7 +185,7 @@ namespace MicroTaskTracker.Services.Implementations
                     GoalTitle = r.Goal.Title,
                     GoalDescription = r.Goal.ShortDescription,
                     Why = r.Why,
-                    IdealOutcome = r.IdealOutcome,   
+                    IdealOutcome = r.IdealOutcome,  
                     Actions = r.Actions.Select(a => new ActionsDisplayViewModel
                     {
                         ActionId = a.Id,

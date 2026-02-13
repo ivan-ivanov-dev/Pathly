@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MicroTaskTracker.Models.DBModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace MicroTaskTracker.Models.ViewModels.Roadmaps
 {
