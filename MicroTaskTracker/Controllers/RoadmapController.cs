@@ -90,13 +90,13 @@ namespace MicroTaskTracker.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("RoadmapForm", model);
             }
 
             try
             {
                 var roadmapId = await _roadmapService.SaveRoadmapAsync(model, userId);
-                return RedirectToAction(nameof(Details), new { id = roadmapId });
+                return RedirectToAction("Selection");
             }
             catch (Exception)
             {
