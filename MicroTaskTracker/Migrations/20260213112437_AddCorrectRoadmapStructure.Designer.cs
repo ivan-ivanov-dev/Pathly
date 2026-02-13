@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MicroTaskTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260212181607_AddGoalsAndActions")]
-    partial class AddGoalsAndActions
+    [Migration("20260213112437_AddCorrectRoadmapStructure")]
+    partial class AddCorrectRoadmapStructure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,10 +29,14 @@ namespace MicroTaskTracker.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GoalId")
+                    b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsCompleted")
+                    b.Property<string>("Resources")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RoadmapId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -46,7 +50,7 @@ namespace MicroTaskTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoalId");
+                    b.HasIndex("RoadmapId");
 
                     b.HasIndex("UserId");
 
@@ -147,6 +151,37 @@ namespace MicroTaskTracker.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Goals");
+                });
+
+            modelBuilder.Entity("MicroTaskTracker.Models.DBModels.Roadmap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GoalId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IdealOutcome")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Why")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoalId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Roadmaps");
                 });
 
             modelBuilder.Entity("MicroTaskTracker.Models.DBModels.Tag", b =>
@@ -359,9 +394,9 @@ namespace MicroTaskTracker.Migrations
 
             modelBuilder.Entity("MicroTaskTracker.Models.DBModels.ActionItem", b =>
                 {
-                    b.HasOne("MicroTaskTracker.Models.DBModels.Goal", "Goal")
+                    b.HasOne("MicroTaskTracker.Models.DBModels.Roadmap", "Roadmap")
                         .WithMany("Actions")
-                        .HasForeignKey("GoalId")
+                        .HasForeignKey("RoadmapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -371,7 +406,7 @@ namespace MicroTaskTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Goal");
+                    b.Navigation("Roadmap");
 
                     b.Navigation("User");
                 });
@@ -383,6 +418,25 @@ namespace MicroTaskTracker.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MicroTaskTracker.Models.DBModels.Roadmap", b =>
+                {
+                    b.HasOne("MicroTaskTracker.Models.DBModels.Goal", "Goal")
+                        .WithOne()
+                        .HasForeignKey("MicroTaskTracker.Models.DBModels.Roadmap", "GoalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MicroTaskTracker.Models.DBModels.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Goal");
 
                     b.Navigation("User");
                 });
@@ -491,7 +545,7 @@ namespace MicroTaskTracker.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("MicroTaskTracker.Models.DBModels.Goal", b =>
+            modelBuilder.Entity("MicroTaskTracker.Models.DBModels.Roadmap", b =>
                 {
                     b.Navigation("Actions");
                 });

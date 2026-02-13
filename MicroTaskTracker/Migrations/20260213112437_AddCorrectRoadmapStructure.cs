@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MicroTaskTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class AddGoalsAndActions : Migration
+    public partial class AddCorrectRoadmapStructure : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,16 +55,45 @@ namespace MicroTaskTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roadmaps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GoalId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Why = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
+                    IdealOutcome = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roadmaps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Roadmaps_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Roadmaps_Goals_GoalId",
+                        column: x => x.GoalId,
+                        principalTable: "Goals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Actions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Resources = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    GoalId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RoadmapId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,9 +105,9 @@ namespace MicroTaskTracker.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Actions_Goals_GoalId",
-                        column: x => x.GoalId,
-                        principalTable: "Goals",
+                        name: "FK_Actions_Roadmaps_RoadmapId",
+                        column: x => x.RoadmapId,
+                        principalTable: "Roadmaps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -89,9 +118,9 @@ namespace MicroTaskTracker.Migrations
                 column: "ActionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Actions_GoalId",
+                name: "IX_Actions_RoadmapId",
                 table: "Actions",
-                column: "GoalId");
+                column: "RoadmapId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Actions_UserId",
@@ -101,6 +130,17 @@ namespace MicroTaskTracker.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Goals_UserId",
                 table: "Goals",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roadmaps_GoalId",
+                table: "Roadmaps",
+                column: "GoalId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roadmaps_UserId",
+                table: "Roadmaps",
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
@@ -133,6 +173,9 @@ namespace MicroTaskTracker.Migrations
 
             migrationBuilder.DropTable(
                 name: "Actions");
+
+            migrationBuilder.DropTable(
+                name: "Roadmaps");
 
             migrationBuilder.DropTable(
                 name: "Goals");
