@@ -1,7 +1,4 @@
-﻿/**
- * TaskManager: Handles standard Task CRUD and Modals
- */
-const TaskManager = {
+﻿const TaskManager = {
     init: function () {
         this.bindEvents();
         this.initFooterTips();
@@ -10,7 +7,12 @@ const TaskManager = {
 
     bindEvents: function () {
         document.addEventListener("click", (e) => this.handleModalClick(e));
-        document.addEventListener("change", (e) => this.handleTagValidation(e));
+        document.addEventListener("change", (e) => {
+            if (e.target.classList.contains('priority-select-direct')) {
+                this.handlePriorityUpdate(e);
+            }
+            this.handleTagValidation(e);
+        });
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
     },
 
@@ -26,19 +28,51 @@ const TaskManager = {
     handleModalClick: function (e) {
         const btn = e.target.closest("[data-modal-url]");
         if (!btn) return;
-        e.preventDefault();
 
-        fetch(btn.getAttribute("data-modal-url"))
+        e.preventDefault();
+        e.stopPropagation();
+
+        const url = btn.getAttribute("data-modal-url");
+        const title = btn.getAttribute("data-modal-title") || "Task Details";
+
+        fetch(url)
             .then(r => r.text())
             .then(html => {
-                document.getElementById("taskModalBody").innerHTML = html;
-                document.getElementById("taskModalTitle").textContent = btn.getAttribute("data-modal-title") || "Task";
+                const modalBody = document.getElementById("taskModalBody");
+                const modalTitle = document.getElementById("taskModalTitle");
+
+                if (modalBody) modalBody.innerHTML = html;
+                if (modalTitle) modalTitle.textContent = title;
+
                 const modalEl = document.getElementById("taskModal");
                 let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 modal.show();
                 this.rebindValidation();
             })
-            .catch(() => alert("Failed to load modal."));
+            .catch(() => alert("Failed to load modal content."));
+    },
+
+    handlePriorityUpdate: function (e) {
+        const select = e.target;
+        const taskId = select.getAttribute("data-task-id");
+        const newPriority = select.value;
+        const form = select.closest('form');
+
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+            .then(response => {
+                if (response.ok) {
+                    const card = select.closest('.task-card');
+                    if (card) {
+                        const colors = { "0": "#0d6efd", "1": "#ffc107", "2": "#dc3545" };
+                        card.style.borderTopColor = colors[newPriority] || "#0d6efd";
+                    }
+                }
+            })
+            .catch(err => console.error("Priority Update Error:", err));
     },
 
     handleFormSubmit: function (e) {
@@ -84,7 +118,7 @@ const TaskManager = {
             const errorSpan = document.getElementById('TagError');
             const submitBtn = document.querySelector('button[type="submit"]');
             const isInvalid = checkedCount > 4;
-            errorSpan.classList.toggle('d-none', !isInvalid);
+            if (errorSpan) errorSpan.classList.toggle('d-none', !isInvalid);
             if (submitBtn) submitBtn.disabled = isInvalid;
         }
     },
@@ -108,9 +142,6 @@ const TaskManager = {
     }
 };
 
-/**
- * RoadmapPlanner: Handles linking, unlinking, and permanent deletion of tasks
- */
 const RoadmapPlanner = {
     toggleTask: function (taskId, actionId) {
         const card = document.getElementById(`planner-card-${taskId}`);
