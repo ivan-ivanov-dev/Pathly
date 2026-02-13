@@ -2,6 +2,7 @@
     init: function () {
         this.bindEvents();
         this.initFooterTips();
+        this.initModalFocus();
     },
 
     bindEvents: function () {
@@ -13,6 +14,16 @@
 
         // Form Submission
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
+    },
+
+    initModalFocus: function () {
+        const modalEl = document.getElementById('taskModal');
+        if (!modalEl) return;
+
+        modalEl.addEventListener('shown.bs.modal', () => {
+            const titleInput = document.querySelector('#taskModalBody input[name="Title"], #taskModalBody #Title');
+            if (titleInput) titleInput.focus();
+        });
     },
 
     handleModalClick: function (e) {
@@ -103,6 +114,15 @@
             }, 200);
         });
     }
+    focusTitleInput: function () {
+            const taskModalEl = document.getElementById('taskModal');
+            if (!taskModalEl) return;
+
+            taskModalEl.addEventListener('shown.bs.modal', function () {
+                const titleInput = document.querySelector('#taskModalBody input[name="Title"], #taskModalBody #Title');
+                if (titleInput) titleInput.focus();
+            });
+        });
 };
 
 // Initialize on Load
