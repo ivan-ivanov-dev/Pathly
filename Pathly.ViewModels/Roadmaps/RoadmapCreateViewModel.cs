@@ -1,5 +1,4 @@
-﻿using Pathly.Models.ViewModels.Goals;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.Roadmaps
 {

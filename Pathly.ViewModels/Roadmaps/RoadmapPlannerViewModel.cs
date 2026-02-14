@@ -7,7 +7,7 @@ namespace Pathly.ViewModels.Roadmaps
     public class RoadmapPlannerViewModel
     {
         public int TargetActionId { get; set; }
-        public int RoadmapId { get; set; } // So we can return to the right roadmap
+        public int RoadmapId { get; set; } 
         public IEnumerable<TaskItem> UnlinkedTasks { get; set; }
     }
 }
