@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Pathly.Migrations
+namespace Pathly.Data.Migrations
 {
     /// <inheritdoc />
     public partial class SetDefaultPriorityAsLow : Migration

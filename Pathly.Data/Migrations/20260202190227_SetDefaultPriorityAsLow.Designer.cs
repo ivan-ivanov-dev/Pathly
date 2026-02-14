@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Pathly.Migrations
+namespace Pathly.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260202190227_SetDefaultPriorityAsLow")]

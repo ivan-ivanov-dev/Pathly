@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Pathly.Migrations
+namespace Pathly.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddCorrectRoadmapStructure : Migration
