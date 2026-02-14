@@ -99,7 +99,7 @@
                     </div>
                 </div>
 
-                <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -160,7 +160,7 @@
                     </div>
                 </div>
 
-                <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
