@@ -10,7 +10,7 @@ using Pathly.ViewModels.TasksViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [Authorize]
     public class RoadmapController : Controller

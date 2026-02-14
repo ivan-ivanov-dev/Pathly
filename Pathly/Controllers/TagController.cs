@@ -5,7 +5,7 @@ using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Tags;
 
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [Authorize]
     public class TagController : Controller
@@ -33,7 +33,7 @@ namespace Pathly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(TagViewModel model)
         {
-            if (String.IsNullOrWhiteSpace(model.Name))
+            if (string.IsNullOrWhiteSpace(model.Name))
             {
                 ModelState.AddModelError("Name", "Tag name is required.");
                 return View(model);

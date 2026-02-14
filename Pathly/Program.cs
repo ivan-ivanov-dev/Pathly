@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
-namespace Pathly
+namespace Pathly.Web
 {
     public class Program
     {

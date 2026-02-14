@@ -7,7 +7,7 @@ using Pathly.Services.Contracts;
 using Pathly.ViewModels.Goals;
 using System.Threading.Tasks;
 
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [Authorize]
     public class GoalsController : Controller
@@ -37,7 +37,7 @@ namespace Pathly.Controllers
         public async Task<IActionResult> CreateAsync(GoalCreateViewModel model)
         {
             var today = DateTime.UtcNow.Date;
-            if (String.IsNullOrWhiteSpace(model.Title))
+            if (string.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
             }
@@ -93,7 +93,7 @@ namespace Pathly.Controllers
         public async Task<IActionResult> EditAsync(GoalEditViewModel model)
         {
             var today = DateTime.UtcNow.Date;
-            if (String.IsNullOrWhiteSpace(model.Title))
+            if (string.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
             }

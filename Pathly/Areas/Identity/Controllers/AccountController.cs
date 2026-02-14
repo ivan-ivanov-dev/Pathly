@@ -5,7 +5,7 @@ using Pathly.DataModels;
 using Pathly.ViewModels.Authentication;
 using System.Threading.Tasks;
 
-namespace Pathly.Areas.Identity.Controllers
+namespace Pathly.Web.Areas.Identity.Controllers
 {
     [Area("Identity")]
     public class AccountController : Controller

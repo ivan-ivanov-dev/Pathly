@@ -4,7 +4,7 @@ using Pathly.Models.ViewModels.Dashboard;
 using Pathly.Services.Contracts;
 using System.Security.Claims;
 
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [Authorize]
     public class DashboardController : Controller

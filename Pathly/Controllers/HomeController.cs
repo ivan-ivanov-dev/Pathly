@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.Models.ViewModels;
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [AllowAnonymous]
     public class HomeController : Controller

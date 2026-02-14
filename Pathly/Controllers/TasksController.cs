@@ -10,7 +10,7 @@ using Pathly.Services.Contracts;
 using Pathly.ViewModels.TasksViewModels;
 using System.Threading.Tasks;
 
-namespace Pathly.Controllers
+namespace Pathly.Web.Controllers
 {
     [Authorize]
     public class TasksController : Controller
@@ -60,7 +60,7 @@ namespace Pathly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(TaskCreateViewModel model)
         {
-            if (String.IsNullOrWhiteSpace(model.Title))
+            if (string.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "The Title field is required.");
             }
@@ -143,7 +143,7 @@ namespace Pathly.Controllers
             var id = model.Id;
             var userId = _userManager.GetUserId(User);
 
-            if (String.IsNullOrWhiteSpace(model.Title))
+            if (string.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "The Title field is required.");
             }
