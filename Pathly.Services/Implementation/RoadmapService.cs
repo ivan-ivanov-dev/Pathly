@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
-using Pathly.Models.DBModels;
-using Pathly.Models.ViewModels.Roadmaps;
-using Pathly.Models.ViewModels.TasksViewModels;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Roadmaps;
+using Pathly.ViewModels.TasksViewModels;
 
 namespace Pathly.Services.Implementation
 {

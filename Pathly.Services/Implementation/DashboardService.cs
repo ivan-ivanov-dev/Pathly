@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
-using Pathly.Models.ViewModels.Dashboard;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Dashboard;
 
 namespace Pathly.Services.Implementation
 {

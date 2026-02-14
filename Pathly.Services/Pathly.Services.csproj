@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Pathly.DataModels\Pathly.DataModels.csproj" />
     <ProjectReference Include="..\Pathly.Data\Pathly.Data.csproj" />
+    <ProjectReference Include="..\Pathly.ViewModels\Pathly.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

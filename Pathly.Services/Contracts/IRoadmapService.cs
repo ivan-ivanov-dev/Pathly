@@ -1,5 +1,5 @@
 ﻿using Pathly.DataModels;
-using Pathly.Models.ViewModels.Roadmaps;
+using Pathly.ViewModels.Roadmaps;
 
 namespace Pathly.Services.Contracts
 {

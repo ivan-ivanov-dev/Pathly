@@ -1,4 +1,5 @@
-﻿using Pathly.Models.ViewModels.Goals;
+﻿
+using Pathly.ViewModels.Goals;
 
 namespace Pathly.Services.Contracts
 {

@@ -1,5 +1,5 @@
 ﻿using Pathly.DataModels;
-using Pathly.Models.ViewModels.TasksViewModels;
+using Pathly.ViewModels.TasksViewModels;
 
 namespace Pathly.Services.Contracts
 {

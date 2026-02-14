@@ -1,4 +1,4 @@
-﻿using Pathly.Models.ViewModels.Dashboard;
+﻿using Pathly.ViewModels.Dashboard;
 using System.IO.Compression;
 
 namespace Pathly.Services.Contracts

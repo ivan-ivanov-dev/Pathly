@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
-using Pathly.Models.DBModels;
-using Pathly.Models.ViewModels.Goals;
+using Pathly.DataModels;
 using Pathly.Services.Contracts;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Pathly.ViewModels.Goals;
 
 namespace Pathly.Services.Implementation
 {
