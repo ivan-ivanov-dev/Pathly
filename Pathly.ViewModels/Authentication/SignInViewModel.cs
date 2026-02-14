@@ -1,27 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pathly.GCommon;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.Authentication
 {
     public class SignInViewModel
     {
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [Required(ErrorMessage = ErrorMessages.EmailIsRequired)]
+        [EmailAddress(ErrorMessage = ErrorMessages.InvalidEmailAddress)]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Password is required.")]
+        [Required(ErrorMessage = ErrorMessages.PasswordIsRequired)]
         [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
-        [MaxLength(100, ErrorMessage = "Password cannot exceed 100 characters.")]
+        [MinLength(ValidationConstants.MinPasswordLength, ErrorMessage = ErrorMessages.PasswordMustBeAtLeast6CharactersLong)]
+        [MaxLength(ValidationConstants.MaxPasswordLength, ErrorMessage = ErrorMessages.PasswordCannotExceed100Characters)]
         public string Password { get; set; } = null!;
 
-        [Required(ErrorMessage = "Please confirm your password.")]
+        [Required(ErrorMessage = ErrorMessages.PasswordMustBeConfirmed)]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        [Compare("Password", ErrorMessage = ErrorMessages.PasswordsDoNotMatch)]
         public string ConfirmPassword { get; set; } = null!;
 
-        [Required]
-        [MinLength(3, ErrorMessage = "Usrename must be at least 3 characters long.")]
-        [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
+        [Required(ErrorMessage = ErrorMessages.UserNameIsRequired)]
+        [MinLength(ValidationConstants.MinUserNameLength, ErrorMessage = ErrorMessages.UserNameMustBeAtLeast3CharactersLong)]
+        [MaxLength(ValidationConstants.MaxUserNameLength, ErrorMessage = ErrorMessages.UserNameCannotExceed50Characters)]
         public string UserName { get; set; } = null!;
     }
 }

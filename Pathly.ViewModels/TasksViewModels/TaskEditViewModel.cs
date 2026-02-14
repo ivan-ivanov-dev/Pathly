@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Pathly.GCommon;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.TasksViewModels
@@ -7,11 +8,11 @@ namespace Pathly.ViewModels.TasksViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Title is required")]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [Required(ErrorMessage = ErrorMessages.TitleIsRequired)]
+        [MaxLength(ValidationConstants.MaxTaskItemTitleLength, ErrorMessage = ErrorMessages.TaskItemTitleCannotExceed100Characters)]
         public string Title { get; set; } = null!;
 
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength, ErrorMessage = ErrorMessages.TaskItemDescriptionCannotExceed500Characters)]
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
         public List<int> SelectedTagIds { get; set; } = new List<int>();

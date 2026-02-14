@@ -1,4 +1,5 @@
-﻿using Pathly.ViewModels.TasksViewModels;
+﻿using Pathly.GCommon;
+using Pathly.ViewModels.TasksViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.Roadmaps
@@ -6,8 +7,8 @@ namespace Pathly.ViewModels.Roadmaps
     public class ActionItemCreateViewModel
     {
         public int? Id { get; set; }
-        [Required]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [Required(ErrorMessage = ErrorMessages.TitleIsRequired)]
+        [MaxLength(ValidationConstants.MaxActionItemTitleLength, ErrorMessage = ErrorMessages.ActionTitleCannotExceed100Characters)]
         public string Title { get; set; } = null!;
 
         public string? Resources { get; set; }

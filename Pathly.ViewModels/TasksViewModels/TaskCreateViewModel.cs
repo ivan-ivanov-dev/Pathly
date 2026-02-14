@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Pathly.DataModels;
+using Pathly.GCommon;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.TasksViewModels
 {
     public class TaskCreateViewModel
     {
-        [Required(ErrorMessage = "Title is required")]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [Required(ErrorMessage = ErrorMessages.TitleIsRequired)]
+        [MaxLength(ValidationConstants.MaxTaskItemTitleLength, ErrorMessage = ErrorMessages.TaskItemTitleCannotExceed100Characters)]
         public string Title { get; set; } = null!;
 
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength, ErrorMessage = ErrorMessages.TaskItemDescriptionCannotExceed500Characters)]
         public string? Description { get; set; }
 
         public DateTime? DueDate { get; set; }
