@@ -71,51 +71,79 @@
         @foreach (var task in Model.Tasks)
         {
             <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow-sm task-card @(task.IsCompleted ? "opacity-75 bg-light" : "")"
-                     style="border-top: 4px solid @(task.Priority == TaskPriority.High ? "#dc3545" : task.Priority == TaskPriority.Medium ? "#ffc107" : "#0d6efd") !important;">
+                <div class="card h-100 border-0 shadow-sm task-card animate-fade-in @(task.IsCompleted ? "task-completed" : "")"
+                     data-priority-color="@(task.Priority == TaskPriority.High ? "danger" : task.Priority == TaskPriority.Medium ? "warning" : "primary")">
 
                     <div class="card-body p-4 d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <form asp-action="UpdatePriority" method="post" class="mt-2">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@task.Id" />
-                                <select name="priority"
-                                        class="form-select form-select-sm priority-select-direct border-0 bg-soft-light"
-                                        data-task-id="@task.Id"
-                                        asp-for="@task.Priority"
-                                        asp-items="Html.GetEnumSelectList<TaskPriority>()">
-                                </select>
-                            </form>
+
+                        @* SECTION 1: HEADER (Title & Dots) *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark text-truncate pe-2">@task.Title</h5>
                             <div class="dropdown">
-                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                    <li><a class="dropdown-item small" href="#" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })"><i class="bi bi-pencil me-2"></i>Edit</a></li>
-                                    <li><a class="dropdown-item small" href="#" data-modal-url="@Url.Action("Details", "Tasks", new { id = task.Id })"><i class="bi bi-info-circle me-2"></i>Details</a></li>
+                                    <li><a class="dropdown-item small" href="#" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item small text-danger" href="#" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    <li><a class="dropdown-item small text-danger" href="#" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })" data-modal-title="Delete Task"><i class="bi bi-trash me-2"></i>Delete</a></li>
                                 </ul>
                             </div>
                         </div>
 
-                        <h5 class="fw-bold mb-2 @(task.IsCompleted ? "text-decoration-line-through text-muted" : "text-dark")">@task.Title</h5>
-
-                        <div class="mt-auto">
-                            <div class="d-flex align-items-center mb-3 text-muted small">
-                                <i class="bi bi-calendar-event me-2"></i>
-                                <span>Due: @(task.DueDate?.ToString("MMM dd, yyyy") ?? "No date set")</span>
+                        @* SECTION 2: CONTENT (Tags & Details) *@
+                        <div class="mb-4">
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                @if (task.Tags != null && task.Tags.Any())
+                                {
+                                    @foreach (var tag in task.Tags)
+                                    {
+                                        <span class="badge rounded-pill bg-light text-dark border fw-normal" style="font-size: 0.7rem;">#@tag</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted small fst-italic">No tags</span>
+                                }
                             </div>
+                            <button class="btn btn-sm btn-light w-100 rounded-pill text-muted fw-bold border-0 shadow-none"
+                                    data-modal-url="@Url.Action("Details", "Tasks", new { id = task.Id })"
+                                    data-modal-title="Task Intelligence">
+                                See Details
+                            </button>
+                        </div>
 
-                            <div class="d-flex gap-2">
-                                <form asp-action="MarkTaskStatus" method="post" class="flex-grow-1">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@task.Id" />
-                                    <button type="submit" class="btn btn-sm w-100 rounded-pill @(task.IsCompleted ? "btn-outline-secondary" : "btn-success") fw-bold">
-                                        <i class="bi @(task.IsCompleted ? "bi-arrow-counterclockwise" : "bi-check2-circle") me-1"></i>
-                                        @(task.IsCompleted ? "Reopen" : "Finish")
-                                    </button>
-                                </form>
+                        @* SECTION 3: FOOTER (Due, Priority & Status) *@
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="row align-items-center">
+                                <div class="col-7">
+                                    <div class="text-muted mb-2" style="font-size: 0.75rem;">
+                                        <i class="bi bi-clock-history me-1"></i> @(task.DueDate?.ToString("MMM dd, yyyy") ?? "No date")
+                                    </div>
+                                    <form asp-action="UpdatePriority" asp-controller="Tasks" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <select name="priority"
+                                                class="form-select form-select-sm priority-select-direct pathly-dropdown @(task.Priority == TaskPriority.High ? "bg-soft-danger" : task.Priority == TaskPriority.Medium ? "bg-soft-warning" : "bg-soft-primary")"
+                                                data-task-id="@task.Id"
+                                                asp-for="@task.Priority"
+                                                asp-items="Html.GetEnumSelectList<TaskPriority>()">
+                                        </select>
+                                    </form>
+                                </div>
+                                <div class="col-5 text-end">
+                                    <form asp-action="MarkTaskStatus" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <button type="submit" class="btn btn-status-circle @(task.IsCompleted ? "btn-success" : "btn-outline-success")"
+                                                title="@(task.IsCompleted ? "Reopen Task" : "Complete Task")">
+                                            <i class="bi @(task.IsCompleted ? "bi-check-all" : "bi-check-lg")"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

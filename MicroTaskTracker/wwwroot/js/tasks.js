@@ -54,9 +54,9 @@
 
     handlePriorityUpdate: function (e) {
         const select = e.target;
-        const taskId = select.getAttribute("data-task-id");
         const newPriority = select.value;
         const form = select.closest('form');
+        const card = select.closest('.task-card');
 
         fetch(form.action, {
             method: "POST",
@@ -65,14 +65,15 @@
         })
             .then(response => {
                 if (response.ok) {
-                    const card = select.closest('.task-card');
-                    if (card) {
-                        const colors = { "0": "#0d6efd", "1": "#ffc107", "2": "#dc3545" };
-                        card.style.borderTopColor = colors[newPriority] || "#0d6efd";
-                    }
+                    select.classList.remove('bg-soft-danger', 'bg-soft-warning', 'bg-soft-primary');
+
+                    const colorMap = { "0": "primary", "1": "warning", "2": "danger" };
+                    const colorClass = `bg-soft-${colorMap[newPriority]}`;
+                    select.classList.add(colorClass);
+
+                    card.setAttribute('data-priority-color', colorMap[newPriority]);
                 }
-            })
-            .catch(err => console.error("Priority Update Error:", err));
+            });
     },
 
     handleFormSubmit: function (e) {
