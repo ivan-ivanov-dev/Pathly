@@ -10,7 +10,7 @@ namespace Pathly.DataModels
         
         public int Id { get; set; }
         [Required]
-        [MaxLength(ValidationConstants.MaxTagNameLength,ErrorMessage ="Tag name cannot exceed 30 characters")]
+        [MaxLength(ValidationConstants.MaxTagNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]

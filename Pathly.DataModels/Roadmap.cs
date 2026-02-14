@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pathly.GCommon;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.DataModels
 {
@@ -9,10 +10,10 @@ namespace Pathly.DataModels
         public int GoalId { get; set; }
         public Goal Goal { get; set; } = null!;
 
-        [MaxLength(2000,ErrorMessage ="This description cannot exceed 2000 characters")]
+        [MaxLength(ValidationConstants.MaxRoadmapWhyLength)]
         public string? Why { get; set; }
 
-        [MaxLength(2000, ErrorMessage = "This description cannot exceed 2000 characters")]
+        [MaxLength(ValidationConstants.MaxRoadmapIdealOutcomeLength)]
         public string? IdealOutcome { get; set; }
 
         [Required]

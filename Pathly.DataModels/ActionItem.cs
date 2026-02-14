@@ -8,10 +8,10 @@ namespace Pathly.DataModels
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(ValidationConstants.MaxActionItemTitleLength, ErrorMessage = "Title cannot exceed 100 characters")]
+        [MaxLength(ValidationConstants.MaxActionItemTitleLength)]
         public string Title { get; set; } = null!;
 
-        [MaxLength(ValidationConstants.MaxActionItemResourcesLength, ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxActionItemResourcesLength)]
         public string? Resources { get; set; }
         public DateTime? DueDate { get; set; }
         public bool IsCompleted { get; set; } = false;

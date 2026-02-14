@@ -6,11 +6,11 @@ namespace Pathly.DataModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Title is required")]
-        [MaxLength(ValidationConstants.MaxTaskItemTitleLength,ErrorMessage = "Title cannot exceed 100 characters")]
+        [Required]
+        [MaxLength(ValidationConstants.MaxTaskItemTitleLength)]
         public string Title { get; set; } = null!;
 
-        [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength,ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength)]
         public string? Description { get; set; }
 
         public TaskPriority Priority { get; set; } = TaskPriority.Low;
