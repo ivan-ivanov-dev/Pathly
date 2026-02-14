@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pathly.DataModels\Pathly.DataModels.csproj" />
+    <ProjectReference Include="..\Pathly.GCommon\Pathly.GCommon.csproj" />
+  </ItemGroup>
+
 </Project>

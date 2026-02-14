@@ -7,13 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\ViewModels\NewFolder1\**" />
     <Compile Remove="Views\Tasks\NewFolder\**" />
-    <Content Remove="Models\ViewModels\NewFolder1\**" />
     <Content Remove="Views\Tasks\NewFolder\**" />
-    <EmbeddedResource Remove="Models\ViewModels\NewFolder1\**" />
     <EmbeddedResource Remove="Views\Tasks\NewFolder\**" />
-    <None Remove="Models\ViewModels\NewFolder1\**" />
     <None Remove="Views\Tasks\NewFolder\**" />
   </ItemGroup>
 
@@ -30,6 +26,8 @@
     <ProjectReference Include="..\Pathly.DataModels\Pathly.DataModels.csproj" />
     <ProjectReference Include="..\Pathly.Data\Pathly.Data.csproj" />
     <ProjectReference Include="..\Pathly.GCommon\Pathly.GCommon.csproj" />
+    <ProjectReference Include="..\Pathly.Services\Pathly.Services.csproj" />
+    <ProjectReference Include="..\Pathly.ViewModels\Pathly.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
