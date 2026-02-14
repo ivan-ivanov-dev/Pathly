@@ -4,9 +4,9 @@ using Pathly.DataModels;
 using Pathly.Models.DBModels;
 using Pathly.Models.ViewModels.Roadmaps;
 using Pathly.Models.ViewModels.TasksViewModels;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 
-namespace Pathly.Services.Implementations
+namespace Pathly.Services.Implementation
 {
     public class RoadmapService : IRoadmapService
     {

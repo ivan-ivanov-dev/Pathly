@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
-using Pathly.Services.Implementations;
-using Pathly.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Pathly.DataModels;
+using Pathly.Services.Contracts;
+using Pathly.Services.Implementation;
 namespace Pathly
 {
     public class Program

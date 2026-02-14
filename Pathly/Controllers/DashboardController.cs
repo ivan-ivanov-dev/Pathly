@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.Models.ViewModels.Dashboard;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 using System.Security.Claims;
 
 namespace Pathly.Controllers

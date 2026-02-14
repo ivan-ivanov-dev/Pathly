@@ -5,11 +5,11 @@ using Pathly.DataModels;
 using Pathly.Models.DBModels;
 using Pathly.Models.ViewModels;
 using Pathly.Models.ViewModels.TasksViewModels;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Pathly.Services.Implementations
+namespace Pathly.Services.Implementation
 {
     public class TaskService : ITaskService
     {

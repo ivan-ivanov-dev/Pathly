@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 
-namespace Pathly.Services.Implementations
+namespace Pathly.Services.Implementation
 {
     public class TagService : ITagService
     {

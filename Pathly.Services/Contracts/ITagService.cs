@@ -1,6 +1,6 @@
 ﻿using Pathly.DataModels;
 
-namespace Pathly.Services.Interfaces
+namespace Pathly.Services.Contracts
 {
     public interface ITagService
     {

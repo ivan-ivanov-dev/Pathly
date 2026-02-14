@@ -2,10 +2,10 @@
 using Pathly.Data;
 using Pathly.Models.DBModels;
 using Pathly.Models.ViewModels.Goals;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Pathly.Services.Implementations
+namespace Pathly.Services.Implementation
 {
     public class GoalService : IGoalService
     {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Models.ViewModels.TasksViewModels;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 using System.Threading.Tasks;
 
 namespace Pathly.Controllers

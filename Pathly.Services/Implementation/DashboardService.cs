@@ -2,9 +2,9 @@
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Models.ViewModels.Dashboard;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 
-namespace Pathly.Services.Implementations
+namespace Pathly.Services.Implementation
 {
     public class DashboardService : IDashboardService
     {

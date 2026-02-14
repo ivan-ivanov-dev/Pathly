@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Pathly.DataModels;
 using Pathly.Models.ViewModels.Goals;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 using System.Threading.Tasks;
 
 namespace Pathly.Controllers

@@ -1,7 +1,7 @@
 ﻿using Pathly.Models.ViewModels.Dashboard;
 using System.IO.Compression;
 
-namespace Pathly.Services.Interfaces
+namespace Pathly.Services.Contracts
 {
     public interface IDashboardService
     {

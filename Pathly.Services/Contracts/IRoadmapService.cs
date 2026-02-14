@@ -1,7 +1,7 @@
 ﻿using Pathly.DataModels;
 using Pathly.Models.ViewModels.Roadmaps;
 
-namespace Pathly.Services.Interfaces
+namespace Pathly.Services.Contracts
 {
     public interface IRoadmapService
     {

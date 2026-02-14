@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.DataModels;
 using Pathly.Models.ViewModels.Tags;
-using Pathly.Services.Interfaces;
+using Pathly.Services.Contracts;
 
 namespace Pathly.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using Pathly.Models.ViewModels.Goals;
 
-namespace Pathly.Services.Interfaces
+namespace Pathly.Services.Contracts
 {
     public interface IGoalService
     {
