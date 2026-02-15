@@ -77,6 +77,18 @@
             }, 100);
         });
     }
+    // ============================================
+    // SIDEBAR TOGGLE
+    // ============================================
+    function toggleSidebar() {
+        // Toggle the class once on the body
+        document.body.classList.toggle('sidebar-collapsed');
+
+        // Save the single source of truth for the state
+        const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+        localStorage.setItem('sidebar-pref', isCollapsed);
+    }
+
 
     // ============================================
     // CARDS & BUTTONS HOVER EFFECTS
@@ -119,5 +131,7 @@
         initFadeInOnScroll();
         initHeroAnimation();
         initHoverEffects();
+        toggleSidebar();
+
     });
 })();

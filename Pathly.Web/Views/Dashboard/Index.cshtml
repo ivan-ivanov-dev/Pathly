@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
 }
 
-<div class="py-5">
+<div class="dashboard-content-area py-5">
     @* Welcome Header *@
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold text-dark">Welcome back, @User.Identity.Name!</h1>
@@ -56,12 +56,12 @@
     @* Action Cards Grid *@
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
                 <div class="card-body text-center p-4 d-flex flex-column">
                     <div class="path-card-icon-circle bg-purple-soft mx-auto mb-3">🎯</div>
                     <h5 class="card-title fw-bold">Set a Goal</h5>
                     <p class="card-text text-muted small flex-grow-1">Define your destination. Big dreams start with clear targets.</p>
-                    <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                    <a asp-controller="Goals" asp-action="Index" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Go to goals</a>
                 </div>
             </div>
         </div>
@@ -71,12 +71,12 @@
                     <div class="path-card-icon-circle bg-teal-soft mx-auto mb-3">🗺️</div>
                     <h5 class="card-title fw-bold text-primary">Build Roadmap</h5>
                     <p class="card-text text-muted small flex-grow-1">Trace the steps. Break mountains into manageable hills.</p>
-                    <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                    <a asp-controller="Roadmap" asp-action="Selection" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Create a roadmap</a>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
                 <div class="card-body text-center p-4 d-flex flex-column">
                     <div class="path-card-icon-circle bg-orange-soft mx-auto mb-3">⚡</div>
                     <h5 class="card-title fw-bold">Take Action</h5>
