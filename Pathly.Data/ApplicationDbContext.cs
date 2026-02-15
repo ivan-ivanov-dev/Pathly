@@ -21,15 +21,24 @@ namespace Pathly.Data
         {
             base.OnModelCreating(builder);
 
-            // TaskTag (many-to-many)
+            //Task -> User
+            builder.Entity<TaskItem>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // TaskTag
             builder.Entity<TaskTag>()
                 .HasKey(tt => new { tt.TaskId, tt.TagId });
 
+            // TaskTag -> Task
             builder.Entity<TaskTag>()
                 .HasOne(tt => tt.Task)
                 .WithMany(t => t.TaskTags)
                 .HasForeignKey(tt => tt.TaskId);
 
+            // TaskTag -> Tag
             builder.Entity<TaskTag>()
                 .HasOne(tt => tt.Tag)
                 .WithMany(t => t.TaskTags)
@@ -40,7 +49,7 @@ namespace Pathly.Data
                 .HasOne(t => t.User)
                 .WithMany()
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Goal -> User
             builder.Entity<Goal>()
@@ -54,28 +63,35 @@ namespace Pathly.Data
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Roadmap -> Goal (ONE-TO-ONE)
+            // Roadmap -> Goal
             builder.Entity<Roadmap>()
                 .HasOne(r => r.Goal)
                 .WithOne()
                 .HasForeignKey<Roadmap>(r => r.GoalId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Roadmap -> Actions (ONE-TO-MANY)
+            // Roadmap -> Actions
             builder.Entity<Roadmap>()
                 .HasMany(r => r.Actions)
                 .WithOne(a => a.Roadmap)
                 .HasForeignKey(a => a.RoadmapId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Action -> Tasks (ONE-TO-MANY, nullable on Task)
+            // Action -> Tasks
             builder.Entity<ActionItem>()
                 .HasMany(a => a.Tasks)
                 .WithOne(t => t.Action)
                 .HasForeignKey(t => t.ActionId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            //Action -> User
+            builder.Entity<ActionItem>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }
