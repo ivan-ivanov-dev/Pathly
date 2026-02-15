@@ -15,7 +15,7 @@ namespace Pathly.Web
             // Add services to the container.
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
+                options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     sqliteOptions => sqliteOptions.MigrationsAssembly("Pathly.Data")
                 )
