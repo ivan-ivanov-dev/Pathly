@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <partial name="_Favicons" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 @{
@@ -61,151 +62,151 @@
     }
 
     @* Sidebar: Only for Authenticated Users *@
-    @if (User.Identity.IsAuthenticated)
-    {
-        @* Sidebar (Mobile) *@
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
-            <div class="offcanvas-header border-bottom">
-                <a asp-controller="Dashboard" asp-action="Index">
-                    <img src="~/images/PathlyLogo.png" alt="Pathly" style="height: 35px;" />
-                </a>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    <div class="app-container">
+        @if (User.Identity.IsAuthenticated)
+        {
+            @* Sidebar (Mobile) *@
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
+                <div class="offcanvas-header border-bottom">
+                    <a asp-controller="Dashboard" asp-action="Index">
+                        <img src="~/images/PathlyLogo.png" alt="Pathly" style="height: 35px;" />
+                    </a>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="sidebar-nav">
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                           asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
+                           asp-controller="Tasks" asp-action="Index">Tasks</a>
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Goals" ? "active" : "")"
+                           asp-controller="Goals" asp-action="Index">Goals</a>
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
+                           asp-controller="Roadmap" asp-action="Selection">Roadmaps</a>
+                    </nav>
+                </div>
+                <div class="sidebar-footer">
+                    <div class="d-flex align-items-center user-profile-wrapper mb-3">
+                        <div class="user-avatar-circle">
+                            <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
+                        </div>
+
+                        <div class="ms-3 sidebar-link-text user-info-text">
+                            <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                                @User.Identity?.Name
+                            </p>
+                            <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
+                                Account Settings
+                            </a>
+                        </div>
+                    </div>
+
+                    <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                            </svg>
+                            <span class="sidebar-link-text">Logout</span>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="offcanvas-body">
+
+            @* Sidebar (Desktop) *@
+            <aside class="sidebar-desktop d-none d-lg-flex" id="sidebarDesktop">
+                <div class="sidebar-brand">
+                    @* Logo only - wrapped in a link to Dashboard *@
+                    <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center">
+                        <img src="~/images/PathlyLogo.png" alt="Pathly" class="sidebar-logo-img" />
+                    </a>
+
+                    <button id="sidebarCollapseBtn" class="btn btn-sm sidebar-collapse-btn">
+                        <span aria-hidden="true">⮜</span>
+                    </button>
+                </div>
+
                 <nav class="sidebar-nav">
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
-                       asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                       asp-controller="Dashboard" asp-action="Index">
+                        <span class="sidebar-link-text">Dashboard</span>
+                    </a>
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
-                       asp-controller="Tasks" asp-action="Index">Tasks</a>
+                       asp-controller="Tasks" asp-action="Index">
+                        <span class="sidebar-link-text">Tasks</span>
+                    </a>
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Goals" ? "active" : "")"
-                       asp-controller="Goals" asp-action="Index">Goals</a>
+                       asp-controller="Goals" asp-action="Index">
+                        <span class="sidebar-link-text">Goals</span>
+                    </a>
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
-                       asp-controller="Roadmap" asp-action="Selection">Roadmaps</a>
+                       asp-controller="Roadmap" asp-action="Selection">
+                        <span class="sidebar-link-text">Roadmaps</span>
+                    </a>
                 </nav>
-            </div>
-            <div class="sidebar-footer">
-                <div class="d-flex align-items-center user-profile-wrapper mb-3">
-                    <div class="user-avatar-circle">
-                        <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
+
+                <div class="sidebar-footer">
+                    <div class="d-flex align-items-center user-profile-wrapper mb-3">
+                        <div class="user-avatar-circle">
+                            <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
+                        </div>
+
+                        <div class="ms-3 sidebar-link-text user-info-text">
+                            <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                                @User.Identity?.Name
+                            </p>
+                            <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
+                                Account Settings
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="ms-3 sidebar-link-text user-info-text">
-                        <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
-                            @User.Identity?.Name
-                        </p>
-                        <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
-                            Account Settings
-                        </a>
-                    </div>
+                    <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                            </svg>
+                            <span class="sidebar-link-text">Logout</span>
+                        </button>
+                    </form>
                 </div>
+            </aside>
+        }
 
-                <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
-                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
-                        </svg>
-                        <span class="sidebar-link-text">Logout</span>
-                    </button>
-                </form>
-            </div>
+        @* 1. Use 'main-wrapper' to house everything that isn't the sidebar *@
+        <div class="main-wrapper @(isAuthPage ? "auth-container-centered" : "")">
+
+            @* 2. Main content takes up the top space *@
+            <main role="main" id="main-content" class="main-content">
+                @RenderBody()
+            </main>
+
+            @* 3. Footer stays at the bottom of the main-wrapper *@
+            @if (!isAuthPage)
+            {
+                <footer class="footer mt-auto py-4 custom-footer-bg">
+                    <div class="container-fluid">
+                        @* Use fluid here too *@
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
+                            <div class="footer-brand-section text-nowrap">
+                                <span class="small text-muted">&copy; @DateTime.UtcNow.Year</span>
+                                <span class="fw-bold text-primary ms-1">Pathly</span>
+                            </div>
+
+                            <span class="text-muted d-none d-md-inline">|</span>
+
+                            <div class="footer-links">
+                                <a class="text-decoration-none fw-bold text-primary" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            }
         </div>
-
-        @* Sidebar (Desktop) *@
-        <aside class="sidebar-desktop d-none d-lg-flex" id="sidebarDesktop">
-            <div class="sidebar-brand">
-                @* Logo only - wrapped in a link to Dashboard *@
-                <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center">
-                    <img src="~/images/PathlyLogo.png" alt="Pathly" class="sidebar-logo-img" />
-                </a>
-
-                <button id="sidebarCollapseBtn" class="btn btn-sm sidebar-collapse-btn">
-                    <span aria-hidden="true">⮜</span>
-                </button>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
-                   asp-controller="Dashboard" asp-action="Index">
-                    <span class="sidebar-link-text">Dashboard</span>
-                </a>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
-                   asp-controller="Tasks" asp-action="Index">
-                    <span class="sidebar-link-text">Tasks</span>
-                </a>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Goals" ? "active" : "")"
-                   asp-controller="Goals" asp-action="Index">
-                    <span class="sidebar-link-text">Goals</span>
-                </a>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
-                   asp-controller="Roadmap" asp-action="Selection">
-                    <span class="sidebar-link-text">Roadmaps</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="d-flex align-items-center user-profile-wrapper mb-3">
-                    <div class="user-avatar-circle">
-                        <span class="avatar-initial">@User.Identity?.Name?[0].ToString().ToUpper()</span>
-                    </div>
-
-                    <div class="ms-3 sidebar-link-text user-info-text">
-                        <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
-                            @User.Identity?.Name
-                        </p>
-                        <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
-                            Account Settings
-                        </a>
-                    </div>
-                </div>
-
-                <form asp-area="Identity" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 logout-btn" title="Logout">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
-                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
-                        </svg>
-                        <span class="sidebar-link-text">Logout</span>
-                    </button>
-                </form>
-            </div>
-        </aside>
-    }
-
-    <div class="@(isAuthPage ? "auth-container-centered" : isDashboard ? "dashboard-wrapper" : isRoadmap ? "roadmap-wrapper" : "container")">
-        <main role="main" class="main-content pb-3">
-            @RenderBody()
-        </main>
     </div>
-
-    @if (!isAuthPage)
-    {
-        <footer class="footer mt-auto py-4 custom-footer-bg">
-            <div class="container">
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
-
-                    @* Combined Copyright & Brand *@
-                    <div class="footer-brand-section text-nowrap">
-                        <span class="small text-muted">&copy; @DateTime.UtcNow.Year</span>
-                        <span class="fw-bold text-primary ms-1">Pathly</span>
-                    </div>
-
-                    @* Privacy Link *@
-                    <div class="footer-links">
-                        <a class="text-decoration-none fw-bold text-primary"
-                           asp-area=""
-                           asp-controller="Home"
-                           asp-action="Privacy">
-                            Privacy Policy
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-        </footer>
-    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -213,7 +214,6 @@
     <script src="~/js/site.js"></script>
     <script src="~/js/sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    @await RenderSectionAsync("Styles", required: false)
 </body>
 
 </html>

@@ -9,15 +9,21 @@
         if (!icon) return;
         const collapsed = bodyEl.classList.contains(COLLAPSED_CLASS);
         icon.textContent = collapsed ? '⮞' : '⮜';
-        btn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
     }
 
     if (collapseBtn) {
-        updateCollapseIcon(collapseBtn);
+
+        if (localStorage.getItem('sidebar-pref') === 'true') {
+            bodyEl.classList.add(COLLAPSED_CLASS);
+            updateCollapseIcon(collapseBtn);
+        }
         collapseBtn.addEventListener('click', function (e) {
             e.preventDefault();
             bodyEl.classList.toggle(COLLAPSED_CLASS);
             updateCollapseIcon(this);
+
+            const isCollapsed = bodyEl.classList.contains(COLLAPSED_CLASS);
+            localStorage.setItem('sidebar-pref', isCollapsed);
         });
     }
 
