@@ -81,6 +81,11 @@ namespace Pathly.Services.Implementation
                 tasksQuery = tasksQuery.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == queryModel.DueDate.Value.Date);
             }
 
+            if (queryModel.TagId.HasValue)
+            {
+                tasksQuery = tasksQuery.Where(t => t.TaskTags.Any(tt => tt.TagId == queryModel.TagId.Value));
+            }
+
             if (queryModel.Ascending.HasValue && queryModel.Ascending.Value)
             {
                 tasksQuery = tasksQuery.OrderBy(t => t.CreatedOn);
