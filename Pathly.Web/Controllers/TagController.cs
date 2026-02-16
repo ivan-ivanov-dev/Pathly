@@ -31,25 +31,23 @@ namespace Pathly.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(TagViewModel model)
+        public async Task<IActionResult> Create(TagViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Name))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Name", "Tag name is required.");
-                return View(model);
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { errors });
             }
-
-            var userId = _userManager.GetUserId(User);
 
             try
             {
+                var userId = _userManager.GetUserId(User);
                 await _tagService.CreateTagAsync(model.Name, userId);
-                return RedirectToAction(nameof(Index));
+                return Ok(new { success = true });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return View();
+                return BadRequest(new { errors = new[] { ex.Message } });
             }
         }
 

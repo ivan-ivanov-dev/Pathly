@@ -83,6 +83,8 @@
                            asp-controller="Goals" asp-action="Index">Goals</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
                            asp-controller="Roadmap" asp-action="Selection">Roadmaps</a>
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")"
+                           asp-controller="Tag" asp-action="Index">Tags</a>
                     </nav>
                 </div>
                 <div class="sidebar-footer">
@@ -143,6 +145,10 @@
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
                        asp-controller="Roadmap" asp-action="Selection">
                         <span class="sidebar-link-text">Roadmaps</span>
+                    </a>
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")"
+                       asp-controller="Tag" asp-action="Index">
+                        <span class="sidebar-link-text">Tags</span>
                     </a>
                 </nav>
 

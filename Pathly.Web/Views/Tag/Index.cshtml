@@ -1,31 +1,73 @@
 ﻿@using Pathly.DataModels
+@using Pathly.ViewModels.Tags
 @model List<Tag>
 
 @{
-    ViewData["Title"] = "My Tags";
+    ViewData["Title"] = "Tag Gallery";
 }
 
-<h2 class="mb-3">My Tags</h2>
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/tag.css" asp-append-version="true" />
 
-<a asp-action="Create" class="btn btn-primary mb-3">Create Tag</a>
+}
+
+<div class="gallery-header">
+    <div>
+        <h2 class="fw-bold mb-0">Tag Gallery</h2>
+        <p class="text-muted mb-0">Helps you to better organize your daily tasks </p>
+    </div>
+    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#createTagModal">
+        <i class="bi bi-plus-lg"></i> New Tag
+    </button>
+</div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">You don’t have any tags yet.</div>
+    <div class="text-center py-5 mt-4 bg-light rounded-3 border-dashed">
+        <div class="mb-3">
+            <i class="bi bi-tags text-muted" style="font-size: 3rem;"></i>
+        </div>
+        <h4>No tags found</h4>
+        <p class="text-muted">Create tags to categorize your tasks and milestones.</p>
+    </div>
 }
 else
 {
-    <div class="d-flex flex-wrap gap-2">
+    <div class="tag-container">
         @foreach (var tag in Model)
         {
-            <div class="badge bg-secondary d-flex align-items-center gap-2 p-2">
-                <span>@tag.Name</span>
-                <form asp-action="Delete" method="post" class="m-0">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" value="@tag.Id" />
-                    <button type="submit" class="btn btn-sm btn-light">×</button>
-                </form>
+            <div class="tag-card">
+                <div class="tag-accent"></div>
+                <div class="tag-name">@tag.Name</div>
+
+                <div class="tag-actions">
+                    <form asp-action="Delete" method="post" class="delete-tag-form">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@tag.Id" />
+                        <button type="button" class="btn-delete-tag">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         }
     </div>
+}
+
+<div class="modal fade" id="createTagModal" tabindex="-1" aria-labelledby="createTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold text-white" id="createTagModalLabel">Add Tag</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @await Html.PartialAsync("CreatePartialView", new TagViewModel())
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/tag.js" asp-append-version="true"></script>
 }
