@@ -81,9 +81,9 @@ namespace Pathly.Services.Implementation
                 tasksQuery = tasksQuery.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == queryModel.DueDate.Value.Date);
             }
 
-            if (queryModel.TagId.HasValue)
+            if (queryModel.SelectedTagIds != null && queryModel.SelectedTagIds.Any())
             {
-                tasksQuery = tasksQuery.Where(t => t.TaskTags.Any(tt => tt.TagId == queryModel.TagId.Value));
+                tasksQuery = tasksQuery.Where(t => t.TaskTags.Any(tt => queryModel.SelectedTagIds.Contains(tt.TagId)));
             }
 
             if (queryModel.Ascending.HasValue && queryModel.Ascending.Value)
@@ -109,10 +109,16 @@ namespace Pathly.Services.Implementation
                 })
                 .ToListAsync();
 
+            var userTags = await _context.Tags
+                .Where(tag => tag.UserId == userId)
+                .ToListAsync();
+
             var result = new TaskListViewModel
             {
-                Tasks = tasks
+                Tasks = tasks,
+                AvailableFilterTags = userTags
             };
+
             return result;
         }
 

@@ -28,6 +28,7 @@ namespace Pathly.Web.Controllers
             var userId = _userManager.GetUserId(User);
 
             var model = await _taskService.GetAllTasksAsync(queryModel, userId);
+
             return View(model);
         }
 

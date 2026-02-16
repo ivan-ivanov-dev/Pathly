@@ -27,8 +27,8 @@
 
     <div class="card border-0 shadow-sm rounded-4 mb-5">
         <div class="card-body p-3">
-            <form method="get" class="row g-2 align-items-end">
-                <div class="col-md-4">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
                         <input type="text" name="SearchByTitle" class="form-control border-0 bg-light shadow-none"
@@ -53,14 +53,39 @@
                         <option value="false" selected="@(Context.Request.Query["IsCompleted"] == "false")">In Progress</option>
                     </select>
                 </div>
+                @*A multiple select dropdown for filtering by tags*@
+                <div class="col-md-2">
+                    <div class="position-relative">
+                        <select name="SelectedTagIds"
+                                class="form-select form-select-sm border-0 bg-light shadow-none"
+                                multiple
+                                size="1"
+                                onfocus="this.size=5;"
+                                onblur="this.size=1;"
+                                onchange="this.size=1; this.blur();"
+                                style="position: absolute; z-index: 1000;">
+                            <option value="" disabled>Filter by Tags...</option>
+                            @foreach (var tag in Model.AvailableFilterTags)
+                            {
+                                <option value="@tag.Id"
+                                        selected="@(Context.Request.Query["SelectedTagIds"].Contains(tag.Id.ToString()))">
+                                    #@tag.Name
+                                </option>
+                            }
+                        </select>
+                        <div style="height: 31px;"></div>
+                    </div>
+                </div>
 
                 <div class="col-md-2">
                     <input type="date" name="DueDate" class="form-control form-control-sm border-0 bg-light shadow-none"
                            value="@Context.Request.Query["DueDate"]" />
                 </div>
 
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark btn-sm w-100 rounded-pill fw-bold">Apply Filters</button>
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-dark btn-sm w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <i class="bi bi-filter me-2"></i>Apply Active Filters
+                    </button>
                 </div>
             </form>
         </div>
@@ -107,7 +132,7 @@
                                 {
                                     @foreach (var tag in task.Tags)
                                     {
-                                        <span class="badge rounded-pill bg-light text-dark border fw-normal" style="font-size: 0.7rem;">#@tag</span>
+                                        <span class="badge rounded-pill bg-light text-dark border fw-normal" style="font-size: 0.7rem;">@tag</span>
                                     }
                                 }
                                 else

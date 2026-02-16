@@ -9,7 +9,7 @@ namespace Pathly.ViewModels.TasksViewModels
         public TaskPriority? Priority { get; set; }
         public DateTime? DueDate { get; set; }
         public bool? Ascending { get; set; }
-        public int? TagId { get; set; }
+        public List<int>? SelectedTagIds { get; set; } = new List<int>();
     }
         
 }
