@@ -65,6 +65,33 @@ var RoadmapDetails = {
                 element.style.opacity = "1";
                 console.error("Connection error:", err);
             });
+    },
+    toggleTaskStatus: function (taskId) {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '/Roadmap/ToggleTaskStatus', // Adjust path to your controller
+            type: 'POST',
+            data: { id: taskId },
+            headers: { "RequestVerificationToken": token },
+            success: function (response) {
+                if (response.success) {
+                    const taskItem = $(`#task-item-${taskId}`);
+                    const textSpan = taskItem.find('.task-title');
+
+                    if (response.isCompleted) {
+                        textSpan.addClass('text-decoration-line-through text-muted');
+                        taskItem.addClass('task-completed');
+                    } else {
+                        textSpan.removeClass('text-decoration-line-through text-muted');
+                        taskItem.removeClass('task-completed');
+                    }
+                }
+            },
+            error: function () {
+                alert("Failed to update task status.");
+            }
+        });
     }
 };
 document.addEventListener('DOMContentLoaded', function () {

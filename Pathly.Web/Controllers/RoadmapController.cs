@@ -185,11 +185,27 @@ namespace Pathly.Web.Controllers
             return BadRequest();
         }
 
-        // Simple helper class for the JSON data
+        //helper class for the JSON data
         public class LinkTaskRequest
         {
             public int TaskId { get; set; }
             public int ActionId { get; set; }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleTaskStatus(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var isCompleted = await _roadmapService.ToggleTaskCompletionAsync(id, userId);
+
+            if (isCompleted == null)
+            {
+                return NotFound();
+            }
+
+            return Json(new { success = true, isCompleted = isCompleted.Value });
         }
     }
 }

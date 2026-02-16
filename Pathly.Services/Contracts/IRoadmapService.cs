@@ -21,5 +21,6 @@ namespace Pathly.Services.Contracts
         Task<IEnumerable<TaskItem>> GetUnlinkedTasksAsync(string userId);
         Task<bool> UnlinkTaskFromActionAsync(int taskId, string userId);
         Task<bool> DeleteRoadmapAsync(int roadmapId, string userId);
+        Task<bool?> ToggleTaskCompletionAsync(int taskId, string userId);
     }
 }

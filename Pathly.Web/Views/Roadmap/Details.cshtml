@@ -101,10 +101,18 @@
                                             {
                                                 @foreach (var task in action.AssignedTasks)
                                                 {
-                                                    <li class="small py-2 d-flex align-items-center justify-content-between border-bottom-dashed" id="task-item-@task.Id">
+                                                    <li class="small py-2 d-flex align-items-center justify-content-between border-bottom-dashed @(task.IsCompleted ? "task-completed" : "")" id="task-item-@task.Id">
                                                         <div class="d-flex align-items-center overflow-hidden me-2">
-                                                            <i class="bi bi-dot text-primary fs-4 flex-shrink-0"></i>
-                                                            <span class="text-truncate" title="@task.Title">@task.Title</span>
+                                                            <div class="form-check me-2">
+                                                                <input type="checkbox"
+                                                                       class="form-check-input task-toggle-check"
+                                                                       @(task.IsCompleted ? "checked" : "")
+                                                                       onclick="RoadmapDetails.toggleTaskStatus('@task.Id')" />
+                                                            </div>
+                                                            <span class="text-truncate task-title @(task.IsCompleted ? "text-decoration-line-through text-muted" : "")"
+                                                                  title="@task.Title">
+                                                                @task.Title
+                                                            </span>
                                                         </div>
                                                         <button type="button" class="unlink-action-btn" onclick="RoadmapDetails.unlinkTask('@task.Id', '@Url.Action("UnlinkTask", "Roadmap")')">
                                                             <i class="bi bi-x-lg"></i>

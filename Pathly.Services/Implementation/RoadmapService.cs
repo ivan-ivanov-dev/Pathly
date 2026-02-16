@@ -314,5 +314,23 @@ namespace Pathly.Services.Implementation
             task.ActionId = null; // Remove the link
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool?> ToggleTaskCompletionAsync(int taskId, string userId)
+        {
+            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId);
+            if (task == null)
+            {
+                return null;
+            }
+            if (task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            task.IsCompleted = !task.IsCompleted;
+            await _context.SaveChangesAsync();
+
+            return task.IsCompleted;
+        }
     }
 }
