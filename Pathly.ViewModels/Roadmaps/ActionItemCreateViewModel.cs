@@ -7,9 +7,8 @@ namespace Pathly.ViewModels.Roadmaps
     public class ActionItemCreateViewModel
     {
         public int? Id { get; set; }
-        [Required(ErrorMessage = ErrorMessages.TitleIsRequired)]
         [MaxLength(ValidationConstants.MaxActionItemTitleLength, ErrorMessage = ErrorMessages.ActionTitleCannotExceed100Characters)]
-        public string Title { get; set; } = null!;
+        public string? Title { get; set; }
 
         public string? Resources { get; set; }
 

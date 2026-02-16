@@ -30,6 +30,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="IsEditing" id="isEditingHidden" />
             <input type="hidden" asp-for="RoadmapId" />
+            <input type="hidden" asp-for="SelectedGoalId" />
 
             @* PHASE I: THE VISION *@
             <div class="roadmap-node animate-fade-in">
@@ -149,6 +150,8 @@
                     </div>
                 </div>
             </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger text-center fw-bold mb-3"></div>
 
             @* SAVE ACTION *@
             <div class="text-center mt-5 pb-5">

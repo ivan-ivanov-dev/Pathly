@@ -8,6 +8,7 @@ namespace Pathly.ViewModels.Roadmaps
         public int? RoadmapId { get; set; }
         public int? SelectedGoalId { get; set; }
 
+        [Required(ErrorMessage = ErrorMessages.GoalTitleIsRequired)]
         [MaxLength(ValidationConstants.MaxGoalTitleLength, ErrorMessage = ErrorMessages.GoalTitleCannotExceed50Characters)]
         public string? NewGoalTitle { get; set; }
         [MaxLength(ValidationConstants.MaxGoalLongDescriptionLength, ErrorMessage = ErrorMessages.GoalLongDescriptionCannotExceed1500Characters)]

@@ -84,9 +84,9 @@ namespace Pathly.Web.Controllers
                     ModelState.AddModelError("", "You do not have permission to use the selected goal.");
                 }
             }
-            if (model.Actions == null || model.Actions.Count == 0)
+            if (!model.Actions.Any(a => !string.IsNullOrWhiteSpace(a.Title)))
             {
-                ModelState.AddModelError("", "Please add at least one action item.");
+                ModelState.AddModelError("", "At least one Milestone title is required to build a path.");
             }
             if (model.SelectedGoalId == null && string.IsNullOrWhiteSpace(model.NewGoalTitle))
             {

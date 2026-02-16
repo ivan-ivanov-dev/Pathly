@@ -27,17 +27,12 @@ namespace Pathly.Services.Implementation
                         .Include(r => r.Actions)
                         .FirstOrDefaultAsync(r => r.Id == model.RoadmapId && r.UserId == userId);
 
-                    if (roadmap == null)
-                    {
-                        throw new UnauthorizedAccessException();
-                    }
+                    if (roadmap == null) throw new UnauthorizedAccessException();
 
                     roadmap.Why = model.Why;
                     roadmap.IdealOutcome = model.IdealOutcome;
 
                     var incomingActionIds = model.Actions.Select(a => a.Id).Where(id => id.HasValue).ToList();
-
-
                     var actionsToRemove = roadmap.Actions.Where(a => !incomingActionIds.Contains(a.Id)).ToList();
                     _context.Actions.RemoveRange(actionsToRemove);
 
@@ -68,8 +63,28 @@ namespace Pathly.Services.Implementation
                 }
                 else
                 {
-                    int goalId = model.SelectedGoalId ?? 0;
-                    if (goalId == 0)
+                    int goalId;
+
+                    if (model.SelectedGoalId.HasValue && model.SelectedGoalId.Value > 0)
+                    {
+                        goalId = model.SelectedGoalId.Value;
+                        var existingGoal = await _context.Goals.FindAsync(goalId);
+                        if (existingGoal != null && existingGoal.UserId == userId)
+                        {
+                            if (!string.IsNullOrWhiteSpace(model.NewGoalTitle))
+                            {
+                                existingGoal.Title = model.NewGoalTitle;
+
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(model.NewGoalDescription))
+                            {
+                                existingGoal.ShortDescription = model.NewGoalDescription;
+
+                            }
+                        }
+                    }
+                    else
                     {
                         var newGoal = new Goal
                         {
@@ -90,9 +105,9 @@ namespace Pathly.Services.Implementation
                         Why = model.Why,
                         IdealOutcome = model.IdealOutcome
                     };
+
                     _context.Roadmaps.Add(roadmap);
                     await _context.SaveChangesAsync();
-
                     foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
                     {
                         _context.Actions.Add(new ActionItem
@@ -105,9 +120,9 @@ namespace Pathly.Services.Implementation
                         });
                     }
                 }
-
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return roadmap.Id;
             }
             catch (Exception)
@@ -121,8 +136,8 @@ namespace Pathly.Services.Implementation
         public async Task<bool> DeleteRoadmapAsync(int roadmapId, string userId)
         {
             var roadmap = await _context.Roadmaps
-                .FirstOrDefaultAsync(r => r.Id == roadmapId && r.UserId == userId);
-
+                    .Include(r => r.Actions)
+                    .FirstOrDefaultAsync(r => r.Id == roadmapId);
             if (roadmap == null)
             {
                 return false;
@@ -132,8 +147,10 @@ namespace Pathly.Services.Implementation
             {
                 throw new UnauthorizedAccessException();
             }
-
+            // Remove related actions first to avoid FK constraints
+            _context.Actions.RemoveRange(roadmap.Actions);
             _context .Roadmaps.Remove(roadmap);
+
             return await _context.SaveChangesAsync() > 0;
         }
 

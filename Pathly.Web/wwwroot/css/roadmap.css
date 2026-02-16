@@ -270,3 +270,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
     }
 
+/* Force the validation message to be visible when it has an error */
+.field-validation-error {
+    display: block !important;
+    margin-top: 0.25rem;
+    color: #dc3545 !important; /* Bootstrap Red */
+    font-size: 0.875em;
+}
+
+/* Ensure the input highlights red too */
+.input-validation-error {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff8f8 !important;
+}

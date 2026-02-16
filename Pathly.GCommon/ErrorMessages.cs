@@ -21,6 +21,7 @@ namespace Pathly.GCommon
         public const string UserNameMustBeAtLeast3CharactersLong = "Username must be at least 3 characters long.";
         public const string UserNameCannotExceed50Characters = "Username cannot exceed 50 characters.";
 
+        public const string GoalTitleIsRequired = "Goal Title is required.";
         public const string GoalTitleCannotExceed50Characters = "Title cannot exceed 50 characters.";
         public const string GoalShortDescriptionCannotExceed200Characters = "Short goal description cannot exceed 200 characters.";
         public const string GoalLongDescriptionCannotExceed1500Characters = "Long goal description cannot exceed 1500 characters.";
