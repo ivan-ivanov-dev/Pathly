@@ -56,6 +56,8 @@ namespace Pathly.Services.Implementation
         public async Task<TaskListViewModel> GetAllTasksAsync(TaskQueryModel queryModel, string userId)
         {
             var tasksQuery = _context.Tasks
+                .Include(t => t.TaskTags)
+                    .ThenInclude(tt => tt.Tag)
                 .Where(u => u.UserId == userId)
                 .AsQueryable();
 
@@ -97,7 +99,8 @@ namespace Pathly.Services.Implementation
                     DueDate = t.DueDate,
                     CreatedOn = t.CreatedOn,
                     IsCompleted = t.IsCompleted,
-                    Priority = t.Priority
+                    Priority = t.Priority,
+                    Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
                 })
                 .ToListAsync();
 
@@ -111,6 +114,8 @@ namespace Pathly.Services.Implementation
         public Task<TaskDetailsViewModel?> GetDetailsAsync(int id, string userId)
         {
             var task = _context.Tasks
+                .Include(t => t.TaskTags)
+                    .ThenInclude(tt => tt.Tag)
                 .Where(t => t.Id == id && t.UserId == userId)
                 .Select(t => new TaskDetailsViewModel
                 {
@@ -120,7 +125,8 @@ namespace Pathly.Services.Implementation
                     DueDate = t.DueDate,
                     CreatedOn = t.CreatedOn,
                     IsCompleted = t.IsCompleted,
-                    Priority = t.Priority
+                    Priority = t.Priority,
+                    Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
                 })
                 .FirstOrDefaultAsync();
 
