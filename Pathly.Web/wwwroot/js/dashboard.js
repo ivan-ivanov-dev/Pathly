@@ -9,17 +9,16 @@
         const greetingEl = document.getElementById('dashboard-greeting');
         if (!greetingEl) return;
 
-        let message = "Your journey is 1% better every day.";
-        if (hour < 12) message = "🌞 Good morning! Let's start the day strong.";
-        else if (hour < 18) message = "🚀 Afternoon push! You're doing great.";
-        else message = "🌙 Great work today. Reflect and rest.";
+        let message = "Consistent action is the bridge between goals and accomplishment.";
+        if (hour < 12) message = "The morning is for clarity. Define your priorities and set the pace for the day.";
+        else if (hour < 18) message = "Maintain your momentum. Every task completed now creates a smoother path for tomorrow.";
+        else message = "The day is done. Review your progress, clear your mind, and prepare for a fresh start.";
 
         greetingEl.innerText = message;
     },
 
     animateBars: function () {
-        // Triggered by CSS transition, but we can add JS logic here 
-        // if we ever want to fetch real-time updates.
+        // Triggered by CSS transition
     }
 };
 
