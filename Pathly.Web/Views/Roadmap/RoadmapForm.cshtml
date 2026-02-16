@@ -155,13 +155,14 @@
                 <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg border-0 bg-gradient" onclick="triggerMajesticSave()">
                     <i class="bi bi-rocket-takeoff-fill me-2"></i> Commit Strategy
                 </button>
-                <p class="text-muted small mt-3">Changes will be saved to your dashboard permanently.</p>
+                
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/tasks.js" asp-append-version="true"></script>
     <script src="~/js/roadmap.js" asp-append-version="true"></script>
