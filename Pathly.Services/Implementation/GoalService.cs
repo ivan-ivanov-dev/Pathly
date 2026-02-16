@@ -28,9 +28,9 @@ namespace Pathly.Services.Implementation
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id, string userId)
+        public async Task<bool> DeleteAsync(int goalId, string userId)
         {
-            var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == id);
+            var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == goalId);
             if (goal == null)
             {
                 return false;
@@ -38,6 +38,22 @@ namespace Pathly.Services.Implementation
             if(goal.UserId != userId)
             {
                 throw new UnauthorizedAccessException("You do not have permission to delete this goal.");
+            }
+
+            var roadmap = await _context.Roadmaps
+                .Include(r => r.Actions)
+                .FirstOrDefaultAsync(r => r.GoalId == goalId && r.UserId == userId);
+
+            if (roadmap != null)
+            {
+                //Remove Actions first to avoid Foreign Key constraint errors
+                if (roadmap.Actions.Any())
+                {
+                    _context.Actions.RemoveRange(roadmap.Actions);
+                }
+
+                //Remove the Roadmap
+                _context.Roadmaps.Remove(roadmap);
             }
 
             _context.Goals.Remove(goal);

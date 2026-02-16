@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
             <a asp-action="Selection" class="back-to-selection text-decoration-none text-muted">
                 <i class="bi bi-arrow-left-circle-fill fs-4 align-middle text-primary"></i>
-                <span class="ms-2 fw-medium">Return to Dashboard</span>
+                <span class="ms-2 fw-medium">Return to Selection</span>
             </a>
 
             <div class="d-flex gap-2">
@@ -134,13 +134,9 @@
 
                                     @* BUTTONS *@
                                     <div class="d-flex gap-2 mt-4 pt-2">
-                                        <button type="button" class="btn btn-sm btn-primary flex-grow-1 rounded-pill"
-                                                data-modal-url="@Url.Action("Create", "Tasks", new { actionId = action.ActionId })">
-                                            <i class="bi bi-plus-lg me-1"></i> Add Task
-                                        </button>
                                         <a asp-action="Planner" asp-route-actionId="@action.ActionId" asp-route-roadmapId="@Model.RoadmapId"
                                            class="btn btn-sm btn-outline-secondary flex-grow-1 rounded-pill">
-                                            <i class="bi bi-link-45deg me-1"></i> Connect
+                                            <i class="bi bi-link-45deg me-1"></i> Connect Tasks
                                         </a>
                                     </div>
                                 </div>
