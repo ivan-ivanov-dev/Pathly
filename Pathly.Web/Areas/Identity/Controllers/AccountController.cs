@@ -71,11 +71,20 @@ namespace Pathly.Web.Areas.Identity.Controllers
                 return View(loginViewModel);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: false);
+            var user = await _userManager.FindByEmailAsync(loginViewModel.Email.Trim());
 
-            if (result.Succeeded)
+            if (user != null)
             {
-                return RedirectToAction("Index", "Home", new { area = "" });
+                var result = await _signInManager.PasswordSignInAsync(
+                    user.UserName,
+                    loginViewModel.Password,
+                    loginViewModel.RememberMe,
+                    lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home", new { area = "" });
+                }
             }
 
             ModelState.AddModelError("", "Incorrect email or password");
