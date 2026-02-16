@@ -2,49 +2,61 @@
 @model TaskDetailsViewModel
 
 <div class="modal-body p-4">
-    <div class="bg-light p-3 rounded">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.05em;">Description</h6>
-                            <p class="mb-0">@(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "No description provided.")</p>
-                        </div>
+    @* Task Header Info *@
+    <div class="mb-4">
+        <h4 class="fw-bold text-dark mb-1">@Model.Title</h4>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            @if (Model.Tags != null && Model.Tags.Any())
+            {
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="badge rounded-pill bg-light text-dark border fw-normal" style="font-size: 0.8rem;">#@tag</span>
+                }
+            }
+            else
+            {
+                <span class="text-muted small fst-italic">No tags assigned</span>
+            }
+        </div>
+    </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="border rounded p-3">
-                                    <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.75rem;">Priority</h6>
-                                    <p class="mb-0 fw-semibold">@(Model.Priority.ToString() ?? "—")</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3">
-                                    <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.75rem;">Status</h6>
-                                    <p class="mb-0 fw-semibold">@(Model.IsCompleted ? "Completed" : "Open")</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3">
-                                    <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.75rem;">Created</h6>
-                                    <p class="mb-0">@Model.CreatedOn.ToLocalTime().ToString("MMMM dd, yyyy")</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3">
-                                    <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.75rem;">Due Date</h6>
-                                    <p class="mb-0">@(Model.DueDate?.ToLocalTime().ToString("MMMM dd, yyyy") ?? "—")</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    @* Description Section *@
+    <div class="bg-light p-3 rounded-3 mb-4">
+        <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.7rem; font-weight: 700;">Description</h6>
+        <p class="mb-0 text-dark" style="line-height: 1.6;">@(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "No description provided.")</p>
+    </div>
+
+    @* Metadata Grid *@
+    <div class="row g-3">
+        <div class="col-sm-6">
+            <div class="p-3 border rounded-3 h-100">
+                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Priority</h6>
+                <p class="mb-0 fw-bold">@Model.Priority</p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="p-3 border rounded-3 h-100">
+                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Status</h6>
+                <p class="mb-0 fw-bold @(Model.IsCompleted ? "text-success" : "text-primary")">
+                    @(Model.IsCompleted ? "✓ Completed" : "○ In Progress")
+                </p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="p-3 border rounded-3 h-100">
+                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Due Date</h6>
+                <p class="mb-0">@(Model.DueDate?.ToString("MMMM dd, yyyy") ?? "—")</p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="p-3 border rounded-3 h-100">
+                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Created On</h6>
+                <p class="mb-0 text-muted">@Model.CreatedOn.ToString("MMM dd, yyyy")</p>
             </div>
         </div>
     </div>
 
-    <div class="d-flex gap-2 justify-content-end mt-3">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <div class="d-flex justify-content-end mt-4">
+        <button type="button" class="btn btn-dark px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
     </div>
 </div>
