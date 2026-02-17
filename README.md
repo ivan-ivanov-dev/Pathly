@@ -9,7 +9,7 @@ Pathly is a strategic productivity tool designed to bridge the gap between high-
 It was made so you can the right tools to set your mountain, find your exact strategy to climbing it and then help you conquer the top.  
 With Pathly you don't have to ask yourself "Is this even possible" - Yes it is. You set a goal, break it into daily tasks and execute them - it's that easy.
 
-### *The story*
+### *The "Why"*
 
 I am very ambitious myself and I want to achieve many things - sometimes too many at once. So sometimes I have too many tasks at once and I start forgetting, 
 mixing stuff up and just could not get my mind right. First I tried writing on paper but let's be real this is not the most convinient way in this modern era. 
@@ -30,12 +30,29 @@ to categorize their efforts into three distinct layers:
 Whether you are learning a new language, building a startup, or just trying to organize your personal growth, 
 Pathly provides the structure to ensure that what you do today actually matters for where you want to be tomorrow.
 
+## User Flow
+
+### *The Pathly Workflow*
+
+* **Define the North Star:** Create a Goal with a target date and an "Ideal Outcome."
+
+* **Strategize:** Generate a Roadmap to bridge the gap between your current state and your goal.
+
+* **Breakdown:** Deconstruct the roadmap into specific Actions (Milestones).
+
+* **Execute:** Link your daily Tasks to these actions and watch your momentum bars grow.
+
 ## **Features**
 
 Full CRUD Operations: Manage Goals, Roadmaps, and Tasks with a seamless interface.
 
 Dynamic Dashboard: Real-time overview of progress and a daily reminder of how far you have gone.
 
+![Pathly Logo](Pathly.Web/wwwroot/images/ProgressBars.png)
+
+#### *Visualizing daily execution vs. long-term journey completion.*
+
+\
 Responsive Sidebar Navigation: A custom-built, collapsible navigation system for a focused workspace.
 
 Interactive Roadmap Selection: View and filter specific paths toward your goals. After creating one 
@@ -166,6 +183,8 @@ This project is built with a focus on maintainability and clean code, following 
 
 ### *DB realationships of entity models*
 
+![Pathly Logo](Pathly.Web/wwwroot/images/EntityRealationship.png)
+
 Pathly utilizes a relational schema centered around the AspNetUsers table to ensure data isolation. The hierarchy follows a strict One-to-Many flow: a single User can own multiple Goals, 
 each containing dedicated Roadmaps. These Roadmaps are broken down into Actions, which serve as milestones. Finally, daily Tasks are linked to these Actions, creating a traceable path 
 from a daily to-do item back to a high-level ambition. The schema also includes a Many-to-Many relationship between Tasks and Tags via the TaskTags join table, allowing for flexible cross-goal organization.
@@ -179,6 +198,18 @@ from a daily to-do item back to a high-level ambition. The schema also includes 
 * **DRY (Don't Repeat Yourself):** Extensive use of **Razor Layouts**, **Partial Views**, and **ViewSections** to ensure UI components are reused and easily updated.
 * **Referential Integrity & Data Pruning:** Implemented custom recursive deletion logic to handle **Foreign Key Constraints** across complex one-to-many and many-to-many relationships, 
    ensuring the database remains clean without orphaned records.
+
+## **Future Improvements**
+
+### *Future Roadmap*
+
+#### Pathly is continuously evolving. Planned features for upcoming releases include:
+
+* **Social Accountability:** The ability to share goals and key milestones with a community of users for mutual encouragement and public "Path" tracking.
+
+* **AI-Assisted Deconstruction:** Integration with LLMs to suggest logical milestones and roadmap structures based on the user's high-level goal.
+
+* **Data Analytics Suite:** Advanced insights into productivity trends, helping users identify which "Paths" are thriving and where focus is lagging over time.
 
 ## **License**
 
