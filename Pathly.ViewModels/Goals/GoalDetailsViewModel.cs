@@ -15,5 +15,7 @@ namespace Pathly.ViewModels.Goals
         public DateTime? TargetDate { get; set; }
         public bool IsActive { get; set; }
         public List<ActionsDisplayViewModel> Actions { get; set; } = new();
+
+        public int? RoadmapId { get; set; }
     }
 }

@@ -70,14 +70,31 @@
             </div>
 
             <div class="mt-5 pt-4 border-top">
-                <div class="row text-center">
-                    <div class="col-md-12">
-                         <a asp-controller="Roadmap" asp-action="Details" asp-route-goalId="@Model.Id" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow">
-                            <i class="bi bi-map me-2"></i>View Roadmap Strategy
-                        </a>
-                    </div>
-                </div>
-            </div>
+    <div class="row text-center">
+        <div class="col-md-12">
+            @if (Model.RoadmapId.HasValue)
+            {
+                @* Go to existing Roadmap Details *@
+                <a asp-controller="Roadmap" 
+                   asp-action="Details" 
+                   asp-route-id="@Model.RoadmapId" 
+                   class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow">
+                    <i class="bi bi-map me-2"></i>View Roadmap Strategy
+                </a>
+            }
+            else
+            {
+                @* Go to Create Roadmap and pass the GoalId *@
+                <a asp-controller="Roadmap" 
+                   asp-action="Create" 
+                   asp-route-goalId="@Model.Id" 
+                   class="btn btn-outline-primary btn-lg rounded-pill px-5 fw-bold shadow">
+                    <i class="bi bi-plus-circle me-2"></i>Create Roadmap Strategy
+                </a>
+            }
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>

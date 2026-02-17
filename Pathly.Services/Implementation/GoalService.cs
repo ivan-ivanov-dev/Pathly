@@ -112,9 +112,9 @@ namespace Pathly.Services.Implementation
 
         }
 
-        public Task<GoalDetailsViewModel?> GetDetailsAsync(int id, string userId)
+        public async Task<GoalDetailsViewModel?> GetDetailsAsync(int id, string userId)
         {
-           var goal = _context.Goals
+           var goal = await _context.Goals
                 .Where(g => g.Id == id && g.UserId == userId)
                 .Select(g => new GoalDetailsViewModel
                 {
@@ -125,6 +125,16 @@ namespace Pathly.Services.Implementation
                     IsActive = g.IsActive
                 })
                 .FirstOrDefaultAsync();
+
+            if (goal != null)
+            {
+                var roadmap = await _context.Roadmaps
+                    .FirstOrDefaultAsync(r => r.GoalId == id);
+
+                // If roadmap is null, RoadmapId stays null. 
+                // If found it assigns the real id to the GoalDetailsViewModel
+                goal.RoadmapId = roadmap?.Id;
+            }
 
             if (goal == null)
             {

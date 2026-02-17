@@ -120,6 +120,12 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
+            // Validate id to ensure it's a valid id
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
             var userId = _userManager.GetUserId(User);
             var goal = await _goalService.GetDetailsAsync(id, userId);
             if (goal == null)
