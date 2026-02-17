@@ -9,7 +9,7 @@
 ![Pathly Logo](Pathly.Web/wwwroot/images/PathlyLogo.png)
 
 
-## 📋 Table of Contents
+## Table of Contents
 - [About](#about)
 - [User Flow](#user-flow)
 - [Features](#features)
@@ -17,6 +17,7 @@
 - [Setup and Installation](#setup-and-installation)
 - [Architecture & Best Practices](#architecture--best-practices)
 - [Future Roadmap](#future-roadmap)
+- [Licence](#license)
 
 ## **About**
 
