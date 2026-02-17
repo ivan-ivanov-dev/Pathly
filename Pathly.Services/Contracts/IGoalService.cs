@@ -10,5 +10,7 @@ namespace Pathly.Services.Contracts
         Task UpdateAsync(int id, GoalEditViewModel model, string userId);
         Task<bool> DeleteAsync(int id, string userId);
         Task<GoalQueryModel> GetAllAsync(GoalQueryModel queryModel, string userId);
+
+        Task ToggleGoalStatusAsync(int id, string userId);
     }
 }

@@ -1,0 +1,51 @@
+﻿.goal-card {
+    border-top: 5px solid #0F4C5C !important; /* Pathly Green */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+    overflow: hidden;
+}
+
+    .goal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+    }
+
+.goal-completed {
+    opacity: 0.65;
+    filter: grayscale(0.4);
+    border-top-color: #6c757d !important; 
+}
+
+    .goal-completed .card-body {
+        background-color: #f8f9fa;
+    }
+
+    .goal-completed h5 {
+        text-decoration: line-through;
+        color: #6c757d !important;
+    }
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.details-container {
+    max-width: 800px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #adb5bd;
+}

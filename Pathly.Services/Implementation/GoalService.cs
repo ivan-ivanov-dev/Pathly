@@ -71,6 +71,14 @@ namespace Pathly.Services.Implementation
             {
                 goalsQuery = goalsQuery.Where(g => g.Title.ToLower().Contains(queryModel.SearchTerm.ToLower()));
             }
+            if (queryModel.TargetDate.HasValue)
+            {
+                goalsQuery = goalsQuery.Where(g => g.TargetDate.HasValue && g.TargetDate.Value.Date == queryModel.TargetDate.Value.Date);
+            }
+            if (queryModel.ShowCompleted.HasValue)
+            {
+                goalsQuery = goalsQuery.Where(g => g.IsActive == !queryModel.ShowCompleted.Value);
+            }
 
             goalsQuery = queryModel.SortOrder switch
             {
@@ -124,6 +132,22 @@ namespace Pathly.Services.Implementation
             }
 
             return goal;
+        }
+
+        public async Task ToggleGoalStatusAsync(int id, string userId)
+        {
+            var goal = _context.Goals.FirstOrDefault(g => g.Id == id);
+            if (goal == null)
+            {
+                throw new InvalidOperationException("Goal not found.");
+            }
+            if(goal.UserId != userId)
+            {
+                throw new UnauthorizedAccessException("You do not have permission to edit this goal.");
+            }
+            
+            goal.IsActive = !goal.IsActive;
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(int id, GoalEditViewModel model, string userId)

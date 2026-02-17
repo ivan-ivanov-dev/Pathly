@@ -130,10 +130,20 @@ namespace Pathly.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var userId = _userManager.GetUserId(User);
             await _goalService.DeleteAsync(id, userId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            await _goalService.ToggleGoalStatusAsync(id,userId);
             return RedirectToAction(nameof(Index));
         }
     }
