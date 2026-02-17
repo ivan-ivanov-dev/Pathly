@@ -43,18 +43,60 @@ you can breake your milestones into daily tasks
 Robust Validation: Comprehensive client-side and server-side data integrity.
 
 ## **Technologies Used**
-* **Framework:** ASP.NET Core MVC (.NET 8)
-* **Database:** Microsoft SQL Server (SSMS)
-* **ORM:** Entity Framework Core (Code-First Approach)
-* **Frontend:** Bootstrap 5, Custom CSS (Flexbox Layouts), JavaScript (ES6+)
-* **Tooling:** NuGet Package Manager, LibMan (Library Manager for frontend dependencies)
+
+### *Backend & Framework:* 
+
+* **ASP.NET Core 8 (MVC):** Utilized for high-performance, cross-platform web architecture.
+
+* **ASP.NET Core Identity:** For secure, encrypted user authentication and account management.
+
+* **Entity Framework Core:** Leveraged as a modern ORM for database mapping and migrations.
+
+* **LINQ (Language Integrated Query):** Used for complex data filtering and aggregation for the dashboard.
+
+### *Database:*
+
+* **Microsoft SQL Server:** For relational data storage and integrity.
+
+* **Database Transactions:** Implemented to ensure atomicity during account deletion and multi-step data pruning.
+
+### *Frontend & UI/UX:*
+
+* **Bootstrap 5:** For a responsive, mobile-first grid system.
+
+* **Razor Views & Partial Views:** Used for modular, reusable UI components (Modals, Sidebars).
+
+* **SweetAlert2:** For high-end, interactive user confirmation dialogues.
+
+* **Bootstrap Icons:** For a consistent and intuitive visual language.
+
+* **CSS3 Animations:** Custom `@keyframes` for smooth transitions and the "Pathly" brand feel.
+
+### *JavaScript & Client-Side:*
+
+* **ES6+ JavaScript:** For DOM manipulation and asynchronous form handling.
+
+* **AJAX:** For seamless data loading (Roadmap selection and Task filtering).
+
+* **Client-Side Validation:** jQuery Validation and Unobtrusive Validation for real-time error handling.
 
 ## **Setup and Installation**
 
 ### *Prerequisites*
-* .NET 8 SDK
-* SQL Server Express or LocalDB
-* Visual Studio 2022
+
+* **Target Framework:** .NET 8.0 SDK
+
+* **IDE:** Visual Studio 2022 
+
+* **Database Engine:** SQL Server Express, Developer Edition, or LocalDB.
+
+### *Tools:*
+
+* **Git:** To clone the repository.
+
+* **EF Core Tools:** (Optional, but recommended) dotnet tool install --global dotnet-ef
+
+* **Modern Browser:** (Chrome, Edge, or Firefox) to view the CSS3 animations and flex-layouts correctly.
 
 ### *Step-by-Step Instructions*
  
@@ -121,13 +163,15 @@ This project is built with a focus on maintainability and clean code, following 
 * **Controllers**: Act as the intermediary "brain." They handle incoming HTTP requests, interact with the `ApplicationDbContext` to retrieve or update data, and return the appropriate
   `View` or `Redirect`.
   
-### **SOLID Principles:**
+### **Used Principles:**
 
 * *Single Responsibility:* Controllers manage HTTP requests, while the Database Context handles data persistence.
 * *Open/Closed:* The architecture allows for adding new goal types or roadmap structures without modifying existing core logic.
 * **Dependency Injection (DI):** Utilizes the built-in .NET IoC container to manage the lifecycle of the `ApplicationDbContext` and other services.
 * **Data Validation:** Implements a dual-layer validation strategy using **Data Annotations** for server-side checks and **jQuery Validation** for real-time client-side feedback.
 * **DRY (Don't Repeat Yourself):** Extensive use of **Razor Layouts**, **Partial Views**, and **ViewSections** to ensure UI components are reused and easily updated.
+* **Referential Integrity & Data Pruning:** Implemented custom recursive deletion logic to handle **Foreign Key Constraints** across complex one-to-many and many-to-many relationships, 
+   ensuring the database remains clean without orphaned records.
 
 ## **License**
 
