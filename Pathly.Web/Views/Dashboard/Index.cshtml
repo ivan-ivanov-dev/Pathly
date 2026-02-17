@@ -18,39 +18,94 @@
     </div>
 
     @* Stats Overview Card *@
-    <div class="card border-0 shadow-sm rounded-4 mb-5">
-        <div class="card-body p-4">
-            <div class="row g-4 align-items-center">
-                <div class="col-md-6 border-md-end">
-                    <div class="px-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-bold small text-uppercase text-primary">Today's Focus</span>
-                            <span class="fw-bold small text-dark">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday</span>
+    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+            <div class="row">
+                @* Today's Detailed Progress *@
+                <div class="col-12 mb-5">
+                    @{
+                        var todayPct = Model.Stats.TotalTasksDueToday > 0
+                        ? (int)Math.Round((double)Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday)
+                        : 0;
+                        var todayRemaining = Model.Stats.TotalTasksDueToday - Model.Stats.CompletedTasksDueToday;
+                    }
+                    <div class="d-flex justify-content-between align-items-end mb-3">
+                        <div>
+                            <h4 class="fw-bold mb-1">Today's Execution</h4>
+                            <p class="small text-muted mb-0">
+                                @if (todayPct == 100 && Model.Stats.TotalTasksDueToday > 0)
+                                {
+                                    <span class="text-success fw-bold animate-pulse"><i class="bi bi-check-circle-fill me-1"></i> Outstanding! You've conquered everything planned for today.</span>
+                                }
+                                else if (Model.Stats.TotalTasksDueToday == 0)
+                                {
+                                    <span>No tasks scheduled for today. Time to plan ahead?</span>
+                                }
+                                else
+                                {
+                                    <span>You have <strong>@todayRemaining</strong> task@(todayRemaining == 1 ? "" : "s") remaining for today.</span>
+                                }
+                            </p>
                         </div>
-                        <div class="progress" style="height: 10px;">
-                            @{
-                                var todayPct = Model.Stats.TotalTasksDueToday > 0
-                                ? (int)Math.Round((double)Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday)
-                                : 0;
+                        <div class="text-end">
+                            <span class="badge bg-primary rounded-pill px-3">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday Tasks</span>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 20px; background-color: #f0f2f5;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated @(todayPct == 100 ? "bg-success" : "bg-primary")"
+                             role="progressbar"
+                             style="width: @todayPct%;"
+                             aria-valuenow="@todayPct"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            @if (todayPct > 5)
+                            {
+                                <span class="small fw-bold">@todayPct%</span>
                             }
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: @todayPct%;" aria-valuenow="@todayPct" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="px-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-bold small text-uppercase text-success">Overall Momentum</span>
-                            @{
-                                var totalPct = Model.Stats.TotalTasks > 0
-                                ? (int)Math.Round((double)Model.Stats.CompletedTasks * 100 / Model.Stats.TotalTasks)
-                                : 0;
-                            }
-                            <span class="fw-bold small text-dark">@totalPct% Complete</span>
+                @* Overall Momentum Detailed Progress *@
+                <div class="col-12">
+                    @{
+                        // Weighted progress (Goals + Tasks)
+                        var totalItems = Model.Stats.TotalTasks + Model.Stats.TotalGoals;
+                        var completedItems = Model.Stats.CompletedTasks + Model.Stats.CompletedGoals;
+
+                        var totalPct = totalItems > 0
+                        ? (int)Math.Round((double)completedItems * 100 / totalItems)
+                        : 0;
+                    }
+                    <div class="d-flex justify-content-between align-items-end mb-3">
+                        <div>
+                            <h4 class="fw-bold mb-1">Overall Pathly Momentum</h4>
+                            <p class="small text-muted mb-0">
+                                @if (totalPct == 100 && Model.Stats.TotalTasks > 0)
+                                {
+                                    <span class="text-success fw-bold"><i class="bi bi-trophy-fill me-1"></i> Absolute Mastery! Every single task in your journey is complete.</span>
+                                }
+                                else
+                                {
+                                    <span>Your total journey progress across all goals and roadmaps.</span>
+                                }
+                            </p>
                         </div>
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: @totalPct%;" aria-valuenow="@totalPct" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="text-end">
+                            <span class="badge bg-dark rounded-pill px-3">@totalPct% Total Completion</span>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 20px; background-color: #f0f2f5;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated @(totalPct == 100 ? "bg-success" : "bg-success")"
+                             role="progressbar"
+                             style="width: @totalPct%;"
+                             aria-valuenow="@totalPct"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            @if (totalPct > 5)
+                            {
+                                <span class="small fw-bold">@totalPct%</span>
+                            }
                         </div>
                     </div>
                 </div>

@@ -79,12 +79,17 @@ namespace Pathly.Services.Implementation
             var totalTasksToday = await userTasks.CountAsync(t => t.DueDate.HasValue && t.DueDate.Value == today);
             var completedTasksToday = await userTasks.CountAsync(t => t.IsCompleted && t.DueDate.HasValue && t.DueDate.Value == today);
 
+            var TotalGoals = await _context.Goals.CountAsync(g => g.UserId == userId);
+            var CompletedGoals = await _context.Goals.CountAsync(g => g.UserId == userId && !g.IsActive);
+
             return new DashboardStatsViewModel
             {
                 TotalTasks = totalTasks,
                 CompletedTasks = completedTasks,
                 TotalTasksDueToday = totalTasksToday,
-                CompletedTasksDueToday = completedTasksToday
+                CompletedTasksDueToday = completedTasksToday,
+                TotalGoals = TotalGoals,
+                CompletedGoals = CompletedGoals
             };
         }
     }

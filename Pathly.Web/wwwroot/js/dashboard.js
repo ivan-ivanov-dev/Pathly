@@ -9,10 +9,23 @@
         const greetingEl = document.getElementById('dashboard-greeting');
         if (!greetingEl) return;
 
-        let message = "Consistent action is the bridge between goals and accomplishment.";
-        if (hour < 12) message = "The morning is for clarity. Define your priorities and set the pace for the day.";
-        else if (hour < 18) message = "Maintain your momentum. Every task completed now creates a smoother path for tomorrow.";
-        else message = "The day is done. Review your progress, clear your mind, and prepare for a fresh start.";
+        let message = "";
+        // Morning
+        if (hour >= 5 && hour < 12) {
+            message = "Good morning! The path is clear. Focus on your high-priority tasks first.";
+        }
+        // Afternoon
+        else if (hour >= 12 && hour < 18) {
+            message = "Good afternoon. Keep that momentum steady; your future self will thank you.";
+        }
+        // Evening
+        else if (hour >= 18 && hour < 22) {
+            message = "Evening check-in. Wrap up the loose ends and prepare for a restful night.";
+        }
+        // Night
+        else {
+            message = "Rest is part of the strategy. Recharge now to conquer tomorrow.";
+        }
 
         greetingEl.innerText = message;
     },
