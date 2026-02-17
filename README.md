@@ -3,6 +3,7 @@
 ![Pathly Logo](Pathly.Web/wwwroot/images/PathlyLogo.png)
 
 ## **About**
+
 Pathly is a strategic productivity tool designed to bridge the gap between high-level ambition and daily execution. 
 
 It was made so you can the right tools to set your mountain, find your exact strategy to climbing it and then help you conquer the top.  
@@ -150,9 +151,9 @@ To configure the startup project: `Right Click on the solution > Configure Start
 ## **Architecture & Best Practices**
 This project is built with a focus on maintainability and clean code, following these core principles:
 
-## **MVC Pattern Architecture**
+### *MVC Pattern Architecture*
 
-### The project is strictly organized using the Model-View-Controller design pattern to ensure a clean separation of concerns:
+#### The project is strictly organized using the Model-View-Controller design pattern to ensure a clean separation of concerns:
 
 * **Models**: Represent the core data structures and business logic. This includes the `Goal`, `Roadmap`, and `Task` entities. They utilize **Data Annotations** (`[Required]`, `[MaxLength]`)
    to enforce data integrity directly at the database level.
@@ -162,8 +163,14 @@ This project is built with a focus on maintainability and clean code, following 
 
 * **Controllers**: Act as the intermediary "brain." They handle incoming HTTP requests, interact with the `ApplicationDbContext` to retrieve or update data, and return the appropriate
   `View` or `Redirect`.
-  
-### **Used Principles:**
+
+### *DB realationships of entity models*
+
+Pathly utilizes a relational schema centered around the AspNetUsers table to ensure data isolation. The hierarchy follows a strict One-to-Many flow: a single User can own multiple Goals, 
+each containing dedicated Roadmaps. These Roadmaps are broken down into Actions, which serve as milestones. Finally, daily Tasks are linked to these Actions, creating a traceable path 
+from a daily to-do item back to a high-level ambition. The schema also includes a Many-to-Many relationship between Tasks and Tags via the TaskTags join table, allowing for flexible cross-goal organization.
+
+### *Used Principles:*
 
 * *Single Responsibility:* Controllers manage HTTP requests, while the Database Context handles data persistence.
 * *Open/Closed:* The architecture allows for adding new goal types or roadmap structures without modifying existing core logic.
