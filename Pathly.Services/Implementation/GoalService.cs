@@ -25,6 +25,7 @@ namespace Pathly.Services.Implementation
             };
 
             _context.Goals.Add(goal);
+
             await _context.SaveChangesAsync();
         }
 
@@ -52,7 +53,6 @@ namespace Pathly.Services.Implementation
                     _context.Actions.RemoveRange(roadmap.Actions);
                 }
 
-                //Remove the Roadmap
                 _context.Roadmaps.Remove(roadmap);
             }
 

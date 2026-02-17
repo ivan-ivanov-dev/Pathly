@@ -1,25 +1,18 @@
-﻿/* ============================================
-   AUTH FORM STYLING (Synchronized)
-   ============================================ */
-
-/* Force the body to allow full-screen centering */
-.auth-page-body {
+﻿.auth-page-body {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
 }
 
-/* Ensure the layout container takes full height */
 .auth-container-centered {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Full viewport height */
+    min-height: 100vh; 
     width: 100%;
 }
 
-/* Force main content to expand and remove sidebar gaps */
 .auth-page-body .main-content {
     margin-left: 0 !important;
     padding: 0 !important;
@@ -29,7 +22,6 @@
     align-items: center;
 }
 
-/* The Container for the Form + Back Button */
 .auth-view-wrapper {
     width: 100%;
     max-width: 550px;
@@ -37,7 +29,7 @@
     animation: authFadeIn 0.6s ease-out forwards;
 }
 
-/* The "Back to Home" Link above the card */
+
 .back-link-wrapper {
     margin-bottom: 1.5rem;
 }
@@ -54,7 +46,6 @@
             color: var(--pathly-primary);
         }
 
-/* The Auth Card */
 .auth-form {
     width: 100%;
     padding: 3.5rem !important;
@@ -109,7 +100,7 @@
         font-size: 0.9rem;
     }
 
-/* Password Strength Meter */
+
 .password-strength {
     height: 6px;
     background: #eee;

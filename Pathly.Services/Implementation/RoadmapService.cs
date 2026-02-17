@@ -255,7 +255,7 @@ namespace Pathly.Services.Implementation
                 IdealOutcome = roadmap.IdealOutcome,
                 Actions = roadmap.Actions.Select(a => new ActionItemCreateViewModel
                 {
-                    Id = a.Id, // CRITICAL: This keeps tasks safe
+                    Id = a.Id,
                     Title = a.Title,
                     Resources = a.Resources,
                     DueDate = a.DueDate,
@@ -311,7 +311,7 @@ namespace Pathly.Services.Implementation
                 throw new UnauthorizedAccessException();
             }
 
-            task.ActionId = null; // Remove the link
+            task.ActionId = null;
             return await _context.SaveChangesAsync() > 0;
         }
 

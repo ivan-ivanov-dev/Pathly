@@ -128,18 +128,15 @@ namespace Pathly.Web.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
-            // Parse the comma-separated IDs from the hidden input
             var taskIds = string.IsNullOrEmpty(selectedTaskIds)
                 ? new List<int>()
                 : selectedTaskIds.Split(',').Select(int.Parse).ToList();
 
-            // Use a loop to call existing service logic for each task
             foreach (var taskId in taskIds)
             {
                 await _roadmapService.LinkTaskToActionAsync(taskId, actionId, userId);
             }
 
-            // Redirect back to the details page of the roadmap
             return RedirectToAction("Details", new { id = roadmapId });
         }
 

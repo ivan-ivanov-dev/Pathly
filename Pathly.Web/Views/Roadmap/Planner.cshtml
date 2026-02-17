@@ -87,17 +87,14 @@
 
         var RoadmapUI = {
             toggleLocalSelection: function(cardElement, taskId) {
-                // 1. Toggle Visuals
                 cardElement.classList.toggle('selected');
 
-                // 2. Update the Set
                 if (cardElement.classList.contains('selected')) {
                     selectedSet.add(taskId);
                 } else {
                     selectedSet.delete(taskId);
                 }
 
-                // 3. Update the hidden input with a comma-separated list
                 document.getElementById('selectedTaskIds').value = Array.from(selectedSet).join(',');
             }
         };
@@ -117,7 +114,6 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Fade out and remove the element from the list
                         const element = document.getElementById(`task-item-${taskId}`);
                         element.style.transition = "all 0.3s ease";
                         element.style.opacity = "0";

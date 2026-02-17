@@ -1,5 +1,4 @@
-﻿/* Roadmap Layout & BG */
-.roadmap-page-bg {
+﻿.roadmap-page-bg {
     background-color: #f8f9fa;
     min-height: 100vh;
     padding-top: 2rem;
@@ -12,7 +11,6 @@
     position: relative;
 }
 
-/* Nodes & Icons */
 .roadmap-node {
     width: 100%;
     max-width: 700px;
@@ -46,16 +44,14 @@
     z-index: 3;
 }
 
-/* Line connecting nodes */
 .roadmap-line {
     width: 6px;
-    height: 50px; /* Adjusted height for better flow */
+    height: 50px; 
     background: linear-gradient(to bottom, #007bff, #0dcaf0, #ffc107, #198754);
     opacity: 0.4;
     z-index: 1;
 }
 
-/* Action Cards */
 .action-card {
     border-radius: 15px;
     border-top: 5px solid #ffc107 !important;
@@ -79,7 +75,6 @@
     font-size: 0.8rem;
 }
 
-/* Task Preview Logic */
 .task-preview-zone {
     max-height: 180px;
     overflow-y: auto;
@@ -119,7 +114,6 @@
     border-bottom: 1px dashed #f1f3f5 !important;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -135,7 +129,6 @@
 .animate-fade-in {
     animation: fadeIn 0.6s ease-out;
 }
-/* Selection Animation & State */
 .planner-selection-card {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
@@ -144,7 +137,6 @@
     overflow: visible;
 }
 
-    /* The "Pop" effect when selected */
     .planner-selection-card.selected {
         border-color: #0d6efd;
         background-color: #f0f7ff;
@@ -152,7 +144,6 @@
         box-shadow: 0 10px 20px rgba(13, 110, 253, 0.15) !important;
     }
 
-/* The Blue Checkmark Indicator */
 .planner-selection-indicator {
     position: absolute;
     top: -12px;
@@ -166,7 +157,6 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    /* Animation for the indicator */
     opacity: 0;
     transform: scale(0);
     transition: all 0.2s ease;
@@ -192,16 +182,15 @@
         transform: scale(1.2);
     }
 
-/* The Unlink Button Base State */
 .unlink-action-btn {
     width: 26px;
     height: 26px;
     display: flex;
-    align-items: center; /* Vertical Center */
-    justify-content: center; /* Horizontal Center */
+    align-items: center;
+    justify-content: center;
     background-color: transparent;
-    color: #dc3545; /* Red X */
-    border: 2px solid #dc3545; /* Red Border */
+    color: #dc3545;
+    border: 2px solid #dc3545;
     border-radius: 6px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
@@ -209,33 +198,32 @@
     flex-shrink: 0;
 }
     .unlink-action-btn i.bi-x-lg {
-        -webkit-text-stroke: 1px #dc3545; /* Makes the X thicker and more visible */
+        -webkit-text-stroke: 1px #dc3545;
         font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    /* Hover State: Colors turn around */
     .unlink-action-btn:hover {
-        background-color: #dc3545; /* Container becomes Red */
-        color: #ffffff !important; /* X becomes White */
+        background-color: #dc3545; 
+        color: #ffffff !important;
     }
     .unlink-action-btn i {
-        font-size: 14px; /* Adjust this to make the X bigger or smaller */
+        font-size: 14px;
         line-height: 1;
         display: block;
     }
-/* Optional: add a slight fade to the list item on hover so the button pops more */
+
 #task-item-@task.Id:hover {
     background-color: rgba(0,0,0,0.02);
 }
-/* Typography and Spacing */
+
 .tracking-wider {
     letter-spacing: 0.1em;
 }
 
-/* Make inputs feel integrated into the card */
+
 .node-content .form-control {
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -246,7 +234,6 @@
         box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
     }
 
-/* Smooth fade-in animation */
 .animate-fade-in {
     animation: fadeIn 0.6s ease-out;
 }
@@ -263,7 +250,6 @@
     }
 }
 
-/* Style the date picker icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     filter: invert(0.5);
@@ -282,15 +268,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
     }
 
-/* Force the validation message to be visible when it has an error */
 .field-validation-error {
     display: block !important;
     margin-top: 0.25rem;
-    color: #dc3545 !important; /* Bootstrap Red */
+    color: #dc3545 !important; 
     font-size: 0.875em;
 }
 
-/* Ensure the input highlights red too */
+
 .input-validation-error {
     border: 1px solid #dc3545 !important;
     background-color: #fff8f8 !important;

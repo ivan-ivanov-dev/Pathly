@@ -48,7 +48,6 @@
     box-shadow: inset 0 0 0 2000px rgba(248, 249, 250, 0.4), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
     transform: none !important;
 }
-    /*Strike through the title and dim the text*/
     .task-completed h5,
     .task-completed .text-muted,
     .task-completed .badge {

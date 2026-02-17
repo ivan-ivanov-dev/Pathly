@@ -1,7 +1,4 @@
-﻿/* ============================================
-   SIDEBAR CORE STRUCTURE
-   ============================================ */
-.app-container {
+﻿.app-container {
     display: flex;
     min-height: 100vh;
     width: 100%;
@@ -13,7 +10,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow-y: auto; /* This creates the scrollbar ONLY for the content */
+    overflow-y: auto;
     background-color: var(--pathly-bg);
     position: relative;
 }
@@ -41,27 +38,22 @@
         flex-direction: column;
     }
 
-    /* Collapsed State */
     body.sidebar-collapsed .sidebar-desktop {
         width: 72px;
     }
 
-    /* We no longer need margin-left on main-content because Flexbox handles it! */
     .main-content {
         flex: 1;
-        padding: 2rem; /* Give it some breathing room */
+        padding: 2rem;
         width: 100%;
     }
 }
 
-/* ============================================
-   BRANDING & LOGO
-   ============================================ */
 .sidebar-brand {
-    margin-bottom: 1.5rem; /* Give it a bit more space */
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Keeps it left-aligned with the buttons below */
+    justify-content: flex-start;
     padding-left: 0.5rem;
     position: relative;
     min-height: 40px;
@@ -69,14 +61,11 @@
 
 .sidebar-logo-img {
     max-width: 100%;
-    height: 38px; /* Slightly larger since it's now the solo star */
+    height: 38px;
     width: auto;
     object-fit: contain;
     transition: all 0.2s ease;
 }
-    /* ============================================
-   NAVIGATION & ACTIVE STATE
-   ============================================ */
     .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -94,12 +83,11 @@
     text-decoration: none;
     font-weight: 500;
     transition: all 0.2s ease;
-    white-space: nowrap; /* Prevents text from wrapping to a second line */
-    overflow: hidden; /* Clips the text as the sidebar narrows */
+    white-space: nowrap; 
+    overflow: hidden; 
     min-width: 0;
 }
 
-    /* The Selected Page Highlight */
     .sidebar-link.active {
         background-color: var(--pathly-primary);
         color: #ffffff !important;
@@ -112,9 +100,6 @@
         transform: translateX(4px);
     }
 
-/* ============================================
-   CONTROLS (Buttons)
-   ============================================ */
 .sidebar-collapse-btn {
     background: #fff;
     border: 1px solid #ddd;
@@ -139,23 +124,19 @@
         border-color: var(--pathly-primary);
     }
 
-/* ============================================
-   FOOTER & MOBILE
-   ============================================ */
-/* Footer Container */
+
 .sidebar-footer {
     margin-top: auto;
     padding: 1.25rem 0;
     border-top: 1px solid rgba(0,0,0,0.08);
 }
 
-/* User Avatar Styling */
 .user-avatar-circle {
     width: 40px;
     height: 40px;
     background: linear-gradient(135deg, var(--pathly-primary), var(--pathly-accent));
     color: white;
-    border-radius: 12px; /* Matches your themed buttons */
+    border-radius: 12px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -164,7 +145,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Logic for the Collapsed/Folded State */
+
 body.sidebar-collapsed .user-profile-wrapper {
     justify-content: center;
 }
@@ -179,11 +160,11 @@ body.sidebar-collapsed .sidebar-link-text {
 
 body.sidebar-collapsed .logout-btn {
     padding: 0.5rem 0;
-    border: none; /* Cleaner look when collapsed */
+    border: none;
 }
 
     body.sidebar-collapsed .logout-btn .sidebar-link-text {
-        display: none; /* Hide 'Logout' text */
+        display: none; 
     }
 
 body.sidebar-collapsed .logout-icon {
@@ -197,7 +178,6 @@ body.sidebar-collapsed .sidebar-link {
     padding-right: 0;
 }
 
-/* Mobile Adjustments (Offcanvas usually doesn't collapse, it just closes) */
 .offcanvas-body .sidebar-footer {
     padding-bottom: 2rem;
 }

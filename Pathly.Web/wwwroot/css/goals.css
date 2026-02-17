@@ -1,5 +1,5 @@
 ﻿.goal-card {
-    border-top: 5px solid #0F4C5C !important; /* Pathly Green */
+    border-top: 5px solid #0F4C5C !important; 
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
     overflow: hidden;
 }

@@ -54,7 +54,7 @@
     }
     else
     {
-    @* Mobile-only fixed button to open offcanvas (keeps header removed on auth) *@
+    @* Mobile-only fixed button to open offcanvas *@
     <button type="button" class="btn btn-outline-secondary sidebar-toggle-fixed d-lg-none" data-bs-toggle="offcanvas"
         data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Open navigation">
         <span class="navbar-toggler-icon"></span>
@@ -131,7 +131,6 @@
             @* Sidebar (Desktop) *@
             <aside class="sidebar-desktop d-none d-lg-flex" id="sidebarDesktop">
                 <div class="sidebar-brand">
-                    @* Logo only - wrapped in a link to Dashboard *@
                     <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center">
                         <img src="~/images/PathlyLogo.png" alt="Pathly" class="sidebar-logo-img" />
                     </a>
@@ -207,20 +206,16 @@
             </aside>
         }
 
-        @* 1. Use 'main-wrapper' to house everything that isn't the sidebar *@
-        <div class="main-wrapper @(isAuthPage ? "auth-container-centered" : "")">
 
-            @* 2. Main content takes up the top space *@
+        <div class="main-wrapper @(isAuthPage ? "auth-container-centered" : "")">
             <main role="main" id="main-content" class="main-content">
                 @RenderBody()
             </main>
 
-            @* 3. Footer stays at the bottom of the main-wrapper *@
             @if (!isAuthPage)
             {
                 <footer class="footer mt-auto py-4 custom-footer-bg">
                     <div class="container-fluid">
-                        @* Use fluid here too *@
                         <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
                             <div class="footer-brand-section text-nowrap">
                                 <span class="small text-muted">&copy; @DateTime.UtcNow.Year</span>

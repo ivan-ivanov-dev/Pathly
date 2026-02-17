@@ -5,7 +5,6 @@ namespace Pathly.Services.Contracts
 {
     public interface ITaskService
     {
-        // Define method signatures for task-related operations
         Task<TaskListViewModel> GetAllTasksAsync(TaskQueryModel queryModel, string userId);
         Task CreateAsync(TaskCreateViewModel model,string userId);
         Task<bool> DeleteAsync(int id, string userId);

@@ -70,7 +70,7 @@ var RoadmapDetails = {
         const token = $('input[name="__RequestVerificationToken"]').val();
 
         $.ajax({
-            url: '/Roadmap/ToggleTaskStatus', // Adjust path to your controller
+            url: '/Roadmap/ToggleTaskStatus',
             type: 'POST',
             data: { id: taskId },
             headers: { "RequestVerificationToken": token },

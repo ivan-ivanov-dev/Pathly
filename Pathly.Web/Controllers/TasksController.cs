@@ -231,6 +231,8 @@ namespace Pathly.Web.Controllers
             return PartialView("DetailsPartialView", model);
         }
 
+        /*Mark Task Status*/
+
         [HttpPost]
         public async Task<IActionResult> MarkTaskStatus(int id)
         {
@@ -239,6 +241,8 @@ namespace Pathly.Web.Controllers
             await _taskService.MarkTaskStatusAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
+
+        /*Update Task Priority*/
 
         [HttpPost]
         public async Task<IActionResult> UpdatePriority(int id, TaskPriority priority)
