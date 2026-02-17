@@ -64,27 +64,27 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 ### *Backend & Framework:* 
 
-* **ASP.NET Core 8 (MVC):** Utilized for high-performance, cross-platform web architecture.
+* **[ASP.NET Core 8 (MVC)](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview):** Utilized for high-performance, cross-platform web architecture.
 
 * **ASP.NET Core Identity:** For secure, encrypted user authentication and account management.
 
-* **Entity Framework Core:** Leveraged as a modern ORM for database mapping and migrations.
+* **[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/):** Leveraged as a modern ORM for database mapping and migrations.
 
 * **LINQ (Language Integrated Query):** Used for complex data filtering and aggregation for the dashboard.
 
 ### *Database:*
 
-* **Microsoft SQL Server:** For relational data storage and integrity.
+* **[Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads):** For relational data storage and integrity.
 
 * **Database Transactions:** Implemented to ensure atomicity during account deletion and multi-step data pruning.
 
 ### *Frontend & UI/UX:*
 
-* **Bootstrap 5:** For a responsive, mobile-first grid system.
+* **[Bootstrap 5](https://getbootstrap.com/docs/5.3/getting-started/introduction/):** For a responsive, mobile-first grid system.
 
 * **Razor Views & Partial Views:** Used for modular, reusable UI components (Modals, Sidebars).
 
-* **SweetAlert2:** For high-end, interactive user confirmation dialogues.
+* **[SweetAlert2](https://sweetalert2.github.io/):** For high-end, interactive user confirmation dialogues.
 
 * **Bootstrap Icons:** For a consistent and intuitive visual language.
 
@@ -102,19 +102,23 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 ### *Prerequisites*
 
-* **Target Framework:** .NET 8.0 SDK
+* **Target Framework:** [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-* **IDE:** Visual Studio 2022 
+* **IDE:** [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) 
 
-* **Database Engine:** SQL Server Express, Developer Edition, or LocalDB.
+* **Database Engine:** [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), Developer Edition, or LocalDB.
+
+#### *Optional:*
+
+* **[SSMS]:**(https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) to manage the SQL Server DB
 
 ### *Tools:*
 
-* **Git:** To clone the repository.
+* **[Git](https://git-scm.com/):** To clone the repository.
 
 * **EF Core Tools:** (Optional, but recommended) dotnet tool install --global dotnet-ef
 
-* **Modern Browser:** (Chrome, Edge, or Firefox) to view the CSS3 animations and flex-layouts correctly.
+* **Modern Browser:** to view the CSS3 animations and flex-layouts correctly.
 
 ### *Step-by-Step Instructions*
  
