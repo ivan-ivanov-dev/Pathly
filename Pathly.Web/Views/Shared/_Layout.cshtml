@@ -97,9 +97,21 @@
                             <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
                                 @User.Identity?.Name
                             </p>
-                            <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
-                                Account Settings
-                            </a>
+
+                            <form id="deleteAccountForm"
+                                  asp-area="Identity"
+                                  asp-controller="Account"
+                                  asp-action="DeleteAccount"
+                                  method="post"
+                                  style="display:none;">
+                                @Html.AntiForgeryToken()
+                            </form>
+
+                            <button type="button" onclick="confirmDeleteAccount()"
+                                    class="p-0 border-0 bg-transparent small text-danger fw-bold text-decoration-none"
+                                    style="font-size: 0.75rem;">
+                                Delete Account
+                            </button>
                         </div>
                     </div>
 
@@ -162,9 +174,22 @@
                             <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
                                 @User.Identity?.Name
                             </p>
-                            <a asp-controller="Account" asp-action="Manage" class="small text-primary text-decoration-none">
-                                Account Settings
-                            </a>
+
+                            <form id="deleteAccountForm"
+                                  asp-area="Identity"
+                                  asp-controller="Account"
+                                  asp-action="DeleteAccount"
+                                  method="post"
+                                  style="display:none;">
+                                @Html.AntiForgeryToken()
+                            </form>
+
+                            <button type="button"
+                                    onclick="confirmDeleteAccount()"
+                                    class="p-0 border-0 bg-transparent small text-danger fw-bold text-decoration-none"
+                                    style="font-size: 0.75rem; cursor: pointer;">
+                                Delete Account
+                            </button>
                         </div>
                     </div>
 
@@ -216,8 +241,10 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/app-constants.js"></script>
     <script src="~/js/site.js"></script>
+    <script src="~/js/auth.js"></script>
     <script src="~/js/sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

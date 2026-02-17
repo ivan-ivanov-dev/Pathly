@@ -47,3 +47,22 @@
     attachDisableSubmit('#registerForm', ['#UserName', '#Email', '#Password', '#ConfirmPassword']);
     attachDisableSubmit('#loginForm', ['#LoginIdentifier', '#Password']);
 });
+window.confirmDeleteAccount = function () {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Every goal, task, and roadmap will be permanently erased. Pathly cannot undo this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete everything',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'rounded-4 shadow-lg border-0'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('deleteAccountForm').submit();
+        }
+    })
+}

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.ViewModels.Authentication;
 using System.Threading.Tasks;
@@ -12,10 +14,12 @@ namespace Pathly.Web.Areas.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly ApplicationDbContext _context;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -99,6 +103,60 @@ namespace Pathly.Web.Areas.Identity.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account", new { area = "Identity" });
+        }
+        /*The only action and controller in the entire project which talk directly to the db context*/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account", new { area = "Identity" });
+
+            var userId = user.Id;
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var userGoalIds = await _context.Goals
+                    .Where(g => g.UserId == userId)
+                    .Select(g => g.Id)
+                    .ToListAsync();
+
+                var userRoadmapIds = await _context.Roadmaps
+                    .Where(r => userGoalIds.Contains(r.GoalId))
+                    .Select(r => r.Id)
+                    .ToListAsync();
+
+                var userTags = _context.Tags.Where(t => t.UserId == userId);
+                _context.Tags.RemoveRange(userTags);
+
+                var actions = _context.Actions.Where(a => userRoadmapIds.Contains(a.RoadmapId));
+                _context.Actions.RemoveRange(actions);
+
+                var roadmaps = _context.Roadmaps.Where(r => userRoadmapIds.Contains(r.Id));
+                _context.Roadmaps.RemoveRange(roadmaps);
+
+                var tasks = _context.Tasks.Where(t => t.UserId == userId);
+                _context.Tasks.RemoveRange(tasks);
+
+                var goals = _context.Goals.Where(g => g.UserId == userId);
+                _context.Goals.RemoveRange(goals);
+
+                await _context.SaveChangesAsync();
+
+                var result = await _userManager.DeleteAsync(user);
+                if (!result.Succeeded) throw new Exception("Identity user deletion failed");
+
+                await transaction.CommitAsync();
+
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return RedirectToAction("Index", "Dashboard", new { area = "" });
+            }
         }
     }
 }
