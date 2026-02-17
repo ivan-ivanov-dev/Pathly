@@ -3,9 +3,9 @@
 }
 
 <!--Hero section -->
-<section class="py-5" style="background-color: var(--pathly-bg);">
+<section class="py-5 mt-md-5" style="background-color: var(--pathly-bg);">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center g-5">
 
             <!-- Left: Headline + Description + Buttons -->
             <div class="col-lg-6">
@@ -16,7 +16,7 @@
                     Pathly is the bridge between dreaming and doing. It helps you transform overwhelming goals into structured roadmaps, organize your day with intent, and build the consistent habits needed to follow through on your promises to yourself.
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
-                    <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: var(--pathly-accent); color: #fff; border-radius: var(--btn-radius);">
+                    <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: var(--pathly-accent); border-radius: var(--btn-radius);color: #fff; border-radius: var(--btn-radius);">
                         Get Started
                     </a>
                     <a asp-area="Identity" asp-controller="Account" asp-action="Login" class="btn btn-lg btn-outline-dark" style="border-radius: var(--btn-radius);">
@@ -239,21 +239,23 @@
 </section>
 
 <!--Call to action section -->
-<section class="py-5" style="background-color: var(--pathly-accent);">
-    <div class="container text-center text-white">
-        <h2 class="fw-bold mb-4" style="color: #fff;">
-            Ready to build your path?
-        </h2>
-        <p class="lead mb-4" style="color: #fff;">
-            Start building your personalized roadmap today and turn your "someday" into "today."
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: #fff; color: var(--pathly-accent); font-weight: 600; border-radius: var(--btn-radius);">
-                Create Your Account
-            </a>
-            <a asp-area="Identity" asp-controller="Account" asp-action="Login" class="btn btn-lg btn-outline-light" style="border-radius: var(--btn-radius);">
-                Log In
-            </a>
+<section class="py-5">
+    <div class="container">
+        <div class="p-5 text-center shadow-lg" style="background-color: var(--pathly-primary); border-radius: var(--card-radius);">
+            <h2 class="fw-bold mb-4" style="color: #fff;">
+                Ready to build your path?
+            </h2>
+            <p class="lead mb-4" style="color: #fff;">
+                Start building your personalized roadmap today and turn your "someday" into "today."
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: #fff; color: var(--pathly-accent); font-weight: 600; border-radius: var(--btn-radius);">
+                    Create Your Account
+                </a>
+                <a asp-area="Identity" asp-controller="Account" asp-action="Login" class="btn btn-lg btn-outline-light" style="border-radius: var(--btn-radius);">
+                    Log In
+                </a>
+            </div>
         </div>
     </div>
 </section>

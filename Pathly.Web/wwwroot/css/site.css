@@ -1,9 +1,15 @@
+/*Import a better font for the landing page*/
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
 :root {
     --transition-speed: 0.3s;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --border-radius: 0.5rem;
+
+    --border-radius: 16px;
+    --btn-radius: 50px; /* Pill-shaped buttons */
+    --card-radius: 24px;
+
     --pathly-primary: #0F4C5C;
     --pathly-accent: #F4A62A;
     --pathly-bg: #FAF7F2;
@@ -20,6 +26,7 @@ html {
 body {
     background-color: var(--pathly-bg);
     color: var(--pathly-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     margin: 0;
@@ -67,9 +74,37 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar {
     box-shadow: var(--shadow-sm);
-    background-color: #ffffff !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6px);
+}
+
+body:not(.landing-page) .navbar {
+    background-color: #ffffff;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Make Navbar transparent on Landing Page */
+.navbar-landing {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Smooth Navigation Buttons */
+.nav-link-login {
+    font-weight: 700;
+    color: var(--pathly-text) !important;
+    padding: 0.5rem 1.5rem !important;
+}
+
+.nav-link-signup {
+    background-color: var(--pathly-primary);
+    color: white !important;
+    border-radius: var(--btn-radius);
+    padding: 0.5rem 1.5rem !important;
+    margin-left: 10px;
+    box-shadow: var(--shadow-sm);
 }
 
 .footer {

@@ -27,38 +27,49 @@
     @if (!User.Identity.IsAuthenticated && isLandingPage)
     {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-light bg-transparent border-bottom mb-3">
-                <div class="container-fluid">
+            <nav class="navbar navbar-expand-sm py-4 border-0 shadow-none" style="background-color: transparent !important;">
+                <div class="container-fluid px-4 px-md-5">
+
+                    @* Left Corner: Brand/Logo *@
                     <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
-                        <img src="~/images/PathlyLogo.png" alt="Pathly" class="app-logo" />
+                        <img src="~/images/PathlyLogo.png" alt="Pathly" class="app-logo" style="height: 40px; width: auto;" />
                     </a>
-                    <button class="navbar-toggler navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+                    @* Mobile Toggle Button (Visible only on small screens) *@
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1"></ul>
-                        <ul class="navbar-nav">
+                    @* Right Corner: Auth Buttons *@
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                        <ul class="navbar-nav align-items-center gap-3">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link px-3 fw-bold text-dark"
+                                   asp-area="Identity" asp-controller="Account" asp-action="Login"
+                                   style="font-size: 1rem;">Log In</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="btn btn-primary px-4 py-2 shadow-sm text-white border-0"
+                                   asp-area="Identity" asp-controller="Account" asp-action="Register"
+                                   style="border-radius: var(--btn-radius); background-color: var(--pathly-primary); font-weight: 700; font-size: 1rem;">
+                                    Get Started
+                                </a>
                             </li>
                         </ul>
                     </div>
+
                 </div>
             </nav>
         </header>
     }
     else
     {
-    @* Mobile-only fixed button to open offcanvas *@
-    <button type="button" class="btn btn-outline-secondary sidebar-toggle-fixed d-lg-none" data-bs-toggle="offcanvas"
-        data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Open navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        @* Mobile-only fixed button to open offcanvas *@
+        <button type="button" class="btn btn-white shadow-sm sidebar-toggle-fixed d-lg-none"
+                style="position: fixed; top: 15px; right: 20px; z-index: 1050; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); background: white;"
+                data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+            <i class="bi bi-list fs-4 text-dark"></i>
+        </button>
     }
 
     @* Sidebar: Only for Authenticated Users *@
