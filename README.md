@@ -1,6 +1,22 @@
+![.NET Version](https://img.shields.io/badge/.NET-8.0-purple)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 # **PATHLY**
 
+> **Bridge the gap between high-level ambition and daily execution with Micro-Strategic Planning.**
+
 ![Pathly Logo](Pathly.Web/wwwroot/images/PathlyLogo.png)
+
+
+## 📋 Table of Contents
+- [About](#about)
+- [User Flow](#user-flow)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Setup and Installation](#setup-and-installation)
+- [Architecture & Best Practices](#architecture--best-practices)
+- [Future Roadmap](#future-roadmap)
 
 ## **About**
 
