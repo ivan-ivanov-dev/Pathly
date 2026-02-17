@@ -66,7 +66,7 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 * **[ASP.NET Core 8 (MVC)](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview):** Utilized for high-performance, cross-platform web architecture.
 
-* **ASP.NET Core Identity:** For secure, encrypted user authentication and account management.
+* **[ASP.NET Core Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity):** For secure, encrypted user authentication and account management.
 
 * **[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/):** Leveraged as a modern ORM for database mapping and migrations.
 
@@ -86,7 +86,7 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 * **[SweetAlert2](https://sweetalert2.github.io/):** For high-end, interactive user confirmation dialogues.
 
-* **Bootstrap Icons:** For a consistent and intuitive visual language.
+* **[Bootstrap Icons](https://icons.getbootstrap.com/):** For a consistent and intuitive visual language.
 
 * **CSS3 Animations:** Custom `@keyframes` for smooth transitions and the "Pathly" brand feel.
 
@@ -96,7 +96,7 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 * **AJAX:** For seamless data loading (Roadmap selection and Task filtering).
 
-* **Client-Side Validation:** jQuery Validation and Unobtrusive Validation for real-time error handling.
+* **Client-Side Validation:** [JQuery Validation](https://jqueryvalidation.org/) and Unobtrusive Validation for real-time error handling.
 
 ## **Setup and Installation**
 
@@ -108,9 +108,9 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 * **Database Engine:** [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), Developer Edition, or LocalDB.
 
-#### *Optional:*
+#### **Optional:**
 
-* **[SSMS]:**(https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) to manage the SQL Server DB
+* **[SSMS](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms):** to manage the SQL Server DB
 
 ### *Tools:*
 
