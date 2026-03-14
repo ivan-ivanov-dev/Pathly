@@ -14,71 +14,93 @@ namespace Pathly.Services.Mappings
         public MappingProfile()
         {
             // --- GOALS ---
-            // Използваме ReverseMap за Create и Edit, за да можем лесно да прехвърляме данни в двете посоки
             CreateMap<Goal, GoalViewModel>().ReverseMap()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
-            CreateMap<Goal, GoalCreateViewModel>().ReverseMap();
-            CreateMap<Goal, GoalEditViewModel>().ReverseMap();
+            CreateMap<Goal, GoalCreateViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
+            CreateMap<Goal, GoalEditViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             CreateMap<Goal, GoalDetailsViewModel>()
-                .ForMember(dest => dest.Actions, opt => opt.Ignore()) // Ръчно се пълни от Roadmap
-                .ReverseMap();
+                .ForMember(dest => dest.Actions, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDeatailsViewModel>()
                 .ForMember(dest => dest.GoalTitle, opt => opt.MapFrom(src => src.Goal.Title))
                 .ForMember(dest => dest.GoalDescription, opt => opt.MapFrom(src => src.Goal.ShortDescription))
                 .ForMember(dest => dest.Actions, opt => opt.MapFrom(src => src.Actions))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.GoalId, opt => opt.Ignore()); // Защита на връзката към Goal
 
             CreateMap<Roadmap, RoadmapCreateViewModel>()
                 .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.SelectedGoalId, opt => opt.MapFrom(src => src.GoalId))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.GoalId, opt => opt.Ignore());
 
             CreateMap<RoadmapPlannerViewModel, RoadmapPlannerViewModel>();
 
             CreateMap<ActionItem, ActionsDisplayViewModel>()
                 .ForMember(dest => dest.ActionId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AssignedTasks, opt => opt.MapFrom(src => src.Tasks))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore()); // Защита на връзката към Roadmap
 
-            CreateMap<ActionItem, ActionItemCreateViewModel>().ReverseMap();
+            CreateMap<ActionItem, ActionItemCreateViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
 
             // --- TASKS ---
-            // Основното мапване за TaskViewModel с логика за Таговете
             CreateMap<TaskItem, TaskViewModel>()
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
                     src.TaskTags.Select(tt => tt.Tag.Name).ToList()))
                 .ReverseMap()
-                .ForMember(dest => dest.TaskTags, opt => opt.Ignore()); // Таговете се обработват ръчно в контролера/сървиса
+                .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore()); // Защита на връзката към Action
 
-            CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap();
+            CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
             CreateMap<TaskItem, TaskCreateViewModel>().ReverseMap()
                  .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
+                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                 .ForMember(dest => dest.ActionId, opt => opt.Ignore())
                  .ForMember(dest => dest.Action, opt => opt.Ignore());
 
-            CreateMap<TaskItem, TaskEditViewModel>().ReverseMap();
+            CreateMap<TaskItem, TaskEditViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
             CreateMap<TaskItem, TaskDetailsViewModel>()
                 .IncludeBase<TaskItem, TaskViewModel>()
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
-            CreateMap<TaskItem, TaskDeleteViewModel>().ReverseMap();
+            CreateMap<TaskItem, TaskDeleteViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             // --- TAGS ---
-            CreateMap<Tag, TagViewModel>().ReverseMap();
+            CreateMap<Tag, TagViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             // --- DASHBOARD ---
-            // Тъй като DashboardStatsViewModel е просто контейнер за числа, 
-            // той обикновено се пълни ръчно в контролера, но тук добавяме мапване за задачите вътре
-            CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap();
+            CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
-            // За клониране/дълбоко копиране ако се наложи
-            CreateMap<DashboardFocusListsViewModel, DashboardFocusListsViewModel>(); 
+            CreateMap<DashboardFocusListsViewModel, DashboardFocusListsViewModel>();
         }
     }
 }
