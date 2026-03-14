@@ -46,6 +46,8 @@ namespace Pathly.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            builder.Services.AddAutoMapper(typeof(Services.Mappings.MappingProfile).Assembly);
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
