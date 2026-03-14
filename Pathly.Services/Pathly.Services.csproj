@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Pathly.DataModels\Pathly.DataModels.csproj" />
     <ProjectReference Include="..\Pathly.Data\Pathly.Data.csproj" />
     <ProjectReference Include="..\Pathly.ViewModels\Pathly.ViewModels.csproj" />
