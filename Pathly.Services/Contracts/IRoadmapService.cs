@@ -6,7 +6,7 @@ namespace Pathly.Services.Contracts
     public interface IRoadmapService
     {
         Task<IEnumerable<Goal>> GetAvailableGoalsAsync(string userId);
-        Task<RoadmapDeatailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId);
+        Task<RoadmapDetailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId);
         Task<List<Roadmap>> GetAllRoadmapsAsync(string userId);
         Task<Goal?> GetGoalByIdAsync(int goalId, string userId);
         Task<int> SaveRoadmapAsync(RoadmapCreateViewModel model, string userId);

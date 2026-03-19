@@ -8,7 +8,7 @@ namespace Pathly.DataModels
         public int Id { get; set; }
 
         public int GoalId { get; set; }
-        public Goal Goal { get; set; } = null!;
+        public virtual Goal Goal { get; set; }
 
         [MaxLength(ValidationConstants.MaxRoadmapWhyLength)]
         public string? Why { get; set; }
@@ -20,6 +20,6 @@ namespace Pathly.DataModels
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 
-        public ICollection<ActionItem> Actions { get; set; } = new List<ActionItem>();
+        public virtual ICollection<ActionItem> Actions { get; set; } = new List<ActionItem>();
     }
 }

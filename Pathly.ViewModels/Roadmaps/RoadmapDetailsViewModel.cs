@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.ViewModels.Roadmaps
 {
-    public class RoadmapDeatailsViewModel
+    public class RoadmapDetailsViewModel
     {
         public int RoadmapId { get; set; }
 

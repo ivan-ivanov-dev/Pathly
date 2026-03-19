@@ -187,7 +187,7 @@ namespace Pathly.Services.Implementation
             return goal;
         }
 
-        public async Task<RoadmapDeatailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId)
+        public async Task<RoadmapDetailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId)
         {
             var roadmap = await _context.Roadmaps
                 .Include(r => r.Goal)
@@ -196,7 +196,7 @@ namespace Pathly.Services.Implementation
                         .ThenInclude(t => t.TaskTags)
                             .ThenInclude(tt => tt.Tag)
                 .Where(r => r.Id == roadmapId && r.UserId == userId)
-                .Select(r => new RoadmapDeatailsViewModel
+                .Select(r => new RoadmapDetailsViewModel
                 {
                     RoadmapId = r.Id,
                     GoalTitle = r.Goal.Title,

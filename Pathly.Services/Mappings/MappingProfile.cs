@@ -35,7 +35,7 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             // --- ROADMAPS & ACTIONS ---
-            CreateMap<Roadmap, RoadmapDeatailsViewModel>()
+            CreateMap<Roadmap, RoadmapDetailsViewModel>()
                 .ForMember(dest => dest.GoalTitle, opt => opt.MapFrom(src => src.Goal.Title))
                 .ForMember(dest => dest.GoalDescription, opt => opt.MapFrom(src => src.Goal.ShortDescription))
                 .ForMember(dest => dest.Actions, opt => opt.MapFrom(src => src.Actions))
@@ -66,6 +66,7 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
 
             // --- TASKS ---
+
             CreateMap<TaskItem, TaskViewModel>()
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
                     src.TaskTags.Select(tt => tt.Tag.Name).ToList()))
