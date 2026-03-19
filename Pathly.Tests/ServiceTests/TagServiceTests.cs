@@ -1,10 +1,11 @@
-﻿using Moq;
-using NUnit.Framework;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using NUnit.Framework;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Implementation;
-using AutoMapper;
+using Pathly.Services.Mappings;
 using Pathly.ViewModels.Tags;
 namespace Pathly.Tests;
 
@@ -12,7 +13,7 @@ namespace Pathly.Tests;
 public class TagServiceTests
 {
     private ApplicationDbContext _context;
-    private Mock<IMapper> _mapperMock;
+    private IMapper _mapper;
     private TagService _tagService;
 
     [SetUp]
@@ -23,16 +24,13 @@ public class TagServiceTests
                 .Options;
 
         _context = new ApplicationDbContext(options);
-        _mapperMock = new Mock<IMapper>();
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
+        _mapper = config.CreateMapper();
 
-        // 2. Инициализираме сървиса
-        _tagService = new TagService(_mapperMock.Object,_context);
-    }
-
-    [Test]
-    public void Test1()
-    {
-        Assert.Pass();
+        _tagService = new TagService(_mapper,_context);
     }
 
     [TearDown]
@@ -43,4 +41,15 @@ public class TagServiceTests
             _context.Dispose();
         }
     }
+
+    [Test]
+    public async Task CreateTagAsync_ShouldAddTag_WhenValid()
+    {
+        await _tagService.CreateTagAsync("Work", "user1");
+
+        var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == "Work");
+        Assert.That(tag, Is.Not.Null);
+        Assert.That(tag.UserId, Is.EqualTo("user1"));
+    }
+
 }
