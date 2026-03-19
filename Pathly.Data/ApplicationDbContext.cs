@@ -73,7 +73,7 @@ namespace Pathly.Data
             // Roadmap -> Goal
             builder.Entity<Roadmap>()
                 .HasOne(r => r.Goal)
-                .WithOne()
+                .WithOne(g => g.Roadmap)
                 .HasForeignKey<Roadmap>(r => r.GoalId)
                 .OnDelete(DeleteBehavior.Restrict);
 
