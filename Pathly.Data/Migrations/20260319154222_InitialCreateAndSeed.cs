@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Pathly.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateAndSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -311,6 +313,122 @@ namespace Pathly.Data.Migrations
                         principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "3f2504e0-4f89-11d3-9a0c-0305e82c3301", 0, "59410515-1d89-44a8-87ce-b8e89edf7130", "test@pathly.com", true, false, null, "TEST@PATHLY.COM", "TEST@PATHLY.COM", "AQAAAAIAAYagAAAAEAoxW3EMto9W74DoYzxcUOwhnIMveA+g07tCD1LizE3mLIEfmLMkWZMxT0KoQdTscw==", null, false, "b2a9201f-73e8-45ee-8ef1-f7c901aeac00", false, "test@pathly.com" });
+
+            migrationBuilder.InsertData(
+                table: "Goals",
+                columns: new[] { "Id", "IsActive", "ShortDescription", "TargetDate", "Title", "UserId" },
+                values: new object[,]
+                {
+                    { 1, true, "Mastering advanced architecture and cloud services in the .NET ecosystem.", new DateTime(2026, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "Become a Senior .NET Developer", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 2, true, "Complete the implementation of AutoMapper and Seeding in the current project.", new DateTime(2026, 4, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6425), "Master Pathly Architecture", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 3, false, "Successfully finished the basics of C# programming.", new DateTime(2025, 10, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6465), "SoftUni Fundamentals Module", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tags",
+                columns: new[] { "Id", "Name", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Work", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 2, "Personal", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 3, "C#", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 4, "Gym", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 5, "Frontend", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 6, "Testing", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 7, "Learning", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 8, "Soft Skill", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 9, "School", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 10, "Urgent", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tasks",
+                columns: new[] { "Id", "ActionId", "CreatedOn", "Description", "DueDate", "IsCompleted", "Priority", "Title", "UserId" },
+                values: new object[,]
+                {
+                    { 28, null, new DateTime(2026, 3, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6839), "Unlinked task description", null, false, 2, "General Task 1", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 29, null, new DateTime(2026, 3, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6841), "Unlinked task description", null, false, 2, "General Task 2", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 30, null, new DateTime(2026, 3, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6842), "Unlinked task description", null, false, 2, "General Task 3", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 31, null, new DateTime(2026, 3, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6844), "Unlinked task description", null, false, 2, "General Task 4", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 32, null, new DateTime(2026, 3, 19, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6868), "Unlinked task description", null, false, 2, "General Task 5", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roadmaps",
+                columns: new[] { "Id", "GoalId", "IdealOutcome", "UserId", "Why" },
+                values: new object[,]
+                {
+                    { 1, 1, "Senior Dev Role", "3f2504e0-4f89-11d3-9a0c-0305e82c3301", "To achieve financial independence" },
+                    { 2, 2, "Perfectly coded app", "3f2504e0-4f89-11d3-9a0c-0305e82c3301", "To build professional habits" },
+                    { 3, 3, "Solid programming basics", "3f2504e0-4f89-11d3-9a0c-0305e82c3301", "Foundation is key" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Actions",
+                columns: new[] { "Id", "DueDate", "IsCompleted", "Resources", "RoadmapId", "Title", "UserId" },
+                values: new object[,]
+                {
+                    { 1, null, true, "MS Docs, Pluralsight", 1, "Master EF Core", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 2, null, false, "Docker, RabbitMQ basics", 1, "Learn Microservices", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 3, null, false, "GoF Book", 1, "System Design Design Patterns", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 4, null, true, "AutoMapper Guide", 2, "Implement AutoMapper", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 5, null, false, "xUnit, Moq", 2, "Setup Unit Tests", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 6, null, false, "Bootstrap, CSS", 2, "Finalize UI", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 7, null, true, null, 3, "Basic Syntax", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 8, null, true, null, 3, "Loops and Arrays", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 9, null, true, null, 3, "Classes and Objects", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tasks",
+                columns: new[] { "Id", "ActionId", "CreatedOn", "Description", "DueDate", "IsCompleted", "Priority", "Title", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6763), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6767), true, 3, "Task 1 for Action 1", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 2, 1, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6771), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6772), false, 4, "Task 2 for Action 1", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 3, 1, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6774), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6775), true, 1, "Task 3 for Action 1", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 4, 2, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6777), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6778), false, 2, "Task 1 for Action 2", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 5, 2, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6780), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6781), true, 3, "Task 2 for Action 2", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 6, 2, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6783), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6784), false, 4, "Task 3 for Action 2", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 7, 3, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6786), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6787), true, 1, "Task 1 for Action 3", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 8, 3, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6789), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6789), false, 2, "Task 2 for Action 3", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 9, 3, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6791), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6792), true, 3, "Task 3 for Action 3", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 10, 4, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6795), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6796), false, 4, "Task 1 for Action 4", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 11, 4, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6797), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6798), true, 1, "Task 2 for Action 4", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 12, 4, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6799), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6800), false, 2, "Task 3 for Action 4", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 13, 5, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6802), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6803), true, 3, "Task 1 for Action 5", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 14, 5, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6804), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6805), false, 4, "Task 2 for Action 5", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 15, 5, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6807), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6807), true, 1, "Task 3 for Action 5", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 16, 6, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6809), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6810), false, 2, "Task 1 for Action 6", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 17, 6, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6811), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6812), true, 3, "Task 2 for Action 6", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 18, 6, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6814), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6815), false, 4, "Task 3 for Action 6", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 19, 7, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6817), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6818), true, 1, "Task 1 for Action 7", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 20, 7, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6819), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6820), false, 2, "Task 2 for Action 7", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 21, 7, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6822), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6822), true, 3, "Task 3 for Action 7", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 22, 8, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6824), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6825), false, 4, "Task 1 for Action 8", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 23, 8, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6826), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6827), true, 1, "Task 2 for Action 8", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 24, 8, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6828), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6829), false, 2, "Task 3 for Action 8", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 25, 9, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6831), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6832), true, 3, "Task 1 for Action 9", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 26, 9, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6833), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6834), false, 4, "Task 2 for Action 9", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" },
+                    { 27, 9, new DateTime(2026, 3, 9, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6835), "Seed description", new DateTime(2026, 3, 24, 17, 42, 21, 229, DateTimeKind.Local).AddTicks(6836), true, 1, "Task 3 for Action 9", "3f2504e0-4f89-11d3-9a0c-0305e82c3301" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TaskTags",
+                columns: new[] { "TagId", "TaskId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 10, 1 },
+                    { 3, 2 },
+                    { 7, 4 },
+                    { 5, 10 }
                 });
 
             migrationBuilder.CreateIndex(
