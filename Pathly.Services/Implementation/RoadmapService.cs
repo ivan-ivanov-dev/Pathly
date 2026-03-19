@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
@@ -10,9 +12,11 @@ namespace Pathly.Services.Implementation
     public class RoadmapService : IRoadmapService
     {
         private readonly ApplicationDbContext _context;
-        public RoadmapService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public RoadmapService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task<int> SaveRoadmapAsync(RoadmapCreateViewModel model, string userId)
         {
@@ -29,8 +33,7 @@ namespace Pathly.Services.Implementation
 
                     if (roadmap == null) throw new UnauthorizedAccessException();
 
-                    roadmap.Why = model.Why;
-                    roadmap.IdealOutcome = model.IdealOutcome;
+                    _mapper.Map(model, roadmap);
 
                     var incomingActionIds = model.Actions.Select(a => a.Id).Where(id => id.HasValue).ToList();
                     var actionsToRemove = roadmap.Actions.Where(a => !incomingActionIds.Contains(a.Id)).ToList();
@@ -50,14 +53,11 @@ namespace Pathly.Services.Implementation
                         }
                         else
                         {
-                            _context.Actions.Add(new ActionItem
-                            {
-                                RoadmapId = roadmap.Id,
-                                Title = actionVm.Title,
-                                Resources = actionVm.Resources,
-                                DueDate = actionVm.DueDate,
-                                UserId = userId
-                            });
+                            var newAction = _mapper.Map<ActionItem>(actionVm);
+                            newAction.RoadmapId = roadmap.Id;
+                            newAction.UserId = userId;
+
+                            _context.Actions.Add(newAction);
                         }
                     }
                 }
@@ -86,38 +86,29 @@ namespace Pathly.Services.Implementation
                     }
                     else
                     {
-                        var newGoal = new Goal
-                        {
-                            Title = model.NewGoalTitle!,
-                            ShortDescription = model.NewGoalDescription,
-                            UserId = userId,
-                            IsActive = true
-                        };
+                        var newGoal = _mapper.Map<Goal>(model);
+                        newGoal.UserId = userId;
+                        newGoal.IsActive = true;
+
                         _context.Goals.Add(newGoal);
                         await _context.SaveChangesAsync();
                         goalId = newGoal.Id;
                     }
 
-                    roadmap = new Roadmap
-                    {
-                        GoalId = goalId,
-                        UserId = userId,
-                        Why = model.Why,
-                        IdealOutcome = model.IdealOutcome
-                    };
+                    roadmap = _mapper.Map<Roadmap>(model);
+                    roadmap.UserId = userId;
+                    roadmap.GoalId = goalId;
 
                     _context.Roadmaps.Add(roadmap);
                     await _context.SaveChangesAsync();
+
                     foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
                     {
-                        _context.Actions.Add(new ActionItem
-                        {
-                            RoadmapId = roadmap.Id,
-                            Title = actionVm.Title,
-                            Resources = actionVm.Resources,
-                            DueDate = actionVm.DueDate,
-                            UserId = userId
-                        });
+                        var newAction = _mapper.Map<ActionItem>(actionVm);
+                        newAction.RoadmapId = roadmap.Id;
+                        newAction.UserId = userId;
+
+                        _context.Actions.Add(newAction);
                     }
                 }
                 await _context.SaveChangesAsync();
@@ -189,42 +180,12 @@ namespace Pathly.Services.Implementation
 
         public async Task<RoadmapDetailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId)
         {
-            var roadmap = await _context.Roadmaps
-                .Include(r => r.Goal)
-                .Include(r => r.Actions)
-                    .ThenInclude(a => a.Tasks)
-                        .ThenInclude(t => t.TaskTags)
-                            .ThenInclude(tt => tt.Tag)
-                .Where(r => r.Id == roadmapId && r.UserId == userId)
-                .Select(r => new RoadmapDetailsViewModel
-                {
-                    RoadmapId = r.Id,
-                    GoalTitle = r.Goal.Title,
-                    GoalDescription = r.Goal.ShortDescription,
-                    Why = r.Why,
-                    IdealOutcome = r.IdealOutcome,  
-                    Actions = r.Actions.Select(a => new ActionsDisplayViewModel
-                    {
-                        ActionId = a.Id,
-                        Title = a.Title,
-                        Resources = a.Resources,
-                        IsCompleted = a.IsCompleted,
-                        DueDate = a.DueDate,
-                        AssignedTasks = a.Tasks
-                            .OrderBy(t => t.CreatedOn)
-                            .Select(t => new TaskViewModel
-                            {
-                                Id = t.Id,
-                                Title = t.Title,
-                                IsCompleted = t.IsCompleted,
-                                Priority = t.Priority,
-                                CreatedOn = t.CreatedOn, 
-                                Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
-                            }).ToList()
-                    }).OrderBy(a => a.DueDate).ToList()
-                }).FirstOrDefaultAsync();
+            var roadmap =  await _context.Roadmaps
+            .Where(r => r.Id == roadmapId && r.UserId == userId)
+            .ProjectTo<RoadmapDetailsViewModel>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
 
-            if(roadmap == null)
+            if (roadmap == null)
             {
                 throw new UnauthorizedAccessException();
             }
@@ -234,45 +195,10 @@ namespace Pathly.Services.Implementation
 
         public async Task<RoadmapCreateViewModel?> GetRoadmapForEditAsync(int roadmapId, string userId)
         {
-            var roadmap = await _context.Roadmaps
-                .Include(r => r.Goal)
-                .Include(r => r.Actions)
-                    .ThenInclude(a => a.Tasks)
-                        .ThenInclude(t => t.TaskTags)
-                            .ThenInclude(tt => tt.Tag)
-                .FirstOrDefaultAsync(r => r.Id == roadmapId && r.UserId == userId);
-
-            if (roadmap == null) return null;
-
-            return new RoadmapCreateViewModel
-            {
-                IsEditing = true,
-                RoadmapId = roadmap.Id,
-                SelectedGoalId = roadmap.GoalId,
-                NewGoalTitle = roadmap.Goal.Title,
-                NewGoalDescription = roadmap.Goal.ShortDescription,
-                Why = roadmap.Why,
-                IdealOutcome = roadmap.IdealOutcome,
-                Actions = roadmap.Actions.Select(a => new ActionItemCreateViewModel
-                {
-                    Id = a.Id,
-                    Title = a.Title,
-                    Resources = a.Resources,
-                    DueDate = a.DueDate,
-                    AssignedTasks = a.Tasks
-                        .OrderBy(t => t.CreatedOn)
-                        .Select(t => new TaskViewModel
-                        {
-                            Id = t.Id,
-                            Title = t.Title,
-                            IsCompleted = t.IsCompleted,
-                            Priority = t.Priority,
-                            CreatedOn = t.CreatedOn,
-                            Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
-
-                        }).ToList()
-                }).ToList()
-            };
+            return await _context.Roadmaps
+            .Where(r => r.Id == roadmapId && r.UserId == userId)
+            .ProjectTo<RoadmapCreateViewModel>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
         }
 
         public async Task<bool> LinkTaskToActionAsync(int taskId, int actionId, string userId)
