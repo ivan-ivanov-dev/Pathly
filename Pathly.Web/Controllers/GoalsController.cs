@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.DataModels;
@@ -12,10 +13,12 @@ namespace Pathly.Web.Controllers
     {
         private readonly IGoalService _goalService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public GoalsController(IGoalService goalService, UserManager<ApplicationUser> userManager)
+        private readonly IMapper _mapper;
+        public GoalsController(IGoalService goalService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _goalService = goalService;
             _userManager = userManager;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index(GoalQueryModel queryModel)
         {
@@ -74,14 +77,8 @@ namespace Pathly.Web.Controllers
             {
                 return NotFound();
             }
-            var model = new GoalEditViewModel
-            {
-                Id = goal.Id,
-                Title = goal.Title,
-                ShortDescription = goal.ShortDescription,
-                TargetDate = goal.TargetDate,
-                IsActive = goal.IsActive
-            };
+            
+            var model = _mapper.Map<GoalEditViewModel>(goal);
 
             return View(model);
         }
