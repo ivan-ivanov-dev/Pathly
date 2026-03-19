@@ -35,27 +35,28 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             CreateMap<RoadmapCreateViewModel, Goal>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.NewGoalTitle))
                 .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.NewGoalDescription))
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.TargetDate, opt => opt.Ignore())
+                .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Roadmap, opt => opt.Ignore());
 
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDetailsViewModel>()
-                .ForMember(dest => dest.GoalTitle, opt => opt.MapFrom(src => src.Goal.Title))
-                .ForMember(dest => dest.GoalDescription, opt => opt.MapFrom(src => src.Goal.ShortDescription))
-                .ForMember(dest => dest.Actions, opt => opt.MapFrom(src => src.Actions))
-                .ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.GoalId, opt => opt.Ignore());
+                .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.GoalDescription, opt => opt.MapFrom(src => src.Goal.ShortDescription));
 
             CreateMap<Roadmap, RoadmapCreateViewModel>()
                 .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.SelectedGoalId, opt => opt.MapFrom(src => src.GoalId))
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.GoalId, opt => opt.Ignore());
+                .ForMember(dest => dest.NewGoalTitle, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalDescription, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalIsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalTargetDate, opt => opt.Ignore())
+                .ForMember(dest => dest.IsEditing, opt => opt.Ignore());
 
             CreateMap<RoadmapPlannerViewModel, RoadmapPlannerViewModel>();
 
@@ -70,11 +71,13 @@ namespace Pathly.Services.Mappings
             CreateMap<ActionItemCreateViewModel, ActionItem>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Roadmap, opt => opt.Ignore())
+                .ForMember(dest => dest.Tasks, opt => opt.Ignore());
 
-            CreateMap<ActionItem, ActionItemCreateViewModel>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+            CreateMap<ActionItem, ActionItemCreateViewModel>()
+                .ForMember(dest => dest.AssignedTasks, opt => opt.Ignore());
 
             // --- TASKS ---
 
@@ -90,17 +93,17 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
-            CreateMap<TaskItem, TaskCreateViewModel>().ReverseMap()
-                 .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
-                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                 .ForMember(dest => dest.ActionId, opt => opt.Ignore())
-                 .ForMember(dest => dest.Action, opt => opt.Ignore());
+            CreateMap<TaskItem, TaskCreateViewModel>()
+                .ForMember(dest => dest.SelectedTagIds, opt => opt.Ignore())
+                .ForMember(dest => dest.AvailableTags, opt => opt.Ignore());
 
-            CreateMap<TaskItem, TaskEditViewModel>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
+            CreateMap<TaskItem, TaskEditViewModel>()
+                .ForMember(dest => dest.SelectedTagIds, opt => opt.Ignore())
+                .ForMember(dest => dest.AvailableTags, opt => opt.Ignore());
 
-            CreateMap<TaskDetailsViewModel, TaskEditViewModel>();
+            CreateMap<TaskDetailsViewModel, TaskEditViewModel>()
+                .ForMember(dest => dest.SelectedTagIds, opt => opt.Ignore())
+                .ForMember(dest => dest.AvailableTags, opt => opt.Ignore());
 
             CreateMap<TaskItem, TaskDetailsViewModel>()
                 .IncludeBase<TaskItem, TaskViewModel>()
@@ -116,9 +119,6 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             // --- DASHBOARD ---
-            CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
-
             CreateMap<DashboardFocusListsViewModel, DashboardFocusListsViewModel>();
         }
     }
