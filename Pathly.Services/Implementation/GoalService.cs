@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
@@ -9,23 +11,18 @@ namespace Pathly.Services.Implementation
     public class GoalService : IGoalService
     {
         private readonly ApplicationDbContext _context; 
-        public GoalService(ApplicationDbContext context) 
+        private readonly IMapper _mapper;
+        public GoalService(ApplicationDbContext context, IMapper mapper) 
         { 
-            _context = context; 
+            _context = context;
+            _mapper = mapper;
         }
         public async Task CreateAsync(GoalCreateViewModel model, string userId)
         {
-            var goal = new Goal
-            {
-                Title = model.Title,
-                ShortDescription = model.ShortDescription,
-                TargetDate = model.TargetDate,
-                IsActive = model.IsActive,
-                UserId = userId
-            };
+            var goal = _mapper.Map<Goal>(model);
+            goal.UserId = userId;
 
             _context.Goals.Add(goal);
-
             await _context.SaveChangesAsync();
         }
 
@@ -87,19 +84,7 @@ namespace Pathly.Services.Implementation
                 _ => goalsQuery
             };
             var goals = await goalsQuery
-                .Select(g => new GoalViewModel
-                {
-                    Id = g.Id,
-                    Title = g.Title,
-                    ShortDescription = g.ShortDescription,
-                    TargetDate = g.TargetDate,
-                    IsActive = g.IsActive,
-                    HasRoadmap = _context.Roadmaps.Any(r => r.GoalId == g.Id),
-                    RoadmapId = _context.Roadmaps
-                        .Where(r => r.GoalId == g.Id)
-                        .Select(r => r.Id)
-                        .FirstOrDefault()
-                })
+                .ProjectTo<GoalViewModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             var result = new GoalListViewModel 
@@ -116,14 +101,7 @@ namespace Pathly.Services.Implementation
         {
            var goal = await _context.Goals
                 .Where(g => g.Id == id && g.UserId == userId)
-                .Select(g => new GoalDetailsViewModel
-                {
-                    Id = g.Id,
-                    Title = g.Title,
-                    ShortDescription = g.ShortDescription,
-                    TargetDate = g.TargetDate,
-                    IsActive = g.IsActive
-                })
+                .ProjectTo<GoalDetailsViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
             if (goal != null)
@@ -173,12 +151,8 @@ namespace Pathly.Services.Implementation
                 throw new UnauthorizedAccessException("You do not have permission to edit this goal.");
             }
 
-            goal.Title = model.Title;
-            goal.ShortDescription = model.ShortDescription;
-            goal.TargetDate = model.TargetDate;
-            goal.IsActive = model.IsActive;
+            _mapper.Map(model, goal);
 
-            _context.Goals.Update(goal);
             await _context.SaveChangesAsync();
         }
     }
