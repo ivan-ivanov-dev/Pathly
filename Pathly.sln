@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathly.ViewModels", "Pathly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathly.Web", "Pathly.Web\Pathly.Web.csproj", "{B15A8560-9B34-0934-3BD2-100EB9148DC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathly.Tests", "Pathly.Tests\Pathly.Tests.csproj", "{46FED087-79ED-4BA2-8842-582F5F5F53B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{B15A8560-9B34-0934-3BD2-100EB9148DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B15A8560-9B34-0934-3BD2-100EB9148DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B15A8560-9B34-0934-3BD2-100EB9148DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FED087-79ED-4BA2-8842-582F5F5F53B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FED087-79ED-4BA2-8842-582F5F5F53B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FED087-79ED-4BA2-8842-582F5F5F53B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FED087-79ED-4BA2-8842-582F5F5F53B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
