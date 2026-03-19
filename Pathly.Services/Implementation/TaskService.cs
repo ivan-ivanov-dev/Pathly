@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Tags;
 using Pathly.ViewModels.TasksViewModels;
 
 namespace Pathly.Services.Implementation
@@ -9,29 +12,31 @@ namespace Pathly.Services.Implementation
     public class TaskService : ITaskService
     {
         private readonly ApplicationDbContext _context;
-        public TaskService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public TaskService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public async Task CreateAsync(TaskCreateViewModel model, string userId)
         {
 
-            var task = new TaskItem
+            var task = _mapper.Map<TaskItem>(model);
+            task.UserId = userId;
+            task.CreatedOn = DateTime.UtcNow;
+            task.IsCompleted = false;
+            task.Priority = TaskPriority.Low;
+
+            if (model.SelectedTagIds != null && model.SelectedTagIds.Any())
             {
-                Title = model.Title,
-                Description = model.Description,
-                DueDate = model.DueDate,
-                CreatedOn = DateTime.UtcNow,
-                IsCompleted = false,
-                Priority = TaskPriority.Low,
-                UserId = userId,
-                TaskTags = model.SelectedTagIds.Select(tagId => new TaskTag
+                task.TaskTags = model.SelectedTagIds.Select(tagId => new TaskTag
                 {
+
                     TagId = tagId
 
-                }).ToList()
-            };
-
+                }).ToList();
+            }
+            
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
         }
@@ -96,49 +101,28 @@ namespace Pathly.Services.Implementation
             }
 
             var tasks = await tasksQuery
-                .Select(t => new TaskViewModel
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    DueDate = t.DueDate,
-                    CreatedOn = t.CreatedOn,
-                    IsCompleted = t.IsCompleted,
-                    Priority = t.Priority,
-                    Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
-                })
+                .ProjectTo<TaskViewModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             var userTags = await _context.Tags
                 .Where(tag => tag.UserId == userId)
+                .ProjectTo<TagViewModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
             var result = new TaskListViewModel
             {
                 Tasks = tasks,
-                AvailableFilterTags = userTags
+                AvailableFilterTags = _mapper.Map<List<Tag>>(userTags)
             };
 
             return result;
         }
 
-        public Task<TaskDetailsViewModel?> GetDetailsAsync(int id, string userId)
+        public async Task<TaskDetailsViewModel?> GetDetailsAsync(int id, string userId)
         {
-            var task = _context.Tasks
-                .Include(t => t.TaskTags)
-                    .ThenInclude(tt => tt.Tag)
+            var task = await _context.Tasks
                 .Where(t => t.Id == id && t.UserId == userId)
-                .Select(t => new TaskDetailsViewModel
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    DueDate = t.DueDate,
-                    CreatedOn = t.CreatedOn,
-                    IsCompleted = t.IsCompleted,
-                    Priority = t.Priority,
-                    Tags = t.TaskTags.Select(tt => tt.Tag.Name).ToList()
-                })
+                .ProjectTo<TaskDetailsViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
             if (task == null)
@@ -215,9 +199,7 @@ namespace Pathly.Services.Implementation
                 throw new UnauthorizedAccessException();
             }
 
-            task.Title = model.Title;
-            task.Description = model.Description;
-            task.DueDate = model.DueDate;
+            _mapper.Map(model, task);
             _context.TaskTags.RemoveRange(task.TaskTags);
 
             task.TaskTags = model.SelectedTagIds.Select(tagId => new TaskTag
