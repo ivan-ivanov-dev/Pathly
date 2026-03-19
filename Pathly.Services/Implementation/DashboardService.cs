@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
@@ -9,8 +11,10 @@ namespace Pathly.Services.Implementation
     public class DashboardService : IDashboardService
     {
         private readonly ApplicationDbContext _context;
-        public DashboardService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public DashboardService(IMapper mapper,ApplicationDbContext context)
         {
+            _mapper = mapper;
             _context = context;
         }
         public async Task<DashboardFocusListsViewModel> GetDashboardFocusListsAsync(string userId)
@@ -20,45 +24,27 @@ namespace Pathly.Services.Implementation
             var userTasks = _context.Tasks.Where(t => t.UserId == userId);
 
             var dueTodayTasks = await userTasks
-                .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == today)
-                .OrderBy(t => t.DueDate)
-                .Take(5)
-                .Select(t => new TaskSummaryViewModel
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    DueDate = t.DueDate,
-                    IsCompleted = t.IsCompleted,
-                    Priority = t.Priority
-                })
-                .ToListAsync();
+            .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == today)
+            .OrderBy(t => t.DueDate)
+            .Take(5)
+            .ProjectTo<TaskSummaryViewModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
             var overdueTasks = await userTasks
-                .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date < today && !t.IsCompleted)
-                .OrderBy(t => t.DueDate)
-                .Take(5)
-                .Select(t => new TaskSummaryViewModel
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    DueDate = t.DueDate,
-                    IsCompleted = t.IsCompleted,
-                    Priority = t.Priority
-                })
-                .ToListAsync();
+            .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date < today && !t.IsCompleted)
+            .OrderBy(t => t.DueDate)
+            .Take(5)
+            .ProjectTo<TaskSummaryViewModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
 
             var futureHighPriorityTasks = await userTasks
-                .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date > today && (t.Priority == TaskPriority.High || t.Priority == TaskPriority.Critical))
-                .OrderBy(t => t.DueDate)
-                .Take(5)
-                .Select(t => new TaskSummaryViewModel
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    DueDate = t.DueDate,
-                    IsCompleted = t.IsCompleted,
-                    Priority = t.Priority
-                })
-                .ToListAsync();
+            .Where(t => t.DueDate.HasValue && t.DueDate.Value.Date > today &&
+                  (t.Priority == TaskPriority.High || t.Priority == TaskPriority.Critical))
+            .OrderBy(t => t.DueDate)
+            .Take(5)
+            .ProjectTo<TaskSummaryViewModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
             return new DashboardFocusListsViewModel
             {
                 DueTodayTasks = dueTodayTasks,
