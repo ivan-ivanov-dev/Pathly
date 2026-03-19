@@ -12,7 +12,7 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        private const string TestUserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301";
+        public const string TestUserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301";
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
