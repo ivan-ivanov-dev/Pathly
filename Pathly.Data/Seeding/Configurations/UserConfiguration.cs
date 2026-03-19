@@ -25,10 +25,10 @@ namespace Pathly.Data.Seeding.Configurations
                 Email = "test@pathly.com",
                 NormalizedEmail = "TEST@PATHLY.COM",
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString() // Важно за Identity
+                SecurityStamp = Guid.NewGuid().ToString() // Important for Identity
             };
 
-            // Хешираме паролата ръчно
+            // Manually hash the password and set it to the PasswordHash property
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Test1234!");
 
             builder.HasData(adminUser);

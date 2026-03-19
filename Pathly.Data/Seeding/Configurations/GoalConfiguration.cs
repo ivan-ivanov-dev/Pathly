@@ -17,7 +17,7 @@ namespace Pathly.Data.Seeding.Configurations
             builder.HasData(new Goal[]
             {
                       
-                // 1. Активна основна цел
+                // Goal1
                 new Goal
                 {
                     Id = 1,
@@ -28,7 +28,7 @@ namespace Pathly.Data.Seeding.Configurations
                     UserId = userId 
                 },
 
-                // 2. Цел в процес (Active, но по-кратък срок)
+                // Goal2
                 new Goal
                 {
                     Id = 2,
@@ -39,7 +39,7 @@ namespace Pathly.Data.Seeding.Configurations
                     UserId = userId
                 },
 
-                // 3. Завършена/Неактивна цел (за тест на филтрите)
+                // Goal3
                 new Goal
                 {
                     Id = 3,
