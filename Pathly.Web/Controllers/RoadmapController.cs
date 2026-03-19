@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.DataModels;
@@ -13,10 +14,12 @@ namespace Pathly.Web.Controllers
     {
         private readonly IRoadmapService _roadmapService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public RoadmapController(IRoadmapService roadmapService, UserManager<ApplicationUser> userManager)
+        private readonly IMapper _mapper;
+        public RoadmapController(IRoadmapService roadmapService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _roadmapService = roadmapService;
             _userManager = userManager;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> Selection()
@@ -38,11 +41,8 @@ namespace Pathly.Web.Controllers
 
                 if (goal != null)
                 {
+                    _mapper.Map(goal, model);
                     model.SelectedGoalId = goal.Id;
-                    model.NewGoalTitle = goal.Title;
-                    model.NewGoalDescription = goal.ShortDescription;
-                    model.NewGoalIsActive = goal.IsActive;
-                    model.NewGoalTargetDate = goal.TargetDate;
                 }
             }
 
@@ -156,14 +156,13 @@ namespace Pathly.Web.Controllers
         public async Task<IActionResult> Planner(int actionId, int roadmapId)
         {
             var userId = _userManager.GetUserId(User);
-
             var tasks = await _roadmapService.GetUnlinkedTasksAsync(userId);
 
             var model = new RoadmapPlannerViewModel
             {
                 TargetActionId = actionId,
                 RoadmapId = roadmapId,
-                UnlinkedTasks = tasks
+                UnlinkedTasks = _mapper.Map<IEnumerable<TaskViewModel>>(tasks)
             };
 
             return View(model);
