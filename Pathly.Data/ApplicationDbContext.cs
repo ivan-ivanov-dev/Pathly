@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Pathly.Data.Seeding.Configurations;
 using Pathly.DataModels;
 
 namespace Pathly.Data
@@ -20,6 +21,10 @@ namespace Pathly.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            //---------------------------//
+            //DEFINE REALATIONSHIPS
+            //---------------------------//
 
             //Task -> User
             builder.Entity<TaskItem>()
@@ -92,7 +97,18 @@ namespace Pathly.Data
                 .WithMany()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-        }
 
+            //---------------------------//
+            //SEEDING CONFIGURATIONS
+            //---------------------------//
+
+            builder.ApplyConfiguration(new UserConfiguration());    // 1. Потребител
+            builder.ApplyConfiguration(new TagConfiguration());     // 2. Тагове
+            builder.ApplyConfiguration(new GoalConfiguration());    // 3. Цели
+            builder.ApplyConfiguration(new RoadmapConfiguration()); // 4. Пътни карти
+            builder.ApplyConfiguration(new ActionItemConfiguration()); // 5. Действия
+            builder.ApplyConfiguration(new TaskItemConfiguration());   // 6. Задачи
+            builder.ApplyConfiguration(new TaskTagConfiguration());    // 7. Връзки Задачи-Тагове
+        }
     }
 }
