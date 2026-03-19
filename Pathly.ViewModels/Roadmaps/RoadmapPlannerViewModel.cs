@@ -1,4 +1,5 @@
 ﻿using Pathly.DataModels;
+using Pathly.ViewModels.TasksViewModels;
 
 namespace Pathly.ViewModels.Roadmaps
 {
@@ -8,6 +9,6 @@ namespace Pathly.ViewModels.Roadmaps
     {
         public int TargetActionId { get; set; }
         public int RoadmapId { get; set; } 
-        public IEnumerable<TaskItem> UnlinkedTasks { get; set; }
+        public IEnumerable<TaskViewModel> UnlinkedTasks { get; set; }
     }
 }
