@@ -1,20 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Tags;
 
 namespace Pathly.Services.Implementation
 {
     public class TagService : ITagService
     {
         private readonly ApplicationDbContext _context; 
-        public TagService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public TagService(IMapper mapper, ApplicationDbContext context)
         {
+            _mapper = mapper;
             _context = context;
         }
         public async Task CreateTagAsync(string name, string userId)
         {
-            bool tagExists = await _context.Tags.AnyAsync(t => t.UserId == userId && t.Name.ToLower() == name.ToLower()); 
+            var normalizedName = name.Trim().ToLower();
+
+            //Case-insensitive
+            bool tagExists = await _context.Tags.AnyAsync(t => t.UserId == userId && t.Name.ToLower() == normalizedName); 
+
             if(tagExists)
             {
                 throw new InvalidOperationException("A tag with the same name already exists!");
@@ -47,13 +56,13 @@ namespace Pathly.Services.Implementation
             return true;
         }
 
-        public async Task<IEnumerable<Tag>> GetUserTagsAsync(string userId)
+        public async Task<IEnumerable<TagViewModel>> GetUserTagsAsync(string userId)
         {
-            var tags = await _context.Tags
-                .Where(t => t.UserId == userId)
-                .OrderBy(t => t.Name)
-                .ToListAsync();
-            return tags;
+            return await _context.Tags
+            .Where(t => t.UserId == userId)
+            .OrderBy(t => t.Name)
+            .ProjectTo<TagViewModel>(_mapper.ConfigurationProvider)
+            .ToListAsync();
         }
     }
 }
