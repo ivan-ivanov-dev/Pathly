@@ -14,7 +14,10 @@ namespace Pathly.Services.Mappings
         public MappingProfile()
         {
             // --- GOALS ---
-            CreateMap<Goal, GoalViewModel>().ReverseMap()
+            CreateMap<Goal, GoalViewModel>()
+                .ForMember(dest => dest.HasRoadmap, opt => opt.MapFrom(src => src.Roadmap != null))
+                .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Roadmap != null ? src.Roadmap.Id : (int?)null))
+                .ReverseMap()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
@@ -23,6 +26,8 @@ namespace Pathly.Services.Mappings
 
             CreateMap<Goal, GoalEditViewModel>().ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
+            CreateMap<GoalDetailsViewModel, GoalEditViewModel>();
 
             CreateMap<Goal, GoalDetailsViewModel>()
                 .ForMember(dest => dest.Actions, opt => opt.Ignore())
