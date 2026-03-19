@@ -34,6 +34,12 @@ namespace Pathly.Services.Mappings
                 .ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
+            CreateMap<RoadmapCreateViewModel, Goal>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.NewGoalTitle))
+                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.NewGoalDescription))
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDetailsViewModel>()
                 .ForMember(dest => dest.GoalTitle, opt => opt.MapFrom(src => src.Goal.Title))
@@ -41,7 +47,7 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.Actions, opt => opt.MapFrom(src => src.Actions))
                 .ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.GoalId, opt => opt.Ignore()); // Защита на връзката към Goal
+                .ForMember(dest => dest.GoalId, opt => opt.Ignore());
 
             CreateMap<Roadmap, RoadmapCreateViewModel>()
                 .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Id))
@@ -59,7 +65,12 @@ namespace Pathly.Services.Mappings
                 .ReverseMap()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore()); // Защита на връзката към Roadmap
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+
+            CreateMap<ActionItemCreateViewModel, ActionItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
 
             CreateMap<ActionItem, ActionItemCreateViewModel>().ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
@@ -73,7 +84,7 @@ namespace Pathly.Services.Mappings
                 .ReverseMap()
                 .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.ActionId, opt => opt.Ignore()); // Защита на връзката към Action
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
             CreateMap<TaskItem, TaskSummaryViewModel>().ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
