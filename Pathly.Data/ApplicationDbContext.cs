@@ -102,13 +102,13 @@ namespace Pathly.Data
             //SEEDING CONFIGURATIONS
             //---------------------------//
 
-            builder.ApplyConfiguration(new UserConfiguration());    // 1. Потребител
-            builder.ApplyConfiguration(new TagConfiguration());     // 2. Тагове
-            builder.ApplyConfiguration(new GoalConfiguration());    // 3. Цели
-            builder.ApplyConfiguration(new RoadmapConfiguration()); // 4. Пътни карти
-            builder.ApplyConfiguration(new ActionItemConfiguration()); // 5. Действия
-            builder.ApplyConfiguration(new TaskItemConfiguration());   // 6. Задачи
-            builder.ApplyConfiguration(new TaskTagConfiguration());    // 7. Връзки Задачи-Тагове
+            builder.ApplyConfiguration(new UserConfiguration());    // 1. Users
+            builder.ApplyConfiguration(new TagConfiguration());     // 2. Tags
+            builder.ApplyConfiguration(new GoalConfiguration());    // 3. Goals
+            builder.ApplyConfiguration(new RoadmapConfiguration()); // 4. Roadmaps
+            builder.ApplyConfiguration(new ActionItemConfiguration()); // 5. Actions
+            builder.ApplyConfiguration(new TaskItemConfiguration());   // 6. Tasks
+            builder.ApplyConfiguration(new TaskTagConfiguration());    // 7. Linking Tasks & Tags
         }
     }
 }
