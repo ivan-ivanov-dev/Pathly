@@ -18,5 +18,9 @@ namespace Pathly.DataModels
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 
+        // Marked 'virtual' so Entity Framework Core can create proxy types for lazy-loading this navigation property.
+        public virtual Roadmap? Roadmap { get; set; }
+        // This allows us to access the related Roadmap for a Goal without explicitly including it in our queries
+        // when using AutoMapper,which can help optimize performance by only loading related data when it's actually needed.
     }
 }
