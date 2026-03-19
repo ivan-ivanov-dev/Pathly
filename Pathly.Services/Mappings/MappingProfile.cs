@@ -100,6 +100,8 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
+            CreateMap<TaskDetailsViewModel, TaskEditViewModel>();
+
             CreateMap<TaskItem, TaskDetailsViewModel>()
                 .IncludeBase<TaskItem, TaskViewModel>()
                 .ReverseMap()
