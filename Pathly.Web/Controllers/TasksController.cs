@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,10 +15,12 @@ namespace Pathly.Web.Controllers
         private readonly ITaskService _taskService;
         private readonly ITagService _tagService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public TasksController(ITaskService taskService, ITagService tagService, UserManager<ApplicationUser> userManager)
+        private readonly IMapper _mapper;
+        public TasksController(ITaskService taskService, ITagService tagService,IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _taskService = taskService;
             _tagService = tagService;
+            _mapper = mapper;
             _userManager = userManager;
         }
 
@@ -40,16 +43,8 @@ namespace Pathly.Web.Controllers
             var userId = _userManager.GetUserId(User);
             var tags = await _tagService.GetUserTagsAsync(userId);
 
-            var model = new TaskCreateViewModel
-            {
-                ActionId = actionId,
-                AvailableTags = tags.Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = t.Name
-                }).ToList()
-            };
-
+            var model = new TaskCreateViewModel { ActionId = actionId };
+            model.AvailableTags = await GetAvailableTagsSelectList(userId);
 
             return PartialView("CreatePartialView",model);
         }
@@ -78,11 +73,7 @@ namespace Pathly.Web.Controllers
             {
                 var tags = await _tagService.GetUserTagsAsync(userId);
 
-                model.AvailableTags = tags.Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = t.Name
-                }).ToList();
+                model.AvailableTags = await GetAvailableTagsSelectList(userId);
 
                 return PartialView("CreatePartialView", model);
             }
@@ -106,9 +97,9 @@ namespace Pathly.Web.Controllers
         public async Task<IActionResult> EditAsync(int id)
         {
             var userId = _userManager.GetUserId(User);
+            var taskDetails = await _taskService.GetDetailsAsync(id,userId);
 
-            var model = await _taskService.GetDetailsAsync(id,userId);
-            if (model == null)
+            if (taskDetails == null)
             {
                 return NotFound();
             }
@@ -116,19 +107,10 @@ namespace Pathly.Web.Controllers
             var tags = await _tagService.GetUserTagsAsync(userId);
             var selectedTagIds = await _taskService.GetTaskTagIdsAsync(id, userId);
 
-            var editModel = new TaskEditViewModel
-            {
-                Id = model.Id,
-                Title = model.Title,
-                Description = model.Description,
-                DueDate = model.DueDate,
-                SelectedTagIds = selectedTagIds,
-                AvailableTags = tags.Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = t.Name
-                }).ToList()
-            };
+            var editModel = _mapper.Map<TaskEditViewModel>(taskDetails);
+
+            editModel.SelectedTagIds = await _taskService.GetTaskTagIdsAsync(id, userId);
+            editModel.AvailableTags = await GetAvailableTagsSelectList(userId);
 
 
             return PartialView("EditPartialView", editModel);
@@ -159,11 +141,7 @@ namespace Pathly.Web.Controllers
             {
                 var tags = await _tagService.GetUserTagsAsync(userId);
 
-                model.AvailableTags = tags.Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = t.Name
-                }).ToList();
+                model.AvailableTags = await GetAvailableTagsSelectList(userId);
 
                 return PartialView("EditPartialView", model);
             }
@@ -192,11 +170,7 @@ namespace Pathly.Web.Controllers
                 return NotFound();
             }
 
-            var model = new TaskDeleteViewModel
-            {
-                Id = task.Id,
-                Title = task.Title
-            };
+            var model = _mapper.Map<TaskDeleteViewModel>(task);
 
             return PartialView("DeletePartialView", model);
         }
@@ -251,6 +225,17 @@ namespace Pathly.Web.Controllers
 
             await _taskService.UpdatePriorityAsync(id,priority, userId);
             return RedirectToAction(nameof(Index));
+        }
+
+        // A helper method to get available tags for the current user and convert them to SelectListItem for dropdowns
+        private async Task<IEnumerable<SelectListItem>> GetAvailableTagsSelectList(string userId)
+        {
+            var tags = await _tagService.GetUserTagsAsync(userId);
+            return tags.Select(t => new SelectListItem
+            {
+                Value = t.Id.ToString(),
+                Text = t.Name
+            }).ToList();
         }
     }
 }
