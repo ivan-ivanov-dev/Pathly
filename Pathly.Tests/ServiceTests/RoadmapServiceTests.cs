@@ -10,6 +10,7 @@ using Pathly.ViewModels.Roadmaps;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 namespace Pathly.Tests;
 
+[TestFixture]
 public class RoadmapServiceTests
 {
     private ApplicationDbContext _context;
