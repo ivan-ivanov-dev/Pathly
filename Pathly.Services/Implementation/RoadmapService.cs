@@ -153,10 +153,6 @@ namespace Pathly.Services.Implementation
                 .OrderByDescending(r => r.Id)
                 .ToListAsync();
 
-            if(roadmaps == null)
-            {
-                throw new UnauthorizedAccessException();
-            }
             return roadmaps;
         }
 
