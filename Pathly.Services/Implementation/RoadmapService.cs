@@ -221,7 +221,7 @@ namespace Pathly.Services.Implementation
 
         public async Task<bool> UnlinkTaskFromActionAsync(int taskId, string userId)
         {
-            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             if (task == null)
             {
