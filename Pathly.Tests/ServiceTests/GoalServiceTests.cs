@@ -15,7 +15,7 @@ public class GoalServiceTests
 {
     private ApplicationDbContext _context;
     private IMapper _mapper;
-    private GoalService _tagService;
+    private GoalService _goalService;
 
     [SetUp]
     public void Setup()
@@ -31,7 +31,7 @@ public class GoalServiceTests
         });
         _mapper = config.CreateMapper();
 
-        _tagService = new GoalService(_context, _mapper);
+        _goalService = new GoalService(_context, _mapper);
     }
 
     [TearDown]
@@ -55,7 +55,7 @@ public class GoalServiceTests
         var userId = "test-user-id";
 
         // Act
-        await _tagService.CreateAsync(model, userId);
+        await _goalService.CreateAsync(model, userId);
         var goalInDb = await _context.Goals.FirstOrDefaultAsync(g => g.Title == model.Title);
 
         // Assert
@@ -78,7 +78,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _tagService.DeleteAsync(goal.Id, goal.UserId);
+        var result = await _goalService.DeleteAsync(goal.Id, goal.UserId);
 
         // Assert
         Assert.IsTrue(result);
@@ -90,7 +90,7 @@ public class GoalServiceTests
         // Arrange
         var nonExistentGoalId = 999;
         // Act
-        var result = await _tagService.DeleteAsync(nonExistentGoalId, "test-user-id");
+        var result = await _goalService.DeleteAsync(nonExistentGoalId, "test-user-id");
         // Assert
         Assert.IsFalse(result);
     }
@@ -111,7 +111,7 @@ public class GoalServiceTests
 
         // Act & Assert
         var ex = Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _tagService.DeleteAsync(goal.Id, "unauthorized-user-id"));
+            await _goalService.DeleteAsync(goal.Id, "unauthorized-user-id"));
         Assert.That(ex.Message, Is.EqualTo("You do not have permission to delete this goal."));
     }
 
@@ -150,7 +150,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _tagService.DeleteAsync(goal.Id, goal.UserId);
+        var result = await _goalService.DeleteAsync(goal.Id, goal.UserId);
         var goalInDb = await _context.Goals.FindAsync(goal.Id);
         var roadmapInDb = await _context.Roadmaps.FindAsync(roadmap.Id);
         var actionInDb = await _context.Actions.FindAsync(actionItem.Id);
@@ -174,7 +174,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var queryModel = new GoalQueryModel { SearchTerm = "First" };
         // Act
-        var result = await _tagService.GetAllAsync(queryModel, userId);
+        var result = await _goalService.GetAllAsync(queryModel, userId);
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Goals.Goals.Count);
@@ -192,7 +192,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var queryModel = new GoalQueryModel { SearchTerm = "NonExistent" };
         // Act
-        var result = await _tagService.GetAllAsync(queryModel, userId);
+        var result = await _goalService.GetAllAsync(queryModel, userId);
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Goals.Goals.Count);
@@ -209,7 +209,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var queryModel = new GoalQueryModel { SearchTerm = "" };
         // Act
-        var result = await _tagService.GetAllAsync(queryModel, userId);
+        var result = await _goalService.GetAllAsync(queryModel, userId);
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Goals.Goals.Count);
@@ -226,7 +226,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var queryModel = new GoalQueryModel { SearchTerm = "Goal", SortOrder = 0 };
         // Act
-        var result = await _tagService.GetAllAsync(queryModel, userId);
+        var result = await _goalService.GetAllAsync(queryModel, userId);
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Goals.Goals.Count);
@@ -243,7 +243,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var queryModel = new GoalQueryModel { SearchTerm = "Goal", SortOrder = (GoalSortOrder)1 };
         // Act
-        var result = await _tagService.GetAllAsync(queryModel, userId);
+        var result = await _goalService.GetAllAsync(queryModel, userId);
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Goals.Goals.Count);
@@ -261,7 +261,7 @@ public class GoalServiceTests
 
         // Act & Assert
         var ex = Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _tagService.GetDetailsAsync(goal.Id, unauthorizedUserId));
+            await _goalService.GetDetailsAsync(goal.Id, unauthorizedUserId));
         Assert.That(ex.Message, Is.EqualTo("You do not have permission to view this goal."));
     }
 
@@ -274,7 +274,7 @@ public class GoalServiceTests
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
         // Act
-        await _tagService.ToggleGoalStatusAsync(goal.Id, userId);
+        await _goalService.ToggleGoalStatusAsync(goal.Id, userId);
         var updatedGoal = await _context.Goals.FindAsync(goal.Id);
         // Assert
         Assert.That(updatedGoal.IsActive, Is.True);
@@ -291,7 +291,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         // Act & Assert
         var ex = Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _tagService.ToggleGoalStatusAsync(goal.Id, unauthorizedUserId));
+            await _goalService.ToggleGoalStatusAsync(goal.Id, unauthorizedUserId));
         Assert.That(ex.Message, Is.EqualTo("You do not have permission to edit this goal."));
     }
 
@@ -303,7 +303,7 @@ public class GoalServiceTests
         var nonExistentGoalId = 999;
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _tagService.ToggleGoalStatusAsync(nonExistentGoalId, userId));
+            await _goalService.ToggleGoalStatusAsync(nonExistentGoalId, userId));
         Assert.That(ex.Message, Is.EqualTo("Goal not found."));
     }
 
@@ -317,7 +317,7 @@ public class GoalServiceTests
         await _context.SaveChangesAsync();
         var updateModel = new GoalEditViewModel { Id = goal.Id, Title = "New Title", ShortDescription = "New Description" };
         // Act
-        await _tagService.UpdateAsync(goal.Id,updateModel, userId);
+        await _goalService.UpdateAsync(goal.Id,updateModel, userId);
         var updatedGoal = await _context.Goals.FindAsync(goal.Id);
         // Assert
         Assert.That(updatedGoal.Title, Is.EqualTo("New Title"));
@@ -335,7 +335,7 @@ public class GoalServiceTests
         var updateModel = new GoalEditViewModel { Id = goal.Id, Title = "New Title", ShortDescription = "New Description" };
         // Act & Assert
         var ex = Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _tagService.UpdateAsync(goal.Id, updateModel, unauthorizedUserId));
+            await _goalService.UpdateAsync(goal.Id, updateModel, unauthorizedUserId));
         Assert.That(ex.Message, Is.EqualTo("You do not have permission to edit this goal."));
     }
 
@@ -348,7 +348,7 @@ public class GoalServiceTests
         var updateModel = new GoalEditViewModel { Id = nonExistentGoalId, Title = "New Title", ShortDescription = "New Description" };
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _tagService.UpdateAsync(nonExistentGoalId, updateModel, userId));
+            await _goalService.UpdateAsync(nonExistentGoalId, updateModel, userId));
         Assert.That(ex.Message, Is.EqualTo("Goal not found."));
     }
 }
