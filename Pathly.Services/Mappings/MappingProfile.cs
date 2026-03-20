@@ -58,6 +58,16 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.NewGoalTargetDate, opt => opt.Ignore())
                 .ForMember(dest => dest.IsEditing, opt => opt.Ignore());
 
+            //Doing the reverse mapping manually instead of relying on .ReverseMap(),
+            //so the specific members are set correctly for both ways
+            CreateMap<RoadmapCreateViewModel, Roadmap>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.GoalId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Goal, opt => opt.Ignore())
+                .ForMember(dest => dest.Actions, opt => opt.Ignore());
+
             CreateMap<RoadmapPlannerViewModel, RoadmapPlannerViewModel>();
 
             CreateMap<ActionItem, ActionsDisplayViewModel>()
