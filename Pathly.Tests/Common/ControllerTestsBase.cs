@@ -7,7 +7,7 @@ using Pathly.DataModels;
 
 namespace Pathly.Tests.Common
 {
-    public class ControllerTestsBase
+    public abstract class ControllerTestsBase
     {
         protected Mock<UserManager<ApplicationUser>> _mockUserManager;
         protected string _userId = "test-user-id";
