@@ -238,7 +238,7 @@ public class GoalServiceTests: ServiceTestsBase
         // Arrange
         var ownerUserId = "owner-user-id";
         var unauthorizedUserId = "unauthorized-user-id";
-        var goal = new Goal { Id = 1, Title = "Test Goal", ShortDescription = "Test", UserId = ownerUserId };
+        var goal = new Goal {Title = "Test Goal", ShortDescription = "Test", UserId = ownerUserId };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
 
@@ -253,7 +253,7 @@ public class GoalServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "test-user-id";
-        var goal = new Goal { Id = 1, Title = "Test Goal", ShortDescription = "Test", UserId = userId, IsActive = false };
+        var goal = new Goal {Title = "Test Goal", ShortDescription = "Test", UserId = userId, IsActive = false };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
         // Act
@@ -269,7 +269,7 @@ public class GoalServiceTests: ServiceTestsBase
         // Arrange
         var ownerUserId = "owner-user-id";
         var unauthorizedUserId = "unauthorized-user-id";
-        var goal = new Goal { Id = 1, Title = "Test Goal", ShortDescription = "Test", UserId = ownerUserId, IsActive = false };
+        var goal = new Goal { Title = "Test Goal", ShortDescription = "Test", UserId = ownerUserId, IsActive = false };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
         // Act & Assert
@@ -295,7 +295,7 @@ public class GoalServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "test-user-id";
-        var goal = new Goal { Id = 1, Title = "Old Title", ShortDescription = "Old Description", UserId = userId };
+        var goal = new Goal { Title = "Old Title", ShortDescription = "Old Description", UserId = userId };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
         var updateModel = new GoalEditViewModel { Id = goal.Id, Title = "New Title", ShortDescription = "New Description" };
@@ -312,7 +312,7 @@ public class GoalServiceTests: ServiceTestsBase
         // Arrange
         var ownerUserId = "owner-user-id";
         var unauthorizedUserId = "unauthorized-user-id";
-        var goal = new Goal { Id = 1, Title = "Old Title", ShortDescription = "Old Description", UserId = ownerUserId };
+        var goal = new Goal { Title = "Old Title", ShortDescription = "Old Description", UserId = ownerUserId };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
         var updateModel = new GoalEditViewModel { Id = goal.Id, Title = "New Title", ShortDescription = "New Description" };
