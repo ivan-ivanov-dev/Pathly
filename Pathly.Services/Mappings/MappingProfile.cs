@@ -130,7 +130,10 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
-                .ForMember(dest => dest.Action, opt => opt.Ignore());
+                .ForMember(dest => dest.Action, opt => opt.Ignore())
+                .ForMember(dest => dest.Priority, opt => opt.Ignore())
+                .ForMember(dest => dest.IsCompleted, opt => opt.Ignore())
+                .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
             CreateMap<TaskDetailsViewModel, TaskEditViewModel>()
                 .ForMember(dest => dest.SelectedTagIds, opt => opt.Ignore())
