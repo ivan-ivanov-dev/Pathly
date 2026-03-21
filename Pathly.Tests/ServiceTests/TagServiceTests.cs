@@ -4,43 +4,27 @@ using Moq;
 using NUnit.Framework;
 using Pathly.Data;
 using Pathly.DataModels;
+using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
 using Pathly.Services.Mappings;
+using Pathly.Tests.Common;
 using Pathly.ViewModels.Tags;
 namespace Pathly.Tests;
 
 [TestFixture]
-public class TagServiceTests
+public class TagServiceTests: ServiceTestsBase
 {
-    private ApplicationDbContext _context;
-    private IMapper _mapper;
     private TagService _tagService;
 
     [SetUp]
-    public void Setup()
+    public void SetupTagService()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-        _context = new ApplicationDbContext(options);
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<MappingProfile>();
-        });
-        _mapper = config.CreateMapper();
-
+        BaseSetup();
         _tagService = new TagService(_mapper,_context);
     }
 
     [TearDown]
-    public void TearDown()
-    {
-        if (_context != null)
-        {
-            _context.Dispose();
-        }
-    }
+    public void TearDown() => BaseTearDown();
 
     [Test]
     public async Task CreateTagAsync_ShouldAddTag_WhenValid()

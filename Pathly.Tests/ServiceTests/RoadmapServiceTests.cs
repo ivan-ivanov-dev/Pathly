@@ -8,41 +8,22 @@ using Pathly.Services.Implementation;
 using Pathly.Services.Mappings;
 using Pathly.ViewModels.Roadmaps;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Pathly.Tests.Common;
 namespace Pathly.Tests;
 
 [TestFixture]
-public class RoadmapServiceTests
+public class RoadmapServiceTests: ServiceTestsBase
 {
-    private ApplicationDbContext _context;
-    private IMapper _mapper;
     private IRoadmapService _roadmapService;
     [SetUp]
-    public void Setup()
+    public void SetupRoadmapService()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)) // Ignore transaction warnings for in-memory database
-        .Options;
-
-        _context = new ApplicationDbContext(options);
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<MappingProfile>();
-        });
-        _mapper = config.CreateMapper();
-
+        BaseSetup();
         _roadmapService = new RoadmapService(_context, _mapper);
     }
 
     [TearDown]
-    public void TearDown()
-    {
-        if (_context != null)
-        {
-            _context.Dispose();
-        }
-    }
+    public void TearDown() => BaseTearDown();
 
     [Test]
     public async Task SaveRoadmapAsync_ShouldCreateNewRoadmap_WhenModelIsValid()

@@ -8,44 +8,25 @@ using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
 using Pathly.Services.Mappings;
+using Pathly.Tests.Common;
 using Pathly.ViewModels.Goals;
 using Pathly.ViewModels.Tags;
 using Pathly.ViewModels.TasksViewModels;
 namespace Pathly.Tests;
 
 [TestFixture]
-public class TaskServiceTests
+public class TaskServiceTests: ServiceTestsBase
 {
-    private ApplicationDbContext _context;
-    private IMapper _mapper;
     private ITaskService _taskService;
     [SetUp]
-    public void Setup()
+    public void SetupTaskService()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)) // Ignore transaction warnings for in-memory database
-        .Options;
-
-        _context = new ApplicationDbContext(options);
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<MappingProfile>();
-        });
-        _mapper = config.CreateMapper();
-
+        BaseSetup();
         _taskService = new TaskService(_context, _mapper);
     }
 
     [TearDown]
-    public void TearDown()
-    {
-        if (_context != null)
-        {
-            _context.Dispose();
-        }
-    }
+    public void TearDown() => BaseTearDown();
 
     [Test]
     public async Task GetAllTasksAsync_ShouldReturnOnlyUserTasks()

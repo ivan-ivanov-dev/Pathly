@@ -4,44 +4,28 @@ using Moq;
 using NUnit.Framework;
 using Pathly.Data;
 using Pathly.DataModels;
+using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
 using Pathly.Services.Mappings;
+using Pathly.Tests.Common;
 using Pathly.ViewModels.Goals;
 using Pathly.ViewModels.Tags;
 namespace Pathly.Tests;
 
 [TestFixture]
-public class GoalServiceTests
+public class GoalServiceTests: ServiceTestsBase
 {
-    private ApplicationDbContext _context;
-    private IMapper _mapper;
     private GoalService _goalService;
 
     [SetUp]
-    public void Setup()
+    public void SetupGoalServicetup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-        _context = new ApplicationDbContext(options);
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<MappingProfile>();
-        });
-        _mapper = config.CreateMapper();
-
-        _goalService = new GoalService(_context, _mapper);
+        BaseSetup();
+        _goalService = new GoalService(_context,_mapper);
     }
 
     [TearDown]
-    public void TearDown()
-    {
-        if (_context != null)
-        {
-            _context.Dispose();
-        }
-    }
+    public void TearDown() => BaseTearDown();
 
     [Test]
     public async Task CreateAsync_ShouldAddGoalToDatabase()
@@ -131,7 +115,6 @@ public class GoalServiceTests
 
         var roadmap = new Roadmap
         {
-            Id = 1,
             GoalId = goal.Id,
             UserId = goal.UserId
         };
