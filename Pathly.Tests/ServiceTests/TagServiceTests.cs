@@ -35,7 +35,7 @@ public class TagServiceTests: ServiceTestsBase
 
         //Assert
         Assert.That(tag, Is.Not.Null);
-        Assert.That(tag.UserId, Is.EqualTo("user1"));
+        Assert.That(tag.Name, Is.EqualTo("Work"));
     }
 
     [Test]
@@ -57,18 +57,20 @@ public class TagServiceTests: ServiceTestsBase
         var tag = new Tag { Name = "Personal", UserId = "user1" };
         _context.Tags.Add(tag);
         await _context.SaveChangesAsync();
+        var tagCountBeforeDeleting = _context.Tags.Count();
         //Act
-        var result = await _tagService.DeleteTagAsync(tag.Id, "user1");
+        var result = await _tagService.DeleteTagAsync(tag.Id, tag.UserId);
         //Assert
         Assert.That(result, Is.True);
-        Assert.That(_context.Tags.Count(), Is.EqualTo(0));
+        var tagCountAfterDeleting = _context.Tags.Count();
+        Assert.That(tagCountAfterDeleting, Is.EqualTo(tagCountBeforeDeleting - 1));
     }
 
     [Test]
     public async Task DeleteTagAsync_ShouldReturnFalse_WhenUnsuccessfull()
     {
         //Act+Arrange
-        var result = await _tagService.DeleteTagAsync(1, "user1");
+        var result = await _tagService.DeleteTagAsync(9999, "user1");
         //Assert
         Assert.That(result, Is.False);
     }
@@ -77,12 +79,13 @@ public class TagServiceTests: ServiceTestsBase
     public void DeleteTagAsync_ShouldThrowUnauthorized_WhenWrongUser()
     {
         //Arrange+Act
-        _context.Tags.Add(new Tag { Id = 5, Name = "NotYours", UserId = "owner" });
+        var tag = new Tag { Name = "NotYours", UserId = "owner" };
+        _context.Tags.Add(tag);
         _context.SaveChanges();
 
         //Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _tagService.DeleteTagAsync(5, "hacker-id"));
+            await _tagService.DeleteTagAsync(tag.Id, "hacker-id"));
     }
 
     [Test]
