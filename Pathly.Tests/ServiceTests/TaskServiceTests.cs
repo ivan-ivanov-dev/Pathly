@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Microsoft.Identity.Client.Extensions.Msal;
 using Moq;
 using NUnit.Framework;
 using Pathly.Data;
@@ -33,8 +35,8 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        _context.Tasks.Add(new TaskItem { Id = 1, Title = "User Task", UserId = userId, CreatedOn = DateTime.Now });
-        _context.Tasks.Add(new TaskItem { Id = 2, Title = "Other Task", UserId = "other", CreatedOn = DateTime.Now });
+        _context.Tasks.Add(new TaskItem {Title = "User Task", UserId = userId, CreatedOn = DateTime.Now });
+        _context.Tasks.Add(new TaskItem {Title = "Other Task", UserId = "other", CreatedOn = DateTime.Now });
         await _context.SaveChangesAsync();
 
         var query = new TaskQueryModel();
@@ -81,18 +83,20 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var tag = new Tag { Id = 10, Name = "Work", UserId = userId };
-        var task1 = new TaskItem { Id = 100, Title = "Task With Tag", UserId = userId, CreatedOn = DateTime.Now };
-        var task2 = new TaskItem { Id = 101, Title = "Task Without Tag", UserId = userId, CreatedOn = DateTime.Now };
-
-        var taskTag = new TaskTag { TaskId = 100, TagId = 10 };
-
+        var tag = new Tag {Name = "Work", UserId = userId };
         _context.Tags.Add(tag);
+        await _context.SaveChangesAsync();
+
+        var task1 = new TaskItem {Title = "Task With Tag", UserId = userId, CreatedOn = DateTime.Now };
+        var task2 = new TaskItem {Title = "Task Without Tag", UserId = userId, CreatedOn = DateTime.Now };
         _context.Tasks.AddRange(task1, task2);
+        await _context.SaveChangesAsync();
+
+        var taskTag = new TaskTag { TaskId = task1.Id, TagId = tag.Id };
         _context.TaskTags.Add(taskTag);
         await _context.SaveChangesAsync();
 
-        var query = new TaskQueryModel { SelectedTagIds = new List<int> { 10 } };
+        var query = new TaskQueryModel { SelectedTagIds = new List<int> { tag.Id } };
 
         // Act
         var result = await _taskService.GetAllTasksAsync(query, userId);
@@ -196,13 +200,13 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Task To Delete", UserId = userId };
+        var task = new TaskItem {Title = "Task To Delete", UserId = userId };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _taskService.DeleteAsync(1, userId);
-        var taskInDb = await _context.Tasks.FindAsync(1);
+        var result = await _taskService.DeleteAsync(task.Id, userId);
+        var taskInDb = await _context.Tasks.FindAsync(task.Id);
 
         // Assert
         Assert.IsTrue(result);
@@ -213,7 +217,7 @@ public class TaskServiceTests: ServiceTestsBase
     public async Task DeleteAsync_ShouldReturnFalse_WhenTaskDoesNotExist()
     {
         // Act
-        var result = await _taskService.DeleteAsync(999, "any-user");
+        var result = await _taskService.DeleteAsync(99999, "any-user");
 
         // Assert
         Assert.IsFalse(result);
@@ -225,13 +229,13 @@ public class TaskServiceTests: ServiceTestsBase
         // Arrange
         var ownerId = "owner";
         var hackerId = "hacker";
-        var task = new TaskItem { Id = 5, Title = "Private Task", UserId = ownerId };
+        var task = new TaskItem { Title = "Private Task", UserId = ownerId };
         _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _taskService.DeleteAsync(5, hackerId));
+            await _taskService.DeleteAsync(task.Id, hackerId));
     }
 
     [Test]
@@ -239,17 +243,21 @@ public class TaskServiceTests: ServiceTestsBase
     {
         //Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Test Task", UserId = userId };
-        var tag = new Tag { Id = 2, Name = "Test Tag", UserId = userId};
-        var taskTag = new TaskTag { TagId = 2, TaskId = 1 }; 
+        var task = new TaskItem { Title = "Test Task", UserId = userId }; 
         _context.Tasks.Add(task);
-        _context.Tags.Add(tag); 
+        await _context.SaveChangesAsync();
+
+        var tag = new Tag {Name = "Test Tag", UserId = userId};
+        _context.Tags.Add(tag);
+        await _context.SaveChangesAsync();
+
+        var taskTag = new TaskTag { TagId = tag.Id, TaskId = task.Id }; 
         _context.TaskTags.Add(taskTag);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         //Act
-        var result = await _taskService.GetDetailsAsync(1,userId);
-        var taskInDb = await _context.Tasks.FindAsync(1);
+        var result = await _taskService.GetDetailsAsync(task.Id,userId);
+        var taskInDb = await _context.Tasks.FindAsync(task.Id);
 
         //Assert
         Assert.IsNotNull(result);
@@ -263,13 +271,13 @@ public class TaskServiceTests: ServiceTestsBase
         // Arrange
         var ownerId = "owner";
         var hackerId = "hacker";
-        var task = new TaskItem { Id = 5, Title = "Private Task", UserId = ownerId };
+        var task = new TaskItem {Title = "Private Task", UserId = ownerId };
         _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _taskService.GetDetailsAsync(5, hackerId));
+            await _taskService.GetDetailsAsync(task.Id, hackerId));
     }
 
     [Test]
@@ -277,21 +285,28 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Task", UserId = userId };
+        var task = new TaskItem {Title = "Task", UserId = userId };
         _context.Tasks.Add(task);
+        await _context.SaveChangesAsync();
+
+        var tag1 = new Tag { Name = "tag1", UserId = userId };
+        var tag2 = new Tag { Name = "tag2", UserId = userId };
+        _context.Tags.AddRange(tag1, tag2);
+        await _context.SaveChangesAsync();
+
         _context.TaskTags.AddRange(
-            new TaskTag { TaskId = 1, TagId = 10 },
-            new TaskTag { TaskId = 1, TagId = 20 }
+            new TaskTag { TaskId = task.Id, TagId = tag1.Id },
+            new TaskTag { TaskId = task.Id, TagId = tag2.Id }
         );
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _taskService.GetTaskTagIdsAsync(1, userId);
+        var result = await _taskService.GetTaskTagIdsAsync(task.Id, userId);
 
         // Assert
         Assert.AreEqual(2, result.Count);
-        Assert.Contains(10, result);
-        Assert.Contains(20, result);
+        Assert.Contains(tag1.Id, result);
+        Assert.Contains(tag2.Id, result);
     }
 
     [Test]
@@ -299,7 +314,7 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _taskService.GetTaskTagIdsAsync(999, "any-user"));
+            await _taskService.GetTaskTagIdsAsync(888, "any-user"));
 
         Assert.AreEqual("Task not found", ex.Message);
     }
@@ -309,18 +324,18 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Task", UserId = userId, IsCompleted = false };
+        var task = new TaskItem {Title = "Task", UserId = userId, IsCompleted = false };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         // Act + Assert 1: False -> True
-        await _taskService.MarkTaskStatusAsync(1, userId);
-        var taskAfterFirstToggle = await _context.Tasks.FindAsync(1);
+        await _taskService.MarkTaskStatusAsync(task.Id, userId);
+        var taskAfterFirstToggle = await _context.Tasks.FindAsync(task.Id);
         Assert.IsTrue(taskAfterFirstToggle.IsCompleted);
 
         // Act + Assert 2: True -> False
-        await _taskService.MarkTaskStatusAsync(1, userId);
-        var taskAfterSecondToggle = await _context.Tasks.FindAsync(1);
+        await _taskService.MarkTaskStatusAsync(task.Id, userId);
+        var taskAfterSecondToggle = await _context.Tasks.FindAsync(task.Id);
         Assert.IsFalse(taskAfterSecondToggle.IsCompleted);
     }
 
@@ -329,7 +344,7 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _taskService.MarkTaskStatusAsync(999, "any-user"));
+            await _taskService.MarkTaskStatusAsync(8888, "any-user"));
         Assert.AreEqual(ex.Message, "Task not found");
     }
 
@@ -339,13 +354,13 @@ public class TaskServiceTests: ServiceTestsBase
         // Arrange
         var ownerId = "owner";
         var hackerId = "hacker";
-        var task = new TaskItem { Id = 10, Title = "Private", UserId = ownerId };
+        var task = new TaskItem {Title = "Private", UserId = ownerId };
         _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _taskService.MarkTaskStatusAsync(10, hackerId));
+            await _taskService.MarkTaskStatusAsync(task.Id, hackerId));
     }
 
     [Test]
@@ -353,15 +368,15 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Task", UserId = userId, Priority = TaskPriority.Low };
+        var task = new TaskItem { Title = "Task", UserId = userId, Priority = TaskPriority.Low };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         // Act
-        await _taskService.UpdatePriorityAsync(1, TaskPriority.High, userId);
+        await _taskService.UpdatePriorityAsync(task.Id, TaskPriority.High, userId);
 
         // Assert
-        var updatedTask = await _context.Tasks.FindAsync(1);
+        var updatedTask = await _context.Tasks.FindAsync(task.Id);
         Assert.AreEqual(TaskPriority.High, updatedTask.Priority);
     }
 
@@ -370,7 +385,7 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _taskService.UpdatePriorityAsync(999, TaskPriority.Medium, "any-user"));
+            await _taskService.UpdatePriorityAsync(777, TaskPriority.Medium, "any-user"));
         Assert.AreEqual(ex.Message, "Task not found");
     }
 
@@ -378,12 +393,13 @@ public class TaskServiceTests: ServiceTestsBase
     public void UpdatePriorityAsync_ShouldThrowUnauthorized_WhenUserIsNotOwner()
     {
         // Arrange
-        _context.Tasks.Add(new TaskItem { Id = 10, Title = "Other", UserId = "owner" });
+        var task = new TaskItem { Title = "Other", UserId = "owner" };
+        _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _taskService.UpdatePriorityAsync(10, TaskPriority.High, "hacker"));
+            await _taskService.UpdatePriorityAsync(task.Id, TaskPriority.High, "hacker"));
     }
 
     [Test]
@@ -393,31 +409,39 @@ public class TaskServiceTests: ServiceTestsBase
         var userId = "user1";
         var task = new TaskItem
         {
-            Id = 1,
             Title = "Old Title",
             UserId = userId,
-            TaskTags = new List<TaskTag> { new TaskTag { TagId = 10, TaskId = 1 } } // Old Tag
         };
         _context.Tasks.Add(task);
+        await _context.SaveChangesAsync();
+
+        var oldTag = new Tag { Name = "Old tag" , UserId = userId};
+        var newTag1 = new Tag { Name = "Old tag", UserId = userId };
+        var newTag2 = new Tag { Name = "Old tag" , UserId = userId};
+        _context.Tags.AddRange(oldTag,newTag1,newTag2);
+        await _context.SaveChangesAsync();
+
+        var taskTag = new TaskTag { TagId = oldTag.Id, TaskId = task.Id }; // Old Tag
+        _context.TaskTags.Add(taskTag);
         await _context.SaveChangesAsync();
 
         var model = new TaskEditViewModel
         {
             Title = "Updated Title",
             Description = "New Description",
-            SelectedTagIds = new List<int> { 20, 30 } //New Tags
+            SelectedTagIds = new List<int> { newTag1.Id, newTag2.Id } //New Tags
         };
 
         // Act
-        await _taskService.UpdateWithTagsAsync(1, model, userId);
-        var updatedTask = await _context.Tasks.Include(t => t.TaskTags).FirstOrDefaultAsync(t => t.Id == 1);
+        await _taskService.UpdateWithTagsAsync(task.Id, model, userId);
+        var updatedTask = await _context.Tasks.Include(t => t.TaskTags).FirstOrDefaultAsync(t => t.Id == task.Id);
 
         // Assert
         Assert.AreEqual("Updated Title", updatedTask.Title);
         Assert.AreEqual(2, updatedTask.TaskTags.Count);
-        Assert.IsTrue(updatedTask.TaskTags.Any(tt => tt.TagId == 20));
-        Assert.IsTrue(updatedTask.TaskTags.Any(tt => tt.TagId == 30));
-        Assert.IsFalse(updatedTask.TaskTags.Any(tt => tt.TagId == 10), "Old tag should be removed.");
+        Assert.IsTrue(updatedTask.TaskTags.Any(tt => tt.TagId == newTag1.Id));
+        Assert.IsTrue(updatedTask.TaskTags.Any(tt => tt.TagId == newTag2.Id));
+        Assert.IsFalse(updatedTask.TaskTags.Any(tt => tt.TagId == oldTag.Id), "Old tag should be removed.");
     }
 
     [Test]
@@ -425,7 +449,7 @@ public class TaskServiceTests: ServiceTestsBase
     {
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _taskService.UpdateWithTagsAsync(999, new TaskEditViewModel(), "any-user"));
+            await _taskService.UpdateWithTagsAsync(7777, new TaskEditViewModel(), "any-user"));
         Assert.AreEqual(ex.Message, "Task not found");
     }
 
@@ -433,11 +457,12 @@ public class TaskServiceTests: ServiceTestsBase
     public void UpdateWithTagsAsync_ShouldThrowUnauthorized_WhenUserIsHacker()
     {
         // Arrange
-        _context.Tasks.Add(new TaskItem { Id = 5, Title = "Private", UserId = "owner" });
+        var task = new TaskItem { Title = "Private", UserId = "owner" };
+        _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _taskService.UpdateWithTagsAsync(5, new TaskEditViewModel(), "hacker"));
+            await _taskService.UpdateWithTagsAsync(task.Id, new TaskEditViewModel(), "hacker"));
     }
 }
