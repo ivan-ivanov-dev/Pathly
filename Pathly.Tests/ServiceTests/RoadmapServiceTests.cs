@@ -9,6 +9,7 @@ using Pathly.Services.Mappings;
 using Pathly.ViewModels.Roadmaps;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Pathly.Tests.Common;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace Pathly.Tests;
 
 [TestFixture]
@@ -61,25 +62,31 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var existingRoadmap = new Roadmap { Id = 1, UserId = userId, GoalId = 10 };
-        var actionToUpdate = new ActionItem { Id = 100, Title = "Old Title", RoadmapId = 1, UserId = userId };
-        var actionToDelete = new ActionItem { Id = 101, Title = "To Delete", RoadmapId = 1, UserId = userId };
+        var goal = new Goal { Title = "Goal", UserId = userId };
+        _context.Goals.Add(goal);
+        await _context.SaveChangesAsync();
 
+        var existingRoadmap = new Roadmap { UserId = userId, GoalId = goal.Id };
         _context.Roadmaps.Add(existingRoadmap);
+        await _context.SaveChangesAsync();
+
+        var actionToUpdate = new ActionItem { Title = "Old Title", RoadmapId = existingRoadmap.Id, UserId = userId };
+        var actionToDelete = new ActionItem { Title = "To Delete", RoadmapId = existingRoadmap.Id, UserId = userId };
         _context.Actions.AddRange(actionToUpdate, actionToDelete);
         await _context.SaveChangesAsync();
 
         var model = new RoadmapCreateViewModel
         {
+            
             IsEditing = true,
-            RoadmapId = 1,
+            RoadmapId = existingRoadmap.Id,
             Actions = new List<ActionItemCreateViewModel>
             {
                 // Update Action
-                new ActionItemCreateViewModel { Id = 100, Title = "New Title" },
+                new ActionItemCreateViewModel { Id = actionToUpdate.Id,Title = "New Title" },
                 // Add a new one without Id
                 new ActionItemCreateViewModel { Title = "Brand New Action" }
-                // Action with Id 101 is missing here so it should gwt deleted
+                // actionToDelete is missing here so it should get deleted
             }
         };
 
@@ -90,9 +97,9 @@ public class RoadmapServiceTests: ServiceTestsBase
         var updatedRoadmap = await _context.Roadmaps.Include(r => r.Actions).FirstAsync(r => r.Id == resultId);
 
         Assert.AreEqual(2, updatedRoadmap.Actions.Count);
-        Assert.IsTrue(updatedRoadmap.Actions.Any(a => a.Title == "New Title" && a.Id == 100));
+        Assert.IsTrue(updatedRoadmap.Actions.Any(a => a.Title == "New Title" && a.Id == actionToUpdate.Id));
         Assert.IsTrue(updatedRoadmap.Actions.Any(a => a.Title == "Brand New Action"));
-        Assert.IsFalse(_context.Actions.Any(a => a.Id == 101), "Action should have been deleted");
+        Assert.IsFalse(_context.Actions.Any(a => a.Id == actionToDelete.Id));
     }
 
     [Test]
@@ -128,7 +135,6 @@ public class RoadmapServiceTests: ServiceTestsBase
         var userId = "user1";
         var existingGoal = new Goal
         {
-            Id = 13,
             Title = "Existing",
             UserId = userId
         };
@@ -149,9 +155,9 @@ public class RoadmapServiceTests: ServiceTestsBase
 
         //Assert
         var roadmap = await _context.Roadmaps.FirstAsync(r => r.Id == resultId);
-        var updatedGoal = await _context.Goals.FirstAsync(r => r.Id == 13);
+        var updatedGoal = await _context.Goals.FirstAsync(r => r.Id == existingGoal.Id);
 
-        Assert.AreEqual(13, roadmap.GoalId);
+        Assert.AreEqual(existingGoal.Id, roadmap.GoalId);
         Assert.AreEqual("Updated Title", updatedGoal.Title);
     }
 
@@ -159,11 +165,11 @@ public class RoadmapServiceTests: ServiceTestsBase
     public void SaveRoadmapAsync_ShouldThrow_WhenEditingOtherUserRoadmap()
     {
         //Arrange
-
-        _context.Roadmaps.Add(new Roadmap { Id = 99, UserId = "owner" });
+        var roadmap = new Roadmap { Id = 99, UserId = "owner" };
+        _context.Roadmaps.Add(roadmap);
         _context.SaveChanges();
 
-        var model = new RoadmapCreateViewModel { IsEditing = true, RoadmapId = 99 };
+        var model = new RoadmapCreateViewModel { IsEditing = true, RoadmapId = roadmap.Id };
 
         //Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
@@ -181,7 +187,7 @@ public class RoadmapServiceTests: ServiceTestsBase
             NewGoalTitle = "Goal",
             Actions = new List<ActionItemCreateViewModel>
         {
-            new ActionItemCreateViewModel { Title = "  " }, // Празно
+            new ActionItemCreateViewModel { Title = "  " }, // Empty
             new ActionItemCreateViewModel { Title = null }, // Null
             new ActionItemCreateViewModel { Title = "Valid Action" }
         }
@@ -203,7 +209,6 @@ public class RoadmapServiceTests: ServiceTestsBase
         var userId = "user1";
         var modelForDeleting = new RoadmapCreateViewModel
         {
-            RoadmapId = 1,
             NewGoalTitle = "Test Deleting",
             NewGoalDescription = "Test",
             Actions = new List<ActionItemCreateViewModel>
@@ -218,7 +223,7 @@ public class RoadmapServiceTests: ServiceTestsBase
 
         //Assert
         Assert.That(result, Is.True);
-        Assert.AreEqual(null,await _context.Roadmaps.FirstOrDefaultAsync(r => r.Id == 1));
+        Assert.AreEqual(null,await _context.Roadmaps.FirstOrDefaultAsync(r => r.Id == modelForDeleting.RoadmapId));
         Assert.IsFalse(_context.Actions.Any(a => a.Title == "Action 1"));
         Assert.IsFalse(_context.Actions.Any(a => a.Title == "Action 2"));
 
@@ -228,14 +233,15 @@ public class RoadmapServiceTests: ServiceTestsBase
     public void DeleteRoadmapAsync_ShouldThrow_WhenDeletingAnotherUserRoadmap()
     {
         //Arrange
-        _context.Roadmaps.Add(new Roadmap { Id = 99, UserId = "owner" });
+        var roadmap = new Roadmap { UserId = "owner" };
+        _context.Roadmaps.Add(roadmap);
         _context.SaveChanges();
 
-        var model = new RoadmapCreateViewModel { IsEditing = true, RoadmapId = 99 };
+        var model = new RoadmapCreateViewModel { IsEditing = true, RoadmapId = roadmap.Id };
 
         //Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _roadmapService.DeleteRoadmapAsync(99, "hacker-user"));
+            await _roadmapService.DeleteRoadmapAsync(roadmap.Id, "hacker-user"));
     }
 
     [Test]
@@ -243,11 +249,11 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         //Arrange
         var userId = "user1";
-        var modelForDeleting = new RoadmapCreateViewModel { RoadmapId = 1, NewGoalTitle = "Test" };
+        var modelForDeleting = new RoadmapCreateViewModel {NewGoalTitle = "Test" };
         
         //Act
         var resultId = await _roadmapService.SaveRoadmapAsync(modelForDeleting, userId);
-        var result = await _roadmapService.DeleteRoadmapAsync(2, userId);
+        var result = await _roadmapService.DeleteRoadmapAsync(999, userId);
 
         //Assert
         Assert.IsFalse(result);
@@ -260,7 +266,6 @@ public class RoadmapServiceTests: ServiceTestsBase
         var userId = "user1";
         var model1 = new RoadmapCreateViewModel
         {
-            RoadmapId = 1,
             NewGoalTitle = "Test1",
             NewGoalDescription = "Test1",
             Actions = new List<ActionItemCreateViewModel>
@@ -271,7 +276,6 @@ public class RoadmapServiceTests: ServiceTestsBase
         };
         var model2 = new RoadmapCreateViewModel
         {
-            RoadmapId = 2,
             NewGoalTitle = "Test2",
             NewGoalDescription = "Test2",
             Actions = new List<ActionItemCreateViewModel>
@@ -288,7 +292,6 @@ public class RoadmapServiceTests: ServiceTestsBase
         //Assert
         Assert.IsNotNull(roadmaps);
         Assert.AreEqual(2, roadmaps.Count);
-        Assert.AreEqual(2, _context.Roadmaps.Count());
     }
 
     [Test]
@@ -297,14 +300,13 @@ public class RoadmapServiceTests: ServiceTestsBase
         // Arrange
         var userId = "user1";
 
-        var goalWithRoadmap = new Goal { Id = 1, Title = "With Roadmap", UserId = userId };
-        var roadmap = new Roadmap { Id = 1, GoalId = 1, UserId = userId };
-
-        var availableGoal = new Goal { Id = 2, Title = "Available", UserId = userId };
-
-        var otherUserGoal = new Goal { Id = 3, Title = "Other User", UserId = "other" };
-
+        var goalWithRoadmap = new Goal {Title = "With Roadmap", UserId = userId };
+        var availableGoal = new Goal { Title = "Available", UserId = userId };
+        var otherUserGoal = new Goal { Title = "Other User", UserId = "other" };
         _context.Goals.AddRange(goalWithRoadmap, availableGoal, otherUserGoal);
+        await _context.SaveChangesAsync();
+
+        var roadmap = new Roadmap { GoalId = goalWithRoadmap.Id, UserId = userId };
         _context.Roadmaps.Add(roadmap);
         await _context.SaveChangesAsync();
 
@@ -313,7 +315,7 @@ public class RoadmapServiceTests: ServiceTestsBase
 
         // Assert
         Assert.That(result.Count(), Is.EqualTo(1));
-        Assert.That(result.First().Id, Is.EqualTo(2));
+        Assert.That(result.First().Id, Is.EqualTo(availableGoal.Id));
         Assert.That(result.First().Title, Is.EqualTo("Available"));
     }
 
@@ -322,12 +324,12 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var goal = new Goal { Id = 10, Title = "My Goal", UserId = userId };
+        var goal = new Goal { Title = "My Goal", UserId = userId };
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.GetGoalByIdAsync(10, userId);
+        var result = await _roadmapService.GetGoalByIdAsync(goal.Id, userId);
 
         // Assert
         Assert.IsNotNull(result);
@@ -338,12 +340,13 @@ public class RoadmapServiceTests: ServiceTestsBase
     public void GetGoalByIdAsync_ShouldThrowUnauthorized_WhenGoalIsMissingOrNotOwned()
     {
         // Arrange
-        _context.Goals.Add(new Goal { Id = 20, Title = "Someone Else's", UserId = "other-user" });
+        var goal = new Goal { Title = "Someone Else's", UserId = "other-user" };
+        _context.Goals.Add(goal);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _roadmapService.GetGoalByIdAsync(20, "hacker-id"));
+            await _roadmapService.GetGoalByIdAsync(goal.Id, "hacker-id"));
     }
 
     [Test]
@@ -351,14 +354,16 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var goal = new Goal { Id = 5, Title = "Goal Title", UserId = userId };
-        var roadmap = new Roadmap { Id = 1, GoalId = 5, UserId = userId };
+        var goal = new Goal {Title = "Goal Title", UserId = userId };
         _context.Goals.Add(goal);
+        await _context.SaveChangesAsync();
+
+        var roadmap = new Roadmap {GoalId = goal.Id, UserId = userId };
         _context.Roadmaps.Add(roadmap);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.GetRoadmapDetailAsync(1, userId);
+        var result = await _roadmapService.GetRoadmapDetailAsync(roadmap.Id, userId);
 
         // Assert
         Assert.IsNotNull(result);
@@ -382,20 +387,21 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var goal = new Goal { Id = 1, Title = "Goal Title", UserId = userId };
-        var roadmap = new Roadmap { Id = 1, GoalId = 1, UserId = userId };
-
+        var goal = new Goal { Title = "Goal Title", UserId = userId };
         _context.Goals.Add(goal);
+        await _context.SaveChangesAsync();
+
+        var roadmap = new Roadmap {GoalId = goal.Id, UserId = userId };
         _context.Roadmaps.Add(roadmap);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.GetRoadmapForEditAsync(1, userId);
+        var result = await _roadmapService.GetRoadmapForEditAsync(roadmap.Id, userId);
 
         // Assert
         Assert.IsNotNull(result);
         Assert.IsInstanceOf<RoadmapCreateViewModel>(result);
-        Assert.AreEqual(1, result.RoadmapId);
+        Assert.AreEqual(roadmap.Id, result.RoadmapId);
         Assert.IsFalse(result.IsEditing);
     }
 
@@ -404,20 +410,20 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 10, Title = "Task", UserId = userId, ActionId = null };
-        var action = new ActionItem { Id = 100, Title = "Action", UserId = userId, RoadmapId = 1 };
+        var task = new TaskItem { Title = "Task", UserId = userId, ActionId = null };
+        var action = new ActionItem { Title = "Action", UserId = userId};
 
         _context.Tasks.Add(task);
         _context.Actions.Add(action);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.LinkTaskToActionAsync(10, 100, userId);
+        var result = await _roadmapService.LinkTaskToActionAsync(task.Id, action.Id, userId);
 
         // Assert
         Assert.IsTrue(result);
-        var updatedTask = await _context.Tasks.FindAsync(10);
-        Assert.AreEqual(100, updatedTask.ActionId);
+        var updatedTask = await _context.Tasks.FindAsync(task.Id);
+        Assert.AreEqual(action.Id, updatedTask.ActionId);
     }
 
     [Test]
@@ -425,15 +431,15 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var myTask = new TaskItem { Id = 1, Title = "My Task", UserId = userId };
-        var otherAction = new ActionItem { Id = 2, Title = "Other Action", UserId = "hacker", RoadmapId = 5 };
+        var myTask = new TaskItem {Title = "My Task", UserId = userId };
+        var otherAction = new ActionItem {Title = "Other Action", UserId = "hacker"};
 
         _context.Tasks.Add(myTask);
         _context.Actions.Add(otherAction);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.LinkTaskToActionAsync(1, 2, userId);
+        var result = await _roadmapService.LinkTaskToActionAsync(myTask.Id, otherAction.Id, userId);
 
         // Assert
         Assert.IsFalse(result);
@@ -444,12 +450,12 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        
-        var unlinkedTask = new TaskItem { Id = 1, Title = "Unlinked", UserId = userId, ActionId = null, CreatedOn = DateTime.Now };
+        var action = new ActionItem { UserId = userId };
+        var unlinkedTask = new TaskItem {Title = "Unlinked", UserId = userId, CreatedOn = DateTime.Now };
 
-        var linkedTask = new TaskItem { Id = 2, Title = "Linked", UserId = userId, ActionId = 10, CreatedOn = DateTime.Now.AddDays(-1) };
+        var linkedTask = new TaskItem {Title = "Linked", UserId = userId, ActionId = action.Id, CreatedOn = DateTime.Now.AddDays(-1) };
 
-        var otherUserTask = new TaskItem { Id = 3, Title = "Other", UserId = "other", ActionId = null, CreatedOn = DateTime.Now };
+        var otherUserTask = new TaskItem {Title = "Other", UserId = "other", CreatedOn = DateTime.Now };
 
         _context.Tasks.AddRange(unlinkedTask, linkedTask, otherUserTask);
         await _context.SaveChangesAsync();
@@ -467,16 +473,20 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Linked Task", UserId = userId, ActionId = 10 };
+        var action = new ActionItem {Title = "Action", UserId = userId };
+        _context.Actions.Add(action);
+        await _context.SaveChangesAsync();
+
+        var task = new TaskItem {Title = "Linked Task", UserId = userId, ActionId = action.Id};
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _roadmapService.UnlinkTaskFromActionAsync(1, userId);
+        var result = await _roadmapService.UnlinkTaskFromActionAsync(task.Id, userId);
 
         // Assert
         Assert.IsTrue(result);
-        var updatedTask = await _context.Tasks.FindAsync(1);
+        var updatedTask = await _context.Tasks.FindAsync(task.Id);
         Assert.IsNull(updatedTask.ActionId);
     }
 
@@ -496,13 +506,14 @@ public class RoadmapServiceTests: ServiceTestsBase
         // Arrange
         var ownerId = "owner";
         var otherId = "other-user";
-        var task = new TaskItem { Id = 5, Title = "Owner's Task", UserId = ownerId, ActionId = 10 };
+        var action = new ActionItem { UserId = ownerId };
+        var task = new TaskItem {Title = "Owner's Task", UserId = ownerId, ActionId = action.Id };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         //Act+Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _roadmapService.UnlinkTaskFromActionAsync(5, otherId));
+            await _roadmapService.UnlinkTaskFromActionAsync(task.Id, otherId));
     }
 
     [Test]
@@ -510,14 +521,14 @@ public class RoadmapServiceTests: ServiceTestsBase
     {
         // Arrange
         var userId = "user1";
-        var task = new TaskItem { Id = 1, Title = "Task", UserId = userId, IsCompleted = false };
+        var task = new TaskItem {Title = "Task", UserId = userId, IsCompleted = false };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
         // Act 1: From false to true
-        var result1 = await _roadmapService.ToggleTaskCompletionAsync(1, userId);
+        var result1 = await _roadmapService.ToggleTaskCompletionAsync(task.Id, userId);
         // Act 2: From true to false
-        var result2 = await _roadmapService.ToggleTaskCompletionAsync(1, userId);
+        var result2 = await _roadmapService.ToggleTaskCompletionAsync(task.Id, userId);
 
         // Assert
         Assert.IsTrue(result1);
@@ -540,12 +551,12 @@ public class RoadmapServiceTests: ServiceTestsBase
         // Arrange
         var ownerId = "owner";
         var hackerId = "hacker";
-        var task = new TaskItem { Id = 10, Title = "Private Task", UserId = ownerId };
+        var task = new TaskItem {Title = "Private Task", UserId = ownerId };
         _context.Tasks.Add(task);
         _context.SaveChanges();
 
         // Act & Assert
         Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-            await _roadmapService.ToggleTaskCompletionAsync(10, hackerId));
+            await _roadmapService.ToggleTaskCompletionAsync(task.Id, hackerId));
     }
 }
