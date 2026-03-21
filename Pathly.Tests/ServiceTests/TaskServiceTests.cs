@@ -13,6 +13,7 @@ using Pathly.ViewModels.Tags;
 using Pathly.ViewModels.TasksViewModels;
 namespace Pathly.Tests;
 
+[TestFixture]
 public class TaskServiceTests
 {
     private ApplicationDbContext _context;
