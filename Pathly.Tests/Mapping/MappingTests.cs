@@ -12,7 +12,6 @@ public class MappingTests
         // Arrange
         var config = new MapperConfiguration(cfg =>
         {
-            //add profiles here
             cfg.AddProfile<MappingProfile>();
         });
 
