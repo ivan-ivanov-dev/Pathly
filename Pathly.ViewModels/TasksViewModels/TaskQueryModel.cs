@@ -13,7 +13,7 @@ namespace Pathly.ViewModels.TasksViewModels
         public List<int>? SelectedTagIds { get; set; } = new List<int>();
 
         public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 6;
+        public int PageSize { get; set; } = 5;
     }
 
 }
