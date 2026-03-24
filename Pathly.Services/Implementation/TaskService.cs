@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
+using Pathly.GCommon;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Tags;
 using Pathly.ViewModels.TasksViewModels;
@@ -100,9 +101,10 @@ namespace Pathly.Services.Implementation
                 tasksQuery = tasksQuery.OrderByDescending(t => t.CreatedOn);
             }
 
-            var tasks = await tasksQuery
-                .ProjectTo<TaskViewModel>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var pagedTasks = await PagedList<TaskViewModel>.ToPagedListAsync(
+                tasksQuery.ProjectTo<TaskViewModel>(_mapper.ConfigurationProvider),
+                queryModel.PageNumber,
+                queryModel.PageSize);
 
             var userTags = await _context.Tags
                 .Where(tag => tag.UserId == userId)
@@ -111,7 +113,7 @@ namespace Pathly.Services.Implementation
 
             var result = new TaskListViewModel
             {
-                Tasks = tasks,
+                Tasks = pagedTasks,
                 AvailableFilterTags = _mapper.Map<List<Tag>>(userTags)
             };
 
