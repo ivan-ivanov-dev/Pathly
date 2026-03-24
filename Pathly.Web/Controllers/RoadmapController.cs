@@ -79,7 +79,7 @@ namespace Pathly.Web.Controllers
                 {
                     ModelState.AddModelError("", "The selected goal does not exist.");
                 }
-                if (goal.UserId != userId)
+                else if (goal.UserId != userId)
                 {
                     ModelState.AddModelError("", "You do not have permission to use the selected goal.");
                 }

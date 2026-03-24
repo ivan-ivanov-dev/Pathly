@@ -6,6 +6,7 @@ using Pathly.Services.Contracts;
 using Pathly.Tests.Common;
 using Pathly.ViewModels.Goals;
 using Pathly.ViewModels.Roadmaps;
+using Pathly.ViewModels.TasksViewModels;
 using Pathly.Web.Controllers;
 
 namespace Pathly.Tests;
@@ -361,6 +362,105 @@ public class RoadmapControllerTests: ControllerTestsBase
 
         // Assert
         Assert.IsInstanceOf<BadRequestResult>(result);
+    }
+
+
+    [Test]
+    public async Task Planner_ShouldReturnViewWithMappedTasks()
+    {
+        // Arrange
+        int actionId = 10;
+        int roadmapId = 5;
+        var unlinkedTasks = new List<TaskItem> { new TaskItem { Id = 1, Title = "Task 1" } };
+        var mappedViewModels = new List<TaskViewModel> { new TaskViewModel { Id = 1, Title = "Task 1" } };
+
+        _mockRoadmapService.Setup(s => s.GetUnlinkedTasksAsync(_userId))
+            .ReturnsAsync(unlinkedTasks);
+
+        _mockMapper.Setup(m => m.Map<IEnumerable<TaskViewModel>>(unlinkedTasks))
+            .Returns(mappedViewModels);
+
+        // Act
+        var result = await _controller.Planner(actionId, roadmapId);
+
+        // Assert
+        Assert.IsInstanceOf<ViewResult>(result);
+        var viewResult = (ViewResult)result;
+
+        Assert.IsInstanceOf<RoadmapPlannerViewModel>(viewResult.Model);
+        var model = (RoadmapPlannerViewModel)viewResult.Model!;
+
+        Assert.That(model.TargetActionId, Is.EqualTo(actionId));
+        Assert.That(model.RoadmapId, Is.EqualTo(roadmapId));
+        Assert.That(model.UnlinkedTasks, Is.EqualTo(mappedViewModels));
+    }
+
+
+    [Test]
+    public async Task UnlinkTask_ShouldReturnOk_WhenSuccessful()
+    {
+        // Arrange
+        int taskId = 1;
+        _mockRoadmapService.Setup(s => s.UnlinkTaskFromActionAsync(taskId, _userId))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _controller.UnlinkTask(taskId);
+
+        // Assert
+        Assert.IsInstanceOf<OkResult>(result);
+    }
+
+    [Test]
+    public async Task UnlinkTask_ShouldReturnBadRequest_WhenFailure()
+    {
+        // Arrange
+        _mockRoadmapService.Setup(s => s.UnlinkTaskFromActionAsync(It.IsAny<int>(), _userId))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await _controller.UnlinkTask(99);
+
+        // Assert
+        Assert.IsInstanceOf<BadRequestResult>(result);
+    }
+
+
+    [Test]
+    public async Task ToggleTaskStatus_ShouldReturnJson_WhenTaskExists()
+    {
+        // Arrange
+        int taskId = 1;
+        _mockRoadmapService.Setup(s => s.ToggleTaskCompletionAsync(taskId, _userId))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _controller.ToggleTaskStatus(taskId);
+
+        // Assert
+        Assert.IsInstanceOf<JsonResult>(result);
+        var jsonResult = (JsonResult)result;
+
+        // Използваме Reflection, за да вземем стойностите от анонимния обект
+        var success = jsonResult.Value?.GetType().GetProperty("success")?.GetValue(jsonResult.Value, null);
+        var isCompleted = jsonResult.Value?.GetType().GetProperty("isCompleted")?.GetValue(jsonResult.Value, null);
+
+        Assert.That(success, Is.True);
+        Assert.That(isCompleted, Is.True);
+    }
+
+    [Test]
+    public async Task ToggleTaskStatus_ShouldReturnNotFound_WhenTaskDoesNotExist()
+    {
+        // Arrange
+        _mockRoadmapService.Setup(s => s.ToggleTaskCompletionAsync(It.IsAny<int>(), _userId))
+            .ReturnsAsync((bool?)null);
+
+        // Act
+        var result = await _controller.ToggleTaskStatus(99);
+
+        // Assert
+        Assert.IsInstanceOf<NotFoundResult>(result);
     }
 
 }
