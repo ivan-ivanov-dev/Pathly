@@ -153,10 +153,6 @@ namespace Pathly.Services.Implementation
                 .OrderByDescending(r => r.Id)
                 .ToListAsync();
 
-            if(roadmaps == null)
-            {
-                throw new UnauthorizedAccessException();
-            }
             return roadmaps;
         }
 
@@ -225,7 +221,7 @@ namespace Pathly.Services.Implementation
 
         public async Task<bool> UnlinkTaskFromActionAsync(int taskId, string userId)
         {
-            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+            var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId);
 
             if (task == null)
             {
