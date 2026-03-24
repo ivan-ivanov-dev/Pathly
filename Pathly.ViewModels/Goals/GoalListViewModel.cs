@@ -1,7 +1,9 @@
-﻿namespace Pathly.ViewModels.Goals
+﻿using Pathly.GCommon;
+
+namespace Pathly.ViewModels.Goals
 {
     public class GoalListViewModel
     {
-        public List<GoalViewModel> Goals { get; set; } = new List<GoalViewModel>();
+        public PagedList<GoalViewModel> Goals { get; set; } = null!;
     }
 }
