@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pathly.DataModels;
+using Pathly.GCommon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
     {
-        string userId = UserConfiguration.TestUserId;
+        string userId = SeedConstants.DemoUserId;
         public void Configure(EntityTypeBuilder<TaskItem> builder)
         {
             var tasks = new List<TaskItem>();
