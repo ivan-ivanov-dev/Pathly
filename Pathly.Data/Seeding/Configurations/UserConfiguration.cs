@@ -20,7 +20,7 @@ namespace Pathly.Data.Seeding.Configurations
             // Demo User
             var normalUser = new ApplicationUser
             {
-                Id = SeedConstants.testUserId,
+                Id = SeedConstants.DemoUserId,
                 UserName = "test@pathly.com",
                 NormalizedUserName = "TEST@PATHLY.COM",
                 Email = "test@pathly.com",
