@@ -92,6 +92,60 @@
     </div>
 
     <div class="row g-4">
+        @if (Model.Tasks.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-center mt-5">
+                <nav aria-label="Task pagination">
+                    <ul class="pagination pagination-animated">
+                        @* Previous page *@
+                        <li class="page-item @(!Model.Tasks.HasPrevious ? "disabled" : "")">
+                            <a class="page-link border-0 shadow-sm rounded-circle mx-1"
+                               asp-action="Index"
+                               asp-all-route-data="@GetPaginationRoutes(Model.Tasks.CurrentPage - 1)"
+                               aria-label="Previous">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        @* Page number *@
+                        @for (int i = 1; i <= Model.Tasks.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.Tasks.CurrentPage ? "active" : "")">
+                                <a class="page-link border-0 shadow-sm rounded-circle mx-1"
+                                   asp-action="Index"
+                                   asp-all-route-data="@GetPaginationRoutes(i)">@i</a>
+                            </li>
+                        }
+
+                        @* Next Page *@
+                        <li class="page-item @(!Model.Tasks.HasNext ? "disabled" : "")">
+                            <a class="page-link border-0 shadow-sm rounded-circle mx-1"
+                               asp-action="Index"
+                               asp-all-route-data="@GetPaginationRoutes(Model.Tasks.CurrentPage + 1)"
+                               aria-label="Next">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+
+        @functions {
+            Dictionary<string, string> GetPaginationRoutes(int page)
+            {
+                var routes = new Dictionary<string, string> { { "PageNumber", page.ToString() } };
+
+                foreach (var key in Context.Request.Query.Keys)
+                {
+                    if (key != "PageNumber")
+                    {
+                        routes[key] = Context.Request.Query[key]!;
+                    }
+                }
+                return routes;
+            }
+        }
         @if (Model.Tasks != null && Model.Tasks.Any())
         {
             @foreach (var task in Model.Tasks)
