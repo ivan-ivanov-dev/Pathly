@@ -102,13 +102,15 @@ namespace Pathly.Data
             //SEEDING CONFIGURATIONS
             //---------------------------//
 
-            builder.ApplyConfiguration(new UserConfiguration());    // 1. Users
-            builder.ApplyConfiguration(new TagConfiguration());     // 2. Tags
-            builder.ApplyConfiguration(new GoalConfiguration());    // 3. Goals
-            builder.ApplyConfiguration(new RoadmapConfiguration()); // 4. Roadmaps
-            builder.ApplyConfiguration(new ActionItemConfiguration()); // 5. Actions
-            builder.ApplyConfiguration(new TaskItemConfiguration());   // 6. Tasks
-            builder.ApplyConfiguration(new TaskTagConfiguration());    // 7. Linking Tasks & Tags
+            builder.ApplyConfiguration(new RoleConfiguration()); // 1.Role
+            builder.ApplyConfiguration(new UserConfiguration());    // 2. Users
+            builder.ApplyConfiguration(new UserRoleConfiguration()); // 3.UserRole
+            builder.ApplyConfiguration(new TagConfiguration());     // 4. Tags
+            builder.ApplyConfiguration(new GoalConfiguration());    // 5. Goals
+            builder.ApplyConfiguration(new RoadmapConfiguration()); // 6. Roadmaps
+            builder.ApplyConfiguration(new ActionItemConfiguration()); // 7. Actions
+            builder.ApplyConfiguration(new TaskItemConfiguration());   // 8. Tasks
+            builder.ApplyConfiguration(new TaskTagConfiguration());    // 9. Linking Tasks & Tags
         }
     }
 }
