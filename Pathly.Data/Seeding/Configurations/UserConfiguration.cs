@@ -13,26 +13,37 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        public const string TestUserId = SeedConstants.testUserId;
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
 
-            var adminUser = new ApplicationUser
+            // Demo User
+            var normalUser = new ApplicationUser
             {
-                Id = TestUserId,
+                Id = SeedConstants.testUserId,
                 UserName = "test@pathly.com",
                 NormalizedUserName = "TEST@PATHLY.COM",
                 Email = "test@pathly.com",
                 NormalizedEmail = "TEST@PATHLY.COM",
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString() // Important for Identity
+                SecurityStamp = Guid.NewGuid().ToString()
             };
+            normalUser.PasswordHash = hasher.HashPassword(normalUser, "Test1234!");
 
-            // Manually hash the password and set it to the PasswordHash property
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Test1234!");
+            // Administrator
+            var adminUser = new ApplicationUser
+            {
+                Id = SeedConstants.AdminUserId,
+                UserName = "admin@pathly.com",
+                NormalizedUserName = "ADMIN@PATHLY.COM",
+                Email = "admin@pathly.com",
+                NormalizedEmail = "ADMIN@PATHLY.COM",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123!");
 
-            builder.HasData(adminUser);
+            builder.HasData(normalUser, adminUser);
         }
     }
 }
