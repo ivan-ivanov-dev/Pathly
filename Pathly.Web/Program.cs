@@ -56,9 +56,11 @@ namespace Pathly.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Errors/Error500");
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/Errors/Error{0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
