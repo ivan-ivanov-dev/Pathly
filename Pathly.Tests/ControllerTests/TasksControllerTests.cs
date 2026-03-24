@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Pathly.DataModels;
+using Pathly.GCommon;
 using Pathly.Services.Contracts;
 using Pathly.Tests.Common;
 using Pathly.ViewModels.Tags;
@@ -43,7 +44,7 @@ public class TasksControllerTests: ControllerTestsBase
     {
         // Arrange
         var queryModel = new TaskQueryModel();
-        var expectedModel = new TaskListViewModel { Tasks = new List<TaskViewModel>() };
+        var expectedModel = new TaskListViewModel { Tasks = new PagedList<TaskViewModel>(new List<TaskViewModel>(), 0, 1, 0) };
 
         _mockTaskService.Setup(s => s.GetAllTasksAsync(queryModel, _userId))
             .ReturnsAsync(expectedModel);

@@ -5,6 +5,7 @@ using Pathly.ViewModels.Goals;
 using Pathly.Web.Controllers;
 using Pathly.Tests.Common;
 using AutoMapper;
+using Pathly.GCommon;
 
 namespace Pathly.Tests;
 
@@ -46,7 +47,12 @@ public class GoalsControllerTests: ControllerTestsBase
             SearchTerm = "Test",
             Goals = new GoalListViewModel
             {
-                Goals = new List<GoalViewModel> { new GoalViewModel { Title = "Test Goal" } }
+                Goals = new PagedList<GoalViewModel>(
+                    new List<GoalViewModel> { new GoalViewModel { Title = "Test Goal" } },
+                    1, // CurrentPage
+                    1, // PageSize
+                    1  // TotalCount
+                )
             }
         };
 
