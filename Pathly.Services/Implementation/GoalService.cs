@@ -3,8 +3,10 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
+using Pathly.GCommon;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Goals;
+using Pathly.ViewModels.TasksViewModels;
 
 namespace Pathly.Services.Implementation
 {
@@ -83,13 +85,15 @@ namespace Pathly.Services.Implementation
                 GoalSortOrder.TitleDesc => goalsQuery.OrderByDescending(g => g.Title),
                 _ => goalsQuery
             };
-            var goals = await goalsQuery
-                .ProjectTo<GoalViewModel>(_mapper.ConfigurationProvider)
-                .ToListAsync();
 
+            var pagedGoals = await PagedList<GoalViewModel>.ToPagedListAsync(
+                goalsQuery.ProjectTo<GoalViewModel>(_mapper.ConfigurationProvider),
+                    queryModel.PageNumber,
+                    queryModel.PageSize);
+                
             var result = new GoalListViewModel 
             { 
-                Goals = goals 
+                Goals = pagedGoals
             };
 
             queryModel.Goals = result;
