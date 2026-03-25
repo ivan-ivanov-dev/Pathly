@@ -14,5 +14,7 @@ namespace Pathly.Services.Contracts
         Task<bool> DeleteUserAsync(string userId);
         Task <bool> ChangeUserRoleAsync(string userId, string roleName);
         Task <bool> ToggleUserLockoutAsync(string userId);
+        Task<AdminStatisticsViewModel> GetStatisticsAsync();
+
     }
 }
