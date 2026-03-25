@@ -96,6 +96,14 @@
                            asp-controller="Roadmap" asp-action="Selection">Roadmaps</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")"
                            asp-controller="Tag" asp-action="Index">Tags</a>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <div class="sidebar-divider my-2 border-bottom opacity-25"></div>
+                            <a class="sidebar-link text-danger fw-bold" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                <span class="sidebar-link-text">Admin Panel</span>
+                            </a>
+                        }
                     </nav>
                 </div>
                 <div class="sidebar-footer">
@@ -172,6 +180,14 @@
                        asp-controller="Tag" asp-action="Index">
                         <span class="sidebar-link-text">Tags</span>
                     </a>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <div class="sidebar-divider my-2 border-bottom opacity-25"></div>
+                        <a class="sidebar-link text-danger fw-bold" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            <span class="sidebar-link-text">Admin Panel</span>
+                        </a>
+                    }
                 </nav>
 
                 <div class="sidebar-footer">
