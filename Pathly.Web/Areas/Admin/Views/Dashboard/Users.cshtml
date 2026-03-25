@@ -40,16 +40,13 @@
                                     <span class="badge @(role == "Administrator" ? "bg-danger" : "bg-primary") rounded-pill">@role</span>
                                 }
                             </td>
-                            <td class="text-end">
-                                <div class="btn-group shadow-sm rounded">
-                                    <button class="btn btn-sm btn-outline-secondary" title="Edit Roles">
-                                        <i class="bi bi-shield-check"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger"
-                                            onclick="confirmDelete('@user.Id', '@user.Email')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
+                            <td>
+                                <select class="form-select form-select-sm shadow-sm"
+                                        onchange="updateRole('@user.Id', this.value)"
+                                        style="width: auto; border-radius: 10px;">
+                                    <option value="User" selected="@(user.Roles.Contains("User"))">User</option>
+                                    <option value="Administrator" selected="@(user.Roles.Contains("Administrator"))">Administrator</option>
+                                </select>
                             </td>
                         </tr>
                     }
@@ -89,6 +86,38 @@
                             }
                         }
                     });
+                }
+            });
+        }
+                function updateRole(userId, newRoleName) {
+            $.ajax({
+                url: '@Url.Action("ChangeRole", "Dashboard", new { area = "Admin" })',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    newRole: newRoleName,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.message
+                        });
+                    } else {
+                        Swal.fire('Error!', response.message, 'error');
+                    }
+                },
+                error: function() {
+                    Swal.fire('Error!', 'Something went wrong with the server.', 'error');
                 }
             });
         }
