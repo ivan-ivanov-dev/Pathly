@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Pathly.Data;
 using Pathly.Services.Mappings;
 using System;
@@ -30,7 +32,12 @@ namespace Pathly.Tests.Common
                 .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 .Options;
 
-            _context = new ApplicationDbContext(options);
+            var configurationMock = new Mock<IConfiguration>();
+
+            configurationMock.Setup(c => c["SeedSettings:AdminPassword"]).Returns("TestPass123!");
+            configurationMock.Setup(c => c["SeedSettings:TestUserPassword"]).Returns("TestPass123!");
+
+            _context = new ApplicationDbContext(options,configurationMock.Object);
             _context.Database.EnsureCreated();
 
             var config = new MapperConfiguration(cfg =>
