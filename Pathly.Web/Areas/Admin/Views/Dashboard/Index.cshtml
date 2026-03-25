@@ -1,34 +1,128 @@
-﻿@{
-    ViewData["Title"] = "Admin Overview";
+﻿@using Pathly.ViewModels.Admin
+@model AdminStatisticsViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
     Layout = "_AdminLayout";
 }
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Administrative Dashboard</h1>
-</div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4 text-dark fw-bold">Dashboard Overview</h1>
+    <p class="text-muted">Quick look at Pathly's current performance.</p>
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4 text-center">
-                <i class="bi bi-people text-primary display-4 mb-3"></i>
-                <h5 class="card-title">User Management</h5>
-                <p class="card-text text-muted">View and manage all registered accounts.</p>
-                <a class="btn btn-primary rounded-pill px-4 asp-area="Admin" asp-controller="Dashboard" asp-action="Users">Enter
-                    Users
-                </a>
+    <div class="row g-4 mt-2">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex align-items-center justify-content-between p-4">
+                    <div>
+                        <div class="small text-white-50 fw-bold">TOTAL USERS</div>
+                        <div class="display-6 fw-bold">@Model.TotalUsers</div>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between bg-white bg-opacity-10 border-0">
+                    <a class="small text-white stretched-link text-decoration-none" asp-action="Users">View Details</a>
+                    <i class="bi bi-chevron-right small"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex align-items-center justify-content-between p-4">
+                    <div>
+                        <div class="small text-white-50 fw-bold">ACTIVE GOALS</div>
+                        <div class="display-6 fw-bold">@Model.TotalGoals</div>
+                    </div>
+                    <i class="bi bi-flag fs-1 opacity-50"></i>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between bg-white bg-opacity-10 border-0">
+                    <span class="small">System-wide goals</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-info text-white mb-4 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex align-items-center justify-content-between p-4">
+                    <div>
+                        <div class="small text-white-50 fw-bold">TASKS DONE</div>
+                        <div class="display-6 fw-bold">@Model.CompletedTasks</div>
+                    </div>
+                    <i class="bi bi-check2-circle fs-1 opacity-50"></i>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between bg-white bg-opacity-10 border-0">
+                    <span class="small text-white">Efficiency tracking</span>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4 text-center">
-                <i class="bi bi-graph-up text-success display-4 mb-3"></i>
-                <h5 class="card-title">System Stats</h5>
-                <p class="card-text text-muted">Monitor goals and task completion rates.</p>
-                <a href="#" class="btn btn-outline-success rounded-pill px-4">View Analytics</a>
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-bar-chart-line me-2"></i>System Activity Overview</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="activityChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pie-chart me-2"></i>Task Completion Rate</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <canvas id="taskPieChart" style="max-height: 300px;"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 1. Activity Bar Chart
+        const activityCtx = document.getElementById('activityChart').getContext('2d');
+        new Chart(activityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Users', 'Active Goals', 'Total Tasks'],
+                datasets: [{
+                    label: 'Count',
+                    data: [@Model.TotalUsers, @Model.TotalGoals, @Model.CompletedTasks + 5],
+                    backgroundColor: ['#0d6efd', '#198754', '#0dcaf0'],
+                    borderRadius: 10,
+                    barThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { display: false } } }
+            }
+        });
+
+        // 2. Task Pie Chart
+        const pieCtx = document.getElementById('taskPieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Remaining'],
+                datasets: [{
+                    data: [@Model.CompletedTasks, 10],
+                    backgroundColor: ['#0dcaf0', '#e9ecef'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+}

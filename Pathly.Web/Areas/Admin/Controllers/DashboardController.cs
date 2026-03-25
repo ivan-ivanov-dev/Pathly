@@ -11,9 +11,10 @@ namespace Pathly.Web.Areas.Admin.Controllers
         {
          _adminService = adminService;   
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var stats = await _adminService.GetStatisticsAsync();
+            return View(stats);
         }
         [HttpGet]
         public async Task<IActionResult> Users()
