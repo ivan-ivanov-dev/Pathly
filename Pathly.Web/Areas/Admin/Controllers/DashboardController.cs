@@ -14,10 +14,24 @@ namespace Pathly.Web.Areas.Admin.Controllers
         {
             return View();
         }
+        [HttpGet]
         public async Task<IActionResult> Users()
         {
             var users = await _adminService.GetAllUsersAsync();
             return View(users);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var success = await _adminService.DeleteUserAsync(userId);
+
+            if (success)
+            {
+                return Json(new { success = true, message = "User deleted successfully!" });
+            }
+            return Json(new { success = false, message = "Users couldn't get deleted" });
         }
     }
 }
