@@ -19,6 +19,18 @@ namespace Pathly.Services.Implementation
         {
             _userManager = userManager;
         }
+
+        public async Task<bool> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
+        }
+
         public async Task<IEnumerable<UserListViewModel>> GetAllUsersAsync()
         {
             var users = await _userManager.Users.ToListAsync();
