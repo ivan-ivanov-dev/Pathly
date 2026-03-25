@@ -22,7 +22,7 @@ namespace Pathly.Services.Implementation
 
         public async Task<bool> ChangeUserRoleAsync(string userId, string roleName)
         {
-            var user = await _userManager.FindByNameAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return false;
@@ -37,7 +37,7 @@ namespace Pathly.Services.Implementation
 
         public async Task<bool> DeleteUserAsync(string userId)
         {
-            var user = await _userManager.FindByNameAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return false;
@@ -59,11 +59,34 @@ namespace Pathly.Services.Implementation
                     Id = user.Id,
                     Email = user.Email,
                     UserName = user.UserName,
+                    IsLockedOut = await _userManager.IsLockedOutAsync(user),
                     Roles = roles
                 });
             }
 
             return userViewModels;
+        }
+
+        public async Task<bool> ToggleUserLockoutAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return false;
+            }
+
+            var isLockedOut = await _userManager.IsLockedOutAsync(user);
+
+            if (isLockedOut)
+            {
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+            }
+            else
+            {
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddYears(100)); //block for a very long period
+            }
+
+            return true;
         }
     }
 }
