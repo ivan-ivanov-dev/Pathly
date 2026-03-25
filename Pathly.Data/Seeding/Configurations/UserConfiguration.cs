@@ -13,6 +13,14 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
+        private readonly string _adminPassword;
+        private readonly string _demoUserPassword;
+
+        public UserConfiguration(string adminPassword, string demoUserPassword)
+        {
+            _adminPassword = adminPassword;
+            _demoUserPassword = demoUserPassword;
+        }
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
@@ -28,7 +36,7 @@ namespace Pathly.Data.Seeding.Configurations
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
-            normalUser.PasswordHash = hasher.HashPassword(normalUser, "Test1234!");
+            normalUser.PasswordHash = hasher.HashPassword(normalUser, _demoUserPassword);
 
             // Administrator
             var adminUser = new ApplicationUser
@@ -41,7 +49,7 @@ namespace Pathly.Data.Seeding.Configurations
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123!");
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, _adminPassword);
 
             builder.HasData(normalUser, adminUser);
         }
