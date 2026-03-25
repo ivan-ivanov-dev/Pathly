@@ -46,7 +46,14 @@
                                         style="width: auto; border-radius: 10px;">
                                     <option value="User" selected="@(user.Roles.Contains("User"))">User</option>
                                     <option value="Administrator" selected="@(user.Roles.Contains("Administrator"))">Administrator</option>
-                                </select>
+                                </select>                                
+                            </td>
+                            <td>
+                                <button class="btn btn-sm @(user.IsLockedOut ? "btn-warning" : "btn-outline-warning")"
+                                        onclick="toggleLockout('@user.Id', '@user.Email', @(user.IsLockedOut.ToString().ToLower()))"
+                                        title="@(user.IsLockedOut ? "Unlock User" : "Lock User")">
+                                    <i class="bi @(user.IsLockedOut ? "bi-lock-fill" : "bi-unlock")"></i>
+                                </button>
                             </td>
                         </tr>
                     }
@@ -118,6 +125,38 @@
                 },
                 error: function() {
                     Swal.fire('Error!', 'Something went wrong with the server.', 'error');
+                }
+            });
+        }
+                function toggleLockout(userId, userEmail, isCurrentlyLocked) {
+            const action = isCurrentlyLocked ? 'unlock' : 'lock';
+
+            Swal.fire({
+                title: `${action.charAt(0).toUpperCase() + action.slice(1)} User?`,
+                text: `Are you sure you want to ${action} ${userEmail}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: isCurrentlyLocked ? '#ffc107' : '#dc3545',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: `Yes, ${action}!`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("ToggleLockout", "Dashboard", new { area = "Admin" })',
+                        type: 'POST',
+                        data: {
+                            userId: userId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Success!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
                 }
             });
         }
