@@ -48,5 +48,19 @@ namespace Pathly.Web.Areas.Admin.Controllers
 
             return Json(new { success = false, message = "User couldn't get their role updated" });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleLockout(string userId)
+        {
+            var success = await _adminService.ToggleUserLockoutAsync(userId);
+
+            if (success)
+            {
+                return Json(new { success = true, message = "User status updated successfully!" });
+            }
+
+            return Json(new { success = false, message = "Error updating lockout status." });
+        }
     }
 }
