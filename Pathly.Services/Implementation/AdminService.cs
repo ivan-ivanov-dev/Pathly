@@ -20,6 +20,21 @@ namespace Pathly.Services.Implementation
             _userManager = userManager;
         }
 
+        public async Task<bool> ChangeUserRoleAsync(string userId, string roleName)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var currentRole = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRole);
+
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            return result.Succeeded;
+        }
+
         public async Task<bool> DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByNameAsync(userId);
