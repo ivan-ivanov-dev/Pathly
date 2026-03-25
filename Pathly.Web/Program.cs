@@ -40,6 +40,7 @@ namespace Pathly.Web
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGoalService, GoalService>();
             builder.Services.AddScoped<IRoadmapService, RoadmapService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
