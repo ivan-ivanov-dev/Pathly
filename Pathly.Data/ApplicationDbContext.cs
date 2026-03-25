@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Pathly.Data.Seeding.Configurations;
 using Pathly.DataModels;
 
@@ -7,9 +8,11 @@ namespace Pathly.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        private readonly IConfiguration _configuration;
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration) 
             : base(options)
         {
+            _configuration = configuration;
         }
         public DbSet<TaskItem> Tasks => Set<TaskItem>();
         public DbSet<Tag> Tags => Set<Tag>();
@@ -102,15 +105,20 @@ namespace Pathly.Data
             //SEEDING CONFIGURATIONS
             //---------------------------//
 
-            builder.ApplyConfiguration(new RoleConfiguration()); // 1.Role
-            builder.ApplyConfiguration(new UserConfiguration());    // 2. Users
-            builder.ApplyConfiguration(new UserRoleConfiguration()); // 3.UserRole
-            builder.ApplyConfiguration(new TagConfiguration());     // 4. Tags
-            builder.ApplyConfiguration(new GoalConfiguration());    // 5. Goals
-            builder.ApplyConfiguration(new RoadmapConfiguration()); // 6. Roadmaps
-            builder.ApplyConfiguration(new ActionItemConfiguration()); // 7. Actions
-            builder.ApplyConfiguration(new TaskItemConfiguration());   // 8. Tasks
-            builder.ApplyConfiguration(new TaskTagConfiguration());    // 9. Linking Tasks & Tags
+            // use defaults for testing purposes
+            var adminPass = _configuration["SeedSettings:AdminPassword"] ?? "Admin123!";
+            var demoUserPassword = _configuration["SeedSettings:TestUserPassword"] ?? "Test1234!";
+
+
+            builder.ApplyConfiguration(new RoleConfiguration());                           // 1.Role
+            builder.ApplyConfiguration(new UserConfiguration(adminPass,demoUserPassword)); // 2. Users
+            builder.ApplyConfiguration(new UserRoleConfiguration());                       // 3.UserRole
+            builder.ApplyConfiguration(new TagConfiguration());                            // 4. Tags
+            builder.ApplyConfiguration(new GoalConfiguration());                           // 5. Goals
+            builder.ApplyConfiguration(new RoadmapConfiguration());                        // 6. Roadmaps
+            builder.ApplyConfiguration(new ActionItemConfiguration());                     // 7. Actions
+            builder.ApplyConfiguration(new TaskItemConfiguration());                       // 8. Tasks
+            builder.ApplyConfiguration(new TaskTagConfiguration());                        // 9. Linking Tasks & Tags
         }
     }
 }
