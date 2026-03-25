@@ -7,6 +7,7 @@
 
 <div class="container-fluid px-4">
     <h1 class="mt-4 text-dark fw-bold">User Management</h1>
+    @Html.AntiForgeryToken()
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
         <li class="breadcrumb-item active">Users</li>
@@ -44,7 +45,8 @@
                                     <button class="btn btn-sm btn-outline-secondary" title="Edit Roles">
                                         <i class="bi bi-shield-check"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" title="Delete User">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            onclick="confirmDelete('@user.Id', '@user.Email')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -56,3 +58,39 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(userId, userEmail) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to delete user: ${userEmail}. This action cannot be undone!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete them!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })',
+                        type: 'POST',
+                        data: {
+                            id: userId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
