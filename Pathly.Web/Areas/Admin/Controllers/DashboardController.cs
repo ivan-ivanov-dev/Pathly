@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pathly.Services.Contracts;
+using Pathly.Services.Implementation;
 
 namespace Pathly.Web.Areas.Admin.Controllers
 {
@@ -31,7 +32,21 @@ namespace Pathly.Web.Areas.Admin.Controllers
             {
                 return Json(new { success = true, message = "User deleted successfully!" });
             }
-            return Json(new { success = false, message = "Users couldn't get deleted" });
+            return Json(new { success = false, message = "User couldn't get deleted" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeRole(string userId, string newRole)
+        {
+            var success = await _adminService.ChangeUserRoleAsync(userId, newRole);
+
+            if (success)
+            {
+                return Json(new { success = true, message = $"Role updated to {newRole}!" });
+            }
+
+            return Json(new { success = false, message = "User couldn't get their role updated" });
         }
     }
 }
