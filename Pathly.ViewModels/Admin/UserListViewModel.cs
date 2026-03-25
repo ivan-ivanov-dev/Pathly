@@ -11,6 +11,7 @@ namespace Pathly.ViewModels.Admin
         public string Id { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string UserName { get; set; } = null!;
+        public bool IsLockedOut { get; set; }
 
         public IEnumerable<string> Roles { get; set; } = new List<string>();
     }
