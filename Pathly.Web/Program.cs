@@ -26,6 +26,8 @@ namespace Pathly.Web
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
                 options.User.RequireUniqueEmail = true;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
