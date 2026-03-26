@@ -42,9 +42,16 @@ namespace Pathly.Web.Controllers
                 return BadRequest(error);
             }
 
-            var userId = _userManager.GetUserId(User);
-            await _tagService.CreateTagAsync(model.Name, userId);
-            return Ok();
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                await _tagService.CreateTagAsync(model.Name, userId);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
