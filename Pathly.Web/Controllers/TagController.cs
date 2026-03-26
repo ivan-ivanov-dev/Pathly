@@ -17,11 +17,14 @@ namespace Pathly.Web.Controllers
             _tagService = tagService;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var userId = _userManager.GetUserId(User); 
-            var tags = await _tagService.GetUserTagsAsync(userId);
-            return View(tags);
+            var userId = _userManager.GetUserId(User);
+            var viewModel = await _tagService.GetUserTagsAsync(userId, searchString);
+
+            ViewData["CurrentFilter"] = searchString;
+
+            return View(viewModel);
         }
 
         [HttpGet]
