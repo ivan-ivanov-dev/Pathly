@@ -1,6 +1,5 @@
-﻿@using Pathly.DataModels
-@using Pathly.ViewModels.Tags
-@model List<TagViewModel>
+﻿@using Pathly.ViewModels.Tags
+@model IEnumerable<TagViewModel>
 
 @{
     ViewData["Title"] = "Tag Gallery";
@@ -8,66 +7,113 @@
 
 @section Styles
 {
+    @* For SweetAlert2 *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="~/css/tag.css" asp-append-version="true" />
-
 }
 
-<div class="gallery-header">
-    <div>
-        <h2 class="fw-bold mb-0">Tag Gallery</h2>
-        <p class="text-muted mb-0">Helps you to better organize your daily tasks </p>
+<div class="container-fluid py-4 animate-fade-in">
+    @* Header & Search Section *@
+    <div class="gallery-header-wrapper mb-5 p-4 rounded-5 bg-white shadow-sm border border-light">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-4">
+                <h1 class="display-6 fw-850 mb-1 text-dark">Tag Gallery</h1>
+                <p class="text-muted mb-0">Organize your journey with colored precision.</p>
+            </div>
+
+            <div class="col-lg-5">
+                <form asp-action="Index" method="get" class="tag-search-form">
+                    <div class="input-group search-pill shadow-sm border border-light">
+                        <span class="input-group-text bg-white border-0 ps-3">
+                            <i class="bi bi-search text-primary"></i>
+                        </span>
+                        <input type="text" name="searchString"
+                               class="form-control border-0 shadow-none ps-2"
+                               placeholder="Find a tag by name..."
+                               value="@ViewData["CurrentFilter"]">
+                        @if (!string.IsNullOrEmpty(ViewData["CurrentFilter"]?.ToString()))
+                        {
+                            <a asp-action="Index" class="btn bg-white border-0 text-muted">
+                                <i class="bi bi-x-circle"></i>
+                            </a>
+                        }
+                        <button type="submit" class="btn btn-primary px-4 fw-bold rounded-pill-end">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-3 text-lg-end">
+                <button type="button" class="btn btn-primary btn-lg-modern shadow-sm shadow-hover" data-bs-toggle="modal" data-bs-target="#createTagModal">
+                    <i class="bi bi-plus-lg me-2"></i>New Tag
+                </button>
+            </div>
+        </div>
     </div>
-    <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#createTagModal">
-        <i class="bi bi-plus-lg"></i> New Tag
-    </button>
+
+    @if (!Model.Any())
+    {
+        @* Empty State *@
+        <div class="empty-state text-center py-5 rounded-5 bg-white shadow-sm border border-light">
+            <div class="icon-shape bg-soft-primary mb-4 mx-auto text-primary">
+                <i class="bi bi-tags"></i>
+            </div>
+            <h3 class="fw-bold text-dark">Your gallery is empty</h3>
+            <p class="text-muted">Create colorful tags to categorize your tasks and stay focused.</p>
+            <button class="btn btn-outline-primary mt-2 rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#createTagModal">
+                <i class="bi bi-plus me-1"></i> Add Your First Tag
+            </button>
+        </div>
+    }
+    else
+    {
+        @* Inverted Color Tag Grid *@
+        <div class="tag-grid">
+            @foreach (var tag in Model)
+            {
+                <div class="inverted-tag-card shadow-hover">
+                    @* Top Section: Name in a Bubble *@
+                    <div class="tag-header-bubble">
+                        <span class="tag-hash">#</span>
+                        <span class="tag-name">@tag.Name</span>
+                    </div>
+
+                    @* Bottom Section: Actions *@
+                    <div class="tag-actions-wrapper">
+                        <form asp-action="Delete" method="post" class="m-0 delete-tag-form" id="deleteForm-@tag.Id">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@tag.Id" />
+                            <button type="button" class="action-bubble btn-delete-tag" onclick="confirmTagDelete(@tag.Id, '@tag.Name')">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    @* Subtle background pattern effect *@
+                    <div class="tag-pattern"></div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
-@if (!Model.Any())
-{
-    <div class="text-center py-5 mt-4 bg-light rounded-3 border-dashed">
-        <div class="mb-3">
-            <i class="bi bi-tags text-muted" style="font-size: 3rem;"></i>
-        </div>
-        <h4>No tags found</h4>
-        <p class="text-muted">Create tags to categorize your tasks and milestones.</p>
-    </div>
-}
-else
-{
-    <div class="tag-container">
-        @foreach (var tag in Model)
-        {
-            <div class="tag-card">
-                <div class="tag-accent"></div>
-                <div class="tag-name">@tag.Name</div>
-
-                <div class="tag-actions">
-                    <form asp-action="Delete" method="post" class="delete-tag-form">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@tag.Id" />
-                        <button type="button" class="btn-delete-tag">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        }
-    </div>
-}
-
-<div class="modal fade" id="createTagModal" tabindex="-1" aria-labelledby="createTagModalLabel" aria-hidden="true">
+@* Modal *@
+<div class="modal fade" id="createTagModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold text-white" id="createTagModalLabel">Add Tag</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content glass-modal border-0 rounded-5">
+            <div class="modal-header border-0 pb-0 pt-4 px-4">
+                <h4 class="fw-800 mt-2 ms-1 text-dark">Create New Tag</h4>
+                <button type="button" class="btn-close me-1 mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            @await Html.PartialAsync("CreatePartialView", new TagViewModel())
+            <div class="modal-body p-4 pt-3">
+                @await Html.PartialAsync("CreatePartialView", new TagViewModel())
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts
 {
+    @* For SweetAlert2 *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/tag.js" asp-append-version="true"></script>
 }
