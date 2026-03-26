@@ -1,18 +1,24 @@
-﻿@using Pathly.ViewModels.Tags;
+﻿@using Pathly.ViewModels.Tags
 @model TagViewModel
 
-<div class="modal-body">
-    <form id="createTagForm" asp-controller="Tag" asp-action="Create" method="post">
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label">Tag Name</label>
-            <span id="nameError" class="text-danger d-block small mb-1"></span>
-            <input asp-for="Name" class="form-control" placeholder="e.g., Urgent, Deep Work..." />
-            <span asp-validation-for="Name" class="text-danger small custom-val-msg"></span>
+<form id="createTagForm" asp-controller="Tag" asp-action="Create" method="post" class="needs-validation">
+    <div class="mb-4">
+        <label asp-for="Name" class="form-label fw-bold text-dark small text-uppercase tracking-wider">Tag Name</label>
+        <div class="input-group input-group-lg shadow-sm rounded-4 overflow-hidden border">
+            <span class="input-group-text bg-white border-0 text-primary">
+                <i class="bi bi-hash"></i>
+            </span>
+            <input asp-for="Name" class="form-control border-0 ps-0 shadow-none"
+                   placeholder="e.g. Urgent, Deep Work..."
+                   autofocus />
         </div>
-        
-        <div class="modal-footer px-0 pb-0">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save Tag</button>
-        </div>
-    </form>
-</div>
+        <span asp-validation-for="Name" class="text-danger small mt-2 d-block ms-2"></span>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end mt-4">
+        <button type="button" class="btn btn-light px-4 rounded-pill fw-bold text-muted" data-bs-toggle="modal" data-bs-target="#createTagModal">Cancel</button>
+        <button type="submit" class="btn btn-primary px-4 rounded-pill fw-bold shadow-sm">
+            <i class="bi bi-check-lg me-1"></i> Create Tag
+        </button>
+    </div>
+</form>
