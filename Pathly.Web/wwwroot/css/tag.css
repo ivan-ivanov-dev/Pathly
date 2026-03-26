@@ -1,78 +1,172 @@
-﻿.tag-container {
+﻿/* Layout & Grid */
+.tag-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2rem;
 }
 
-.tag-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    border: 1px solid #eef2f7;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-    transition: transform 0.2s, box-shadow 0.2s;
+/* --- INVERTED TAG CARD DESIGN --- */
+.inverted-tag-card {
+    position: relative;
+    height: 140px; 
+    border-radius: 28px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     overflow: hidden;
+    z-index: 1;
+    border: none !important;
 }
 
-    .tag-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    .inverted-tag-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
 
-.tag-accent {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: #0F4C5C;
+/* Top Left: Title Bubble */
+.tag-header-bubble {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(5px);
+    padding: 6px 14px;
+    border-radius: 50px;
+    max-width: 85%;
+    align-self: flex-start; 
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.tag-hash {
+    font-weight: 800;
+    color: rgba(255,255,255,0.6);
+    margin-right: 6px;
+    font-size: 1.1rem;
 }
 
 .tag-name {
-    font-weight: 600;
-    color: #2D3748;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: white !important;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-truncate: ellipsis;
 }
 
-.tag-actions {
+/* Bottom Right: Actions Wrapper */
+.tag-actions-wrapper {
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+/* Action Bubble (The Bin) */
+.action-bubble {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
     display: flex;
-    justify-content: flex-end;
-    border-top: 1px solid #f7fafc;
-    padding-top: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
 }
 
 .btn-delete-tag {
-    color: #cbd5e0;
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: 1.2rem;
-    line-height: 1;
-    transition: color 0.2s;
+    background: rgba(239, 68, 68, 0.8) !important; /* Soft Red */
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
     .btn-delete-tag:hover {
-        color: #e53e3e;
+        background: rgb(239, 68, 68) !important; /* Solid Red */
+        transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
     }
 
-.gallery-header {
+/* Subtle background pattern effect */
+.tag-pattern {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* --- DYNAMIC INVERTED COLOR LOGIC --- */
+
+/* Color 1: Deep Pathly Gradient */
+.inverted-tag-card:nth-child(5n+1) {
+    background: linear-gradient(135deg, #0F4C5C 0%, #1a6b82 100%);
+}
+
+    .inverted-tag-card:nth-child(5n+1) .tag-actions-wrapper form button {
+        border-color: rgba(255,255,255,0.2);
+    }
+
+/* Color 2: Royal Purple Gradient */
+.inverted-tag-card:nth-child(5n+2) {
+    background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+}
+
+/* Color 3: Forest Green Gradient */
+.inverted-tag-card:nth-child(5n+3) {
+    background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+}
+
+/* Color 4: Warm Terracotta Gradient */
+.inverted-tag-card:nth-child(5n+4) {
+    background: linear-gradient(135deg, #dd6b20 0%, #ed8936 100%);
+}
+
+/* Color 5: Vibrant Rose Gradient */
+.inverted-tag-card:nth-child(5n+5) {
+    background: linear-gradient(135deg, #d53f8c 0%, #ed64a6 100%);
+}
+
+/* --- Search & Header Styling --- */
+.gallery-header-wrapper {
+    border: none !important;
+}
+
+.search-pill {
+    background: white;
+    border-radius: 50px;
+    padding: 6px;
+}
+
+.rounded-pill-end {
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
+}
+
+.display-6.fw-850 {
+    font-weight: 850;
+    letter-spacing: -0.04em;
+}
+
+/* Empty State Styling */
+.icon-shape {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #f0f4f8;
-    padding-bottom: 1rem;
+    justify-content: center;
+    font-size: 2.5rem;
 }
-/* Match the modal header to primary color */
-.modal-header.bg-primary {
-    background-color: #0F4C5C !important;
+
+.bg-soft-primary {
+    background: #f0f7f9;
 }
-.btn-primary {
-    background-color: #0F4C5C !important;
-    border-color: #0F4C5C !important;
+
+.btn-lg-modern {
+    padding: 0.8rem 2.2rem;
+    border-radius: 16px;
+    font-weight: 700;
 }
