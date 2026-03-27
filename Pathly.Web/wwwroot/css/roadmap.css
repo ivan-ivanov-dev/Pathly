@@ -22,7 +22,14 @@
 }
 
     .roadmap-node.wide-node {
-        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .roadmap-node:not(.wide-node) {
+        width: 100%;
+        max-width: 700px;
     }
 
 .node-content {
@@ -46,8 +53,9 @@
 
 .roadmap-line {
     width: 6px;
-    height: 50px; 
-    background: linear-gradient(to bottom, #007bff, #0dcaf0, #ffc107, #198754);
+    height: 60px;
+    background: linear-gradient(to bottom, #007bff, #17a2b8, #ffc107, #28a745);
+    margin: 0 auto;
     opacity: 0.4;
     z-index: 1;
 }
@@ -64,17 +72,20 @@
 
 .milestones-grid {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; 
-    gap: 1.5rem;
+    justify-content: center;
+    align-items: stretch; 
+    gap: 24px;
     width: 100%;
+    margin: 0 auto; 
+    padding: 20px 0;
 }
 
 .milestone-card-wrapper {
-    flex: 0 1 350px;
-    min-width: 300px;
-    display: flex;
+    flex: 0 1 380px;
+    min-width: 320px;
+    margin = 0;
 }
+
 .action-header-pill {
     background: rgba(255, 193, 7, 0.1);
     border: 1px solid #ffc107;
