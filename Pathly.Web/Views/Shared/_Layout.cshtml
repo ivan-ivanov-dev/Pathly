@@ -120,20 +120,14 @@
                                 @User.Identity?.Name
                             </p>
 
-                            <form id="deleteAccountForm"
-                                  asp-area="Identity"
-                                  asp-controller="Account"
-                                  asp-action="DeleteAccount"
-                                  method="post"
-                                  style="display:none;">
-                                @Html.AntiForgeryToken()
-                            </form>
-
-                            <button type="button" onclick="confirmDeleteAccount()"
-                                    class="p-0 border-0 bg-transparent small text-danger fw-bold text-decoration-none"
-                                    style="font-size: 0.75rem;">
-                                Delete Account
-                            </button>
+                            <div class="ms-3 sidebar-link-text user-info-text">
+                                <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                                    @User.Identity?.Name
+                                </p>
+                                <a asp-controller="Settings" asp-action="Index" class="settings-link text-decoration-none fw-bold">
+                                    Settings
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -204,21 +198,14 @@
                                 @User.Identity?.Name
                             </p>
 
-                            <form id="deleteAccountForm"
-                                  asp-area="Identity"
-                                  asp-controller="Account"
-                                  asp-action="DeleteAccount"
-                                  method="post"
-                                  style="display:none;">
-                                @Html.AntiForgeryToken()
-                            </form>
-
-                            <button type="button"
-                                    onclick="confirmDeleteAccount()"
-                                    class="p-0 border-0 bg-transparent small text-danger fw-bold text-decoration-none"
-                                    style="font-size: 0.75rem; cursor: pointer;">
-                                Delete Account
-                            </button>
+                            <div class="ms-3 sidebar-link-text user-info-text">
+                                <p class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+                                    @User.Identity?.Name
+                                </p>
+                                <a asp-controller="Settings" asp-action="Index" class="settings-link text-decoration-none fw-bold">
+                                    Settings
+                                </a>
+                            </div>
                         </div>
                     </div>
 
