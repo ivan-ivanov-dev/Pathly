@@ -1,0 +1,77 @@
+﻿@model Pathly.ViewModels.Settings.SettingsViewModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="container-fluid py-4">
+    <div class="settings-header mb-4 shadow-sm p-4 bg-white rounded-5">
+        <h1 class="fw-850 text-dark mb-1">Account Settings</h1>
+        <p class="text-muted">Manage your profile, security, and preferences.</p>
+    </div>
+
+    <div class="settings-card shadow-sm bg-white rounded-5 p-4">
+        <ul class="nav nav-pills mb-4 gap-2" id="settingsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill px-4 fw-bold" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button">
+                    <i class="bi bi-person me-2"></i>Profile
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4 fw-bold" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button">
+                    <i class="bi bi-shield-lock me-2"></i>Security
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4 fw-bold text-danger" id="danger-tab" data-bs-toggle="tab" data-bs-target="#danger" type="button">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Danger Zone
+                </button>
+            </li>
+        </ul>
+
+        <hr class="mb-4 opacity-50">
+
+        <div class="tab-content" id="settingsTabContent">
+            <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                <form asp-action="UpdateProfile" method="post" class="col-lg-6">
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label fw-bold small text-uppercase">Username</label>
+                        <input asp-for="Username" class="form-control rounded-4 p-3 shadow-none border-light bg-light" />
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label fw-bold small text-uppercase">Email Address</label>
+                        <input asp-for="Email" class="form-control rounded-4 p-3 shadow-none border-light bg-light" />
+                    </div>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Save Profile</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="security" role="tabpanel">
+                <form asp-action="ChangePassword" method="post" class="col-lg-6">
+                    <div class="mb-3">
+                        <label asp-for="CurrentPassword" class="form-label fw-bold small text-uppercase"></label>
+                        <input asp-for="CurrentPassword" class="form-control rounded-4 p-3 shadow-none border-light bg-light" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewPassword" class="form-label fw-bold small text-uppercase"></label>
+                        <input asp-for="NewPassword" class="form-control rounded-4 p-3 shadow-none border-light bg-light" />
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label fw-bold small text-uppercase"></label>
+                        <input asp-for="ConfirmPassword" class="form-control rounded-4 p-3 shadow-none border-light bg-light" />
+                    </div>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Update Password</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="danger" role="tabpanel">
+                <div class="alert alert-soft-danger rounded-4 p-4 border-0">
+                    <h5 class="fw-bold text-danger"><i class="bi bi-trash3 me-2"></i>Delete Account</h5>
+                    <p class="text-muted small">Once you delete your account, there is no going back. All your tasks, goals, and tags will be permanently wiped.</p>
+                    <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold mt-2" onclick="confirmDelete()">
+                        Delete My Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
