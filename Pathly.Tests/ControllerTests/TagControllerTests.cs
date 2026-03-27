@@ -49,6 +49,24 @@ public class TagControllerTests : ControllerTestsBase
         var viewResult = (ViewResult)result;
         Assert.That(viewResult.Model, Is.EqualTo(expectedTags));
     }
+    [Test]
+    public async Task Index_CallsServiceWithSearchString_AndSetsViewData()
+    {
+        // Arrange
+        var search = "Work";
+
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, search))
+            .ReturnsAsync(new List<TagViewModel>());
+
+        // Act
+        var result = await _controller.Index(search);
+
+        // Assert
+        _mockTagService.Verify(s => s.GetUserTagsAsync(_userId, search), Times.Once);
+
+        var viewResult = result as ViewResult;
+        Assert.That(viewResult.ViewData["CurrentFilter"], Is.EqualTo(search));
+    }
 
     [Test]
     public void Create_Get_ShouldReturnViewWithEmptyModel()
