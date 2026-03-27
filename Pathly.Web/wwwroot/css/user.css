@@ -54,6 +54,15 @@ canvas {
         box-shadow: var(--shadow-md);
     }
 
+.settings-link {
+    color: #0F4C5C !important;
+    transition: color 0.2s ease;
+}
+
+    .settings-link:hover {
+        color: #1a6b82 !important;
+    }
+
 .card-title-modern {
     color: var(--pathly-text);
     font-weight: 800;
