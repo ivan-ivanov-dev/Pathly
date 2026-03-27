@@ -112,11 +112,11 @@ public class TagServiceTests: ServiceTestsBase
         // Arrange
         var userId = "test-user-123";
         var tags = new List<Tag>
-    {
-        new Tag { Id = 1, Name = "Work", UserId = userId },
-        new Tag { Id = 2, Name = "Personal", UserId = userId },
-        new Tag { Id = 3, Name = "Workout", UserId = userId }
-    };
+        {
+            new Tag { Id = 767, Name = "Work", UserId = userId },
+            new Tag { Id = 768, Name = "Personal", UserId = userId },
+            new Tag { Id = 769, Name = "Workout", UserId = userId }
+        };
 
         _context.Tags.AddRange(tags);
         await _context.SaveChangesAsync();

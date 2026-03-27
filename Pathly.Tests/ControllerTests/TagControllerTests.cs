@@ -90,7 +90,7 @@ public class TagControllerTests : ControllerTestsBase
         var result = await _controller.Create(model);
 
         // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
+        Assert.IsInstanceOf<OkResult>(result);
         _mockTagService.Verify(s => s.CreateTagAsync(model.Name, _userId), Times.Once);
     }
 
