@@ -64,7 +64,7 @@ public class TasksControllerTests: ControllerTestsBase
         // Arrange
         int actionId = 10;
         var tags = new List<TagViewModel> { new TagViewModel { Id = 1, Name = "Urgent" } };
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(tags);
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(tags);
 
         // Act
         var result = await _controller.CreateAsync(actionId);
@@ -102,7 +102,7 @@ public class TasksControllerTests: ControllerTestsBase
             SelectedTagIds = new List<int> { 1, 2, 3, 4, 5 }
         };
 
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(new List<TagViewModel>());
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(new List<TagViewModel>());
 
         // Act
         var result = await _controller.CreateAsync(model);
@@ -127,7 +127,7 @@ public class TasksControllerTests: ControllerTestsBase
             DueDate = DateTime.Now.AddDays(-1),
             SelectedTagIds = new List<int>()
         };
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(new List<TagViewModel>());
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(new List<TagViewModel>());
 
         // Act
         var result = await _controller.CreateAsync(model);
@@ -143,7 +143,7 @@ public class TasksControllerTests: ControllerTestsBase
         // Arrange
         var model = new TaskCreateViewModel { Title = "Task", SelectedTagIds = new List<int>() };
         _mockTaskService.Setup(s => s.CreateAsync(model, _userId)).ThrowsAsync(new Exception("Fail"));
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(new List<TagViewModel>());
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(new List<TagViewModel>());
 
         // Act
         var result = await _controller.CreateAsync(model);
@@ -166,7 +166,7 @@ public class TasksControllerTests: ControllerTestsBase
 
         _mockTaskService.Setup(s => s.GetDetailsAsync(taskId, _userId)).ReturnsAsync(taskDetails);
         _mockTaskService.Setup(s => s.GetTaskTagIdsAsync(taskId, _userId)).ReturnsAsync(tagIds);
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(new List<TagViewModel>());
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(new List<TagViewModel>());
         _mockMapper.Setup(m => m.Map<TaskEditViewModel>(taskDetails)).Returns(editModel);
 
         // Act
@@ -233,7 +233,7 @@ public class TasksControllerTests: ControllerTestsBase
     {
         // Arrange
         var model = new TaskEditViewModel { Id = 1, Title = "", SelectedTagIds = new List<int>() };
-        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId)).ReturnsAsync(new List<TagViewModel>());
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>())).ReturnsAsync(new List<TagViewModel>());
 
         // Act
         var result = await _controller.EditAsync(model);

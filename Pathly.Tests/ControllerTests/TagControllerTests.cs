@@ -38,11 +38,11 @@ public class TagControllerTests : ControllerTestsBase
         };
 
         _mockTagService
-            .Setup(s => s.GetUserTagsAsync(_userId))
+            .Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>()))
             .ReturnsAsync(expectedTags);
 
         // Act
-        var result = await _controller.Index();
+        var result = await _controller.Index(null);
 
         // Assert
         Assert.IsInstanceOf<ViewResult>(result);
