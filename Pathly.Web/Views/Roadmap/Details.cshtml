@@ -73,7 +73,7 @@
                 {
                     if (!string.IsNullOrEmpty(Model.Actions[i].Title))
                     {
-                        <partial name="_MilestoneCardPartial" model="Model.Actions[i]"
+                        <partial name="_ActionCardPartial" model="Model.Actions[i]"
                                  view-data='@new ViewDataDictionary(ViewData) {
                                                  { "Index", i },
                                                  { "IsDetails", true },

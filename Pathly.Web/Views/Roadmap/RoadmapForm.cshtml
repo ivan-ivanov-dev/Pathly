@@ -86,7 +86,7 @@
             <div class="milestones-grid">
                 @for (int i = 0; i < Model.Actions.Count; i++)
                 {
-                    <partial name="_MilestoneCardPartial" model="Model.Actions[i]"
+                    <partial name="_ActionCardPartial" model="Model.Actions[i]"
                              view-data='@new ViewDataDictionary(ViewData) { { "Index", i }, { "IsDetails", false } }' />
                 }
             </div>
