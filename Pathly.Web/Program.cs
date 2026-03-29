@@ -44,6 +44,7 @@ namespace Pathly.Web
             builder.Services.AddScoped<IRoadmapService, RoadmapService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<ISettingsService, SettingsService>();
+            builder.Services.AddScoped<IBlobService, BlobService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
