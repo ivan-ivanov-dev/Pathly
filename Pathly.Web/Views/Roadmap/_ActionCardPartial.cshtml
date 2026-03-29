@@ -108,6 +108,10 @@
                     <div class="resource-box p-2 rounded small text-dark border shadow-sm bg-light">
                         @Model.Resources
                     </div>
+                    <div class="drop-zone mt-2" id="drop-zone-@index">
+                        <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                        <input type="file" name="Actions[@index].ResourceFile" class="drop-zone__input" style="display:none;">
+                    </div>
                 </div>
             }
 

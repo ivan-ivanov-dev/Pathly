@@ -94,6 +94,29 @@ var RoadmapDetails = {
         });
     }
 };
+document.querySelectorAll(".drop-zone").forEach(zone => {
+    const input = zone.querySelector(".drop-zone__input");
+
+    zone.addEventListener("click", () => input.click());
+
+    zone.addEventListener("dragover", e => {
+        e.preventDefault();
+        zone.classList.add("drop-zone--over");
+    });
+
+    ["dragleave", "dragend"].forEach(type => {
+        zone.addEventListener(type, () => zone.classList.remove("drop-zone--over"));
+    });
+
+    zone.addEventListener("drop", e => {
+        e.preventDefault();
+        if (e.dataTransfer.files.length) {
+            input.files = e.dataTransfer.files;
+            zone.querySelector(".drop-zone__prompt").textContent = e.dataTransfer.files[0].name;
+        }
+        zone.classList.remove("drop-zone--over");
+    });
+});
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('textarea').forEach(el => {
         el.style.height = el.scrollHeight + 'px';
