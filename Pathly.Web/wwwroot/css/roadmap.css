@@ -316,6 +316,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
 
 .drop-zone {
+    transition: all 0.2s ease;
+    cursor: pointer;
     border: 2px dashed #ffc107;
     background: rgba(255, 193, 7, 0.05);
     border-radius: 8px;
@@ -328,3 +330,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         background: rgba(255, 193, 7, 0.1);
         border-color: #e5ac00;
     }
+
+.drop-zone--over {
+    border: 2px dashed #ffc107 !important;
+    background-color: rgba(255, 193, 7, 0.05) !important;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}

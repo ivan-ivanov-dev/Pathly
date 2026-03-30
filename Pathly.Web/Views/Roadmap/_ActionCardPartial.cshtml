@@ -129,7 +129,7 @@
 
                     <div class="drop-zone mt-2" id="drop-zone-@currentId" onclick="document.getElementById('file-input-@currentId').click()">
                         <span class="drop-zone__prompt">Drop file here or click to upload</span>
-                        <input type="file" id="file-input-@currentId"
+                        <input type="file" id="file-input-@currentId" class="drop-zone__input" 
                                onchange="RoadmapResources.uploadFile('@currentId', this.files[0])"
                                style="display:none;">
 
