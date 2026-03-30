@@ -11,5 +11,8 @@ namespace Pathly.Services.Contracts
     {
         Task<string> UploadFileAsync(IFormFile file);
         string GetReadOnlyLink(string blobName);
+        Task<bool> AddResourceAsync(int actionId, string blobName);
+        Task<bool> RemoveResourceAsync(int actionId, string blobName);
+        Task<bool> DeleteBlobAsync(string blobName);
     }
 }

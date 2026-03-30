@@ -1,7 +1,9 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Pathly.Data;
 using Pathly.Services.Contracts;
 using System;
 using System.Collections.Generic;
@@ -14,12 +16,42 @@ namespace Pathly.Services.Implementation
     public class BlobService : IBlobService
     {
         private readonly BlobServiceClient _blobServiceClient;
+        private readonly ApplicationDbContext _context; 
         private readonly string _containerName;
 
-        public BlobService(IConfiguration configuration)
+        public BlobService(IConfiguration configuration,ApplicationDbContext context)
         {
             _blobServiceClient = new BlobServiceClient(configuration["AzureStorage:ConnectionString"]);
             _containerName = configuration["AzureStorage:ContainerName"];
+            _context = context;
+        }
+
+        public async Task<bool> AddResourceAsync(int actionId, string blobName)
+        {
+            var milestone = await _context.Actions.FindAsync(actionId);
+            if (milestone == null)
+            {
+                return false;
+            }
+
+            milestone.Resources = string.IsNullOrEmpty(milestone.Resources)
+                ? blobName
+                : milestone.Resources + ";" + blobName;
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+        public async Task<bool> DeleteBlobAsync(string blobName)
+        {
+            if (string.IsNullOrEmpty(blobName))
+            {
+                return false;
+            }
+
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            // Deletes the file and returns true if successfull, otherwise false
+            return await blobClient.DeleteIfExistsAsync();
         }
 
         public string GetReadOnlyLink(string blobName)
@@ -47,6 +79,23 @@ namespace Pathly.Services.Implementation
                 return blobClient.GenerateSasUri(sasBuilder).ToString();
             }
             return null;
+        }
+
+        public async Task<bool> RemoveResourceAsync(int actionId, string blobName)
+        {
+            var milestone = await _context.Actions.FindAsync(actionId);
+            if (milestone == null || string.IsNullOrEmpty(milestone.Resources))
+            {
+                return false;
+            }
+
+            var resources = milestone.Resources.Split(';').ToList();
+            if (resources.Remove(blobName))
+            {
+                milestone.Resources = string.Join(";", resources);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<string> UploadFileAsync(IFormFile file)
