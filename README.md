@@ -115,6 +115,36 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 * **Client-Side Validation:** [JQuery Validation](https://jqueryvalidation.org/) and Unobtrusive Validation for real-time error handling.
 
+### *Cloud & Storage:*
+
+* **[Azure Blob Storage](https://azure.microsoft.com/en-us/products/storage/blobs/)** - Utilized for scalable, off-server storage of milestone
+  resources and user-uploaded documentation.
+
+* **Shared Access Signature(SAS)** - Implemented to provide time-limited, secure, read-only access to private cloud resources, ensuring high data privacy.
+
+* **Browser Local Storage** - Used for persisting client-side UI states, such as sidebar toggle preferences and temporary session data,
+  without server overhead.
+
+### *Mapping & Automation:*
+
+* **[AutoMapper](https://automapper.io/)** -  Leveraged for clean Object-to-Object mapping between Domain Entities and ViewModels,
+  enforcing a strict separation of concerns and preventing over-posting vulnerabilities.
+
+### *Testing & Quality Assurance:*
+
+* **[NUnit](https://nunit.org/)** -  The primary test runner used for comprehensive Unit and Integration testing across the service layer.
+
+* **[Moq](https://github.com/devlooped/moq)** -  Utilized to isolate business logic by mocking external dependencies such as the Database Context and Azure Storage Clients.
+
+### *Real-Time & Interactive UI:*
+
+* **[SignalR](https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-10.0)** - Integrated for real-time server-to-client
+  notifications (e.g., live progress updates across different dashboard tabs).
+  
+* **[FullCalendar.js](https://fullcalendar.io/)** - A robust JavaScript library for rendering the interactive event calendar.
+
+* **[SortableJS](https://sortablejs.github.io/Sortable/)** - Used to handle drag-and-drop functionality for the Kanban board
+
 ## **Setup and Installation**
 
 ### *Prerequisites*
@@ -124,6 +154,8 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 * **IDE:** [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) 
 
 * **Database Engine:** [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), Developer Edition, or LocalDB.
+
+* **Cloud Storage:** An Azure Storage Account(for Blob storage features during local use)
 
 #### **Optional:**
 
@@ -139,7 +171,7 @@ Robust Validation: Comprehensive client-side and server-side data integrity.
 
 ### *Step-by-Step Instructions*
  
-#### **1.Clone the repository**
+#### **I.Clone the repository**
 
 Open `Git Bash` in the directory you want to download the project and run this command to clone it:
 
@@ -149,32 +181,54 @@ git clone https://github.com/YourUsername/Pathly.git
  
 ```
 
-#### **2.Configure the Database**
+#### **II.Configure User Secrets**
  
-After you have successfully loaded the project in Visual Studio. Navigate to `appsettings.json` \(in the `Web` solution folder\) and update the connection string to point to your local SQL Server instance:
+Pathly uses **ASP.NET Core User Secrets** to protect sensitive credentials (like Connection Strings and Azure Keys)
+Open your terminal in the Pathly.Web project folder and execute the following commands:
+##### *1.Initialize Secrets:*
 
-``` JSON
+``` Bash
  
-"ConnectionStrings": {
- "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PathlyDb;Trusted_Connection=True;MultipleActiveResultSets=true"}
+dotnet user-secrets init
  
 ```
 
-You can name your database however you like by changing this part:
+##### *2.Initialize Secrets:*
 
-```PlainText
-Database=YourOwnDbName
+``` Bash
+ 
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=(localdb)\\mssqllocaldb;Database=PathlyDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+ 
 ```
 
-#### **3.Apply Migrations**
+##### *3.Set Azure Storage Credentials:*
 
-Open the **Package Manager Console** in Visual Studio and run:
+``` Bash
+ 
+dotnet user-secrets set "AzureStorage:ConnectionString" "AddYourConnectionString"
+dotnet user-secrets set "AzureStorage:ContainerName" "NameOfourStorage"
+ 
+```
+
+*(Do not forget to replace the values with your actual Azure portal credentials)*
+
+#### **III.Initialize the Database**
+
+Apply the Entity Framework migrations to create your local schema and seed initial data:
+
+* **Via Package Manager Console (Visual Studio):**
 
 ```PowerShell
  Update-Database
 ```
 
 **Note!**: Make sure that the **Default Project** is set to `Pathly.Web` 
+
+* **Via .NET CLI:**
+
+```Bash
+ dotnet ef database update
+```
 
 #### **4.Run the Application:**
 Press `F5` or click the `"Start"` button in Visual Studio. The application will launch at:
