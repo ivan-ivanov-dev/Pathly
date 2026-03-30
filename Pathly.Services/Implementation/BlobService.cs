@@ -26,7 +26,7 @@ namespace Pathly.Services.Implementation
         {
             _storageSettings = storageSettings.Value;
             _blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
-            _containerName = configuration[_storageSettings.ContainerName];
+            _containerName = _storageSettings.ContainerName;
             _context = context;
         }
 
@@ -110,8 +110,10 @@ namespace Pathly.Services.Implementation
             string blobName = $"{Guid.NewGuid()}_{file.FileName}";
             var blobClient = containerClient.GetBlobClient(blobName);
 
-            using var stream = file.OpenReadStream();
-            await blobClient.UploadAsync(stream, true);
+            await using (var stream = file.OpenReadStream())// Open the file stream and close it after the upload is done
+            {
+                await blobClient.UploadAsync(stream, true);
+            }
 
             return blobName;
         }
