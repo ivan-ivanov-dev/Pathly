@@ -38,16 +38,34 @@ public class TagControllerTests : ControllerTestsBase
         };
 
         _mockTagService
-            .Setup(s => s.GetUserTagsAsync(_userId))
+            .Setup(s => s.GetUserTagsAsync(_userId, It.IsAny<string>()))
             .ReturnsAsync(expectedTags);
 
         // Act
-        var result = await _controller.Index();
+        var result = await _controller.Index(null);
 
         // Assert
         Assert.IsInstanceOf<ViewResult>(result);
         var viewResult = (ViewResult)result;
         Assert.That(viewResult.Model, Is.EqualTo(expectedTags));
+    }
+    [Test]
+    public async Task Index_CallsServiceWithSearchString_AndSetsViewData()
+    {
+        // Arrange
+        var search = "Work";
+
+        _mockTagService.Setup(s => s.GetUserTagsAsync(_userId, search))
+            .ReturnsAsync(new List<TagViewModel>());
+
+        // Act
+        var result = await _controller.Index(search);
+
+        // Assert
+        _mockTagService.Verify(s => s.GetUserTagsAsync(_userId, search), Times.Once);
+
+        var viewResult = result as ViewResult;
+        Assert.That(viewResult.ViewData["CurrentFilter"], Is.EqualTo(search));
     }
 
     [Test]
@@ -72,7 +90,7 @@ public class TagControllerTests : ControllerTestsBase
         var result = await _controller.Create(model);
 
         // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
+        Assert.IsInstanceOf<OkResult>(result);
         _mockTagService.Verify(s => s.CreateTagAsync(model.Name, _userId), Times.Once);
     }
 

@@ -56,13 +56,24 @@ namespace Pathly.Services.Implementation
             return true;
         }
 
-        public async Task<IEnumerable<TagViewModel>> GetUserTagsAsync(string userId)
+        public async Task<IEnumerable<TagViewModel>> GetUserTagsAsync(string userId, string searchString = null)
         {
-            return await _context.Tags
-            .Where(t => t.UserId == userId)
-            .OrderBy(t => t.Name)
-            .ProjectTo<TagViewModel>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            var query = _context.Tags
+                    .Where(t => t.UserId == userId);
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query = query.Where(t => t.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            return await query
+                .OrderBy(t => t.Name)
+                .Select(t => new TagViewModel
+                {
+                    Id = t.Id,
+                    Name = t.Name
+                })
+                .ToListAsync();
         }
     }
 }

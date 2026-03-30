@@ -106,4 +106,28 @@ public class TagServiceTests: ServiceTestsBase
         Assert.That(tags.Any(t => t.Name == "Tag2"), Is.True);
         Assert.That(tags.Any(t => t.Name == "Tag3"), Is.False);
     }
+    [Test]
+    public async Task GetUserTagsAsync_WithSearchString_ReturnsFilteredTags()
+    {
+        // Arrange
+        var userId = "test-user-123";
+        var tags = new List<Tag>
+        {
+            new Tag { Id = 767, Name = "Work", UserId = userId },
+            new Tag { Id = 768, Name = "Personal", UserId = userId },
+            new Tag { Id = 769, Name = "Workout", UserId = userId }
+        };
+
+        _context.Tags.AddRange(tags);
+        await _context.SaveChangesAsync();
+
+        // Act:
+        var result = await _tagService.GetUserTagsAsync(userId, "Work");
+
+        // Assert
+        Assert.That(result.Count(), Is.EqualTo(2));
+        Assert.That(result.Any(t => t.Name == "Work"), Is.True);
+        Assert.That(result.Any(t => t.Name == "Workout"), Is.True);
+        Assert.That(result.Any(t => t.Name == "Personal"), Is.False);
+    }
 }

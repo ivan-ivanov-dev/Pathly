@@ -1,153 +1,100 @@
-﻿.dashboard-page-body .main-content {
+﻿/* Layout & Container */
+.dashboard-page-body .main-content {
     width: 100% !important;
     padding: 0;
 }
 
 .dashboard-wrapper {
     width: 100%;
-    max-width: 1400px; 
+    max-width: 1400px;
     margin: 0 auto;
-    font-size: 1.1rem;
-    animation: fadeIn 0.4s ease-out;
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-   
-    .dashboard-wrapper .card,
-    .path-card {
-        border-radius: 24px !important; 
-        border: none;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.04) !important;
-        background: #ffffff;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-    }
-
-        .dashboard-wrapper .card:hover,
-        .path-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 1rem 3rem rgba(0,0,0,0.08) !important;
-        }
-
-    .dashboard-wrapper .card-header {
-        padding: 1.75rem 2rem !important;
-        font-size: 1.4rem;
-        font-weight: 700;
-        background-color: transparent;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .dashboard-wrapper .card-body {
-        padding: 2.25rem !important;
-    }
-
-
-.path-card-icon-circle {
-    width: 72px; 
-    height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    border-radius: 20px;
+/* The Soft Modern Cards */
+.soft-card {
+    border-radius: 28px !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(15, 76, 92, 0.06) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+    .soft-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(15, 76, 92, 0.12) !important;
+    }
+
+/* Typography Enhancements */
+.display-header {
+    font-weight: 850;
+    letter-spacing: -0.04em;
+    color: var(--pathly-text);
+    font-size: 2.8rem;
+}
+
+/* Progress Bar Customization */
 .progress {
-    border-radius: 50px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    height: 14px !important;
+    border-radius: 50px !important;
+    background-color: #f0f2f5 !important;
+    overflow: visible !important;
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
 .progress-bar {
-    border-radius: 50px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    font-size: 0.75rem;
+    border-radius: 50px !important;
+    position: relative;
+    transition: width 1.5s ease-in-out;
+}
+
+/* Glow Effect for Progress Bars */
+.bg-primary {
+    background-color: #0F4C5C !important;
+    box-shadow: 0 4px 12px rgba(15, 76, 92, 0.25);
+}
+
+.bg-success {
+    background-color: #2D6A4F !important;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+}
+
+/* Icons & Actions */
+.icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
 }
 
-.progress-bar-animated {
-    animation: progress-bar-stripes 2s linear infinite !important;
+.bg-blue-light {
+    background: #e0f2f1;
+    color: #0F4C5C;
 }
 
-.animate-pulse {
-    animation: pulse-green 2s infinite;
+.bg-gold-light {
+    background: #fff8e1;
+    color: #F4A62A;
 }
 
-.dashboard-wrapper h1 {
-    font-size: 3rem; 
-    margin-bottom: 2rem;
-    font-weight: 850;
-    letter-spacing: -0.03em;
-}
-
-.dashboard-wrapper h2 {
-    font-size: 1.8rem;
-}
-
-.dashboard-wrapper p {
-    color: var(--pathly-muted);
-}
-
-.btn-lg {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    border-radius: 14px;
-    font-weight: 600;
-}
-
-/* Utility Backgrounds */
-.bg-purple-soft {
-    background-color: #f3ebff;
-}
-
-.bg-teal-soft {
-    background-color: #e6fffa;
-}
-
-.bg-orange-soft {
-    background-color: #fffaf0;
-}
-.badge.bg-primary {
-    background-color: var(--bs-primary) !important;
-}
-
-.badge.bg-dark {
-    background-color: #2d3748 !important;
-}
-
-.bg-success.progress-bar-striped {
-    box-shadow: 0 0 15px rgba(25, 135, 84, 0.3);
-}
-
-@media (min-width: 768px) {
-    .border-md-end {
-        border-right: 1px solid #edf2f7 !important;
-    }
+.bg-green-light {
+    background: #e8f5e9;
+    color: #2D6A4F;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(20px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-@keyframes pulse-green {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    50% {
-        transform: scale(1.02);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
     }
 }

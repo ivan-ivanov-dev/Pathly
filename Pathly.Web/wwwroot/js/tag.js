@@ -1,54 +1,65 @@
-﻿$(document).ready(function () {
-    const createModal = $('#createTagModal');
-    const createForm = $('#createTagForm');
-    const nameError = $('#nameError');
-
-    createModal.on('hidden.bs.modal', function () {
-        createForm[0].reset();
-        nameError.empty().hide();
-        $('.custom-val-msg').empty(); 
-    });
-
-    // 2. Handle Tag Creation via AJAX
-    createForm.on('submit', function (e) {
+﻿// 1. Handling the Create Form via AJAX
+const createForm = document.getElementById('createTagForm');
+if (createForm) {
+    createForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        nameError.empty().hide();
+        const form = this;
+        const formData = new FormData(form);
+        const errorSpan = document.getElementById('nameError');
 
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function () {
-                const modalInstance = bootstrap.Modal.getInstance(createModal[0]);
-                modalInstance.hide();
-                location.reload();
-            },
-            error: function (xhr) {
-                const response = xhr.responseJSON;
-                if (response && response.errors) {
-                    nameError.text(response.errors[0]).show();
+        // Clear previous errors
+        errorSpan.textContent = '';
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            }
+        })
+            .then(async response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    const errorMessage = await response.text();
+                    errorSpan.textContent = errorMessage;
+                    errorSpan.classList.add('text-danger');
                 }
-            }
-        });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorSpan.textContent = 'Something went wrong. Please try again.';
+            });
     });
+}
 
-    $(document).on('click', '.btn-delete-tag', function (e) {
-        e.preventDefault();
-        const btn = $(this);
-        const form = btn.closest('form');
-        const card = btn.closest('.tag-card');
-
-        $.ajax({
-            url: form.attr('action'),
-            type: 'POST',
-            data: form.serialize(),
-            success: function () {
-                card.fadeOut(400, function () {
-                    $(this).remove();
-                    if ($('.tag-card').length === 0) location.reload();
-                });
+// 2. Handling the Delete Confirmation
+function confirmTagDelete(tagId, tagName) {
+    Swal.fire({
+        title: 'Delete Tag?',
+        html: `Are you sure you want to remove <strong>#${tagName}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        borderRadius: '24px',
+        customClass: {
+            confirmButton: 'btn btn-danger px-4 mx-2 rounded-pill',
+            cancelButton: 'btn btn-light px-4 mx-2 rounded-pill'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.getElementById(`deleteForm-${tagId}`);
+            if (form) {
+                form.submit();
+            } else {
+                console.error("Delete form not found for ID:", tagId);
             }
-        });
+        }
     });
-});
+}

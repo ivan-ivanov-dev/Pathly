@@ -94,21 +94,94 @@ var RoadmapDetails = {
         });
     }
 };
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('textarea').forEach(el => {
-        el.style.height = el.scrollHeight + 'px';
-        el.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-    });
+var RoadmapResources = {
+    uploadFile: function (actionId, file) {
+        if (!file) return;
 
-    document.querySelectorAll('.action-card input').forEach(el => {
-        el.addEventListener('focus', function () {
-            this.closest('.action-card').style.borderTopColor = '#007bff';
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("actionId", actionId);
+
+        const zone = document.getElementById(`drop-zone-${actionId}`);
+        const prompt = zone.querySelector(".drop-zone__prompt");
+        const progressBar = zone.querySelector(".progress");
+        const bar = zone.querySelector(".progress-bar");
+
+        prompt.textContent = "Uploading: " + file.name;
+        progressBar.classList.remove("d-none");
+
+        fetch('/Roadmap/UploadResource', {
+            method: 'POST',
+            body: formData,
+            headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+    },
+
+    deleteResource: function (milestoneId, blobName, elementId) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        element.style.opacity = "0.5";
+
+        fetch(`/Roadmap/DeleteResource?actionId=${milestoneId}&blobName=${blobName}`, {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
+        })
+            .then(response => {
+                if (response.ok) {
+                    element.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
+                    element.style.transform = "translateX(40px)";
+                    element.style.opacity = "0";
+
+                    setTimeout(() => element.remove(), 400);
+                }
+            });
+    }
+};
+document.querySelectorAll(".drop-zone").forEach(zone => {
+    const input = zone.querySelector(".drop-zone__input");
+
+    if (input) {
+        zone.addEventListener("dragover", e => {
+            e.preventDefault();
+            zone.classList.add("drop-zone--over");
         });
-        el.addEventListener('blur', function () {
-            this.closest('.action-card').style.borderTopColor = '#ffc107';
+
+        ["dragleave", "dragend"].forEach(type => {
+            zone.addEventListener(type, () => zone.classList.remove("drop-zone--over"));
+        });
+
+        zone.addEventListener("drop", e => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) {
+                input.files = e.dataTransfer.files;
+                RoadmapResources.uploadFile(input.id.replace('file-input-', ''), e.dataTransfer.files[0]);
+            }
+            zone.classList.remove("drop-zone--over");
+        });
+    }
+});
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('textarea').forEach(el => {
+            el.style.height = el.scrollHeight + 'px';
+            el.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+
+        document.querySelectorAll('.action-card input').forEach(el => {
+            el.addEventListener('focus', function () {
+                this.closest('.action-card').style.borderTopColor = '#007bff';
+            });
+            el.addEventListener('blur', function () {
+                this.closest('.action-card').style.borderTopColor = '#ffc107';
+            });
         });
     });
-});

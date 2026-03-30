@@ -2,36 +2,118 @@
     ViewData["Title"] = "Privacy Policy";
 }
 
-<div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card border-0 shadow-sm p-4">
-                <h1 class="text-primary fw-bold mb-4">@ViewData["Title"]</h1>
+<style>
+    .privacy-header {
+        background: linear-gradient(135deg, #0F4C5C 0%, #1a6b82 100%);
+        border-radius: 24px;
+        padding: 3rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(15, 76, 92, 0.1);
+    }
 
-                <p class="text-muted">Last updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")</p>
+        .privacy-header h1 {
+            color: white !important;
+        }
 
-                <section class="mb-4">
-                    <h5 class="fw-bold">1. Data We Collect</h5>
-                    <p>Pathly collects your name, email address, and the tasks or goals you create to provide you with a personalized productivity experience.</p>
-                </section>
+    .privacy-card {
+        background: white;
+        border-radius: 24px;
+        border: 1px solid #edf2f7;
+        transition: transform 0.3s ease;
+    }
 
-                <section class="mb-4">
-                    <h5 class="fw-bold">2. How We Use Your Data</h5>
-                    <p>Your data is used exclusively to manage your account and synchronize your tasks across your devices. We do not sell your data to third parties.</p>
-                </section>
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        background: #f0f7f9;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0F4C5C;
+        font-size: 1.5rem;
+        margin-right: 1.5rem;
+    }
 
-                <section class="mb-4">
-                    <h5 class="fw-bold">3. Data Security</h5>
-                    <p>We use industry-standard encryption to ensure your personal information is stored securely.</p>
-                </section>
+    .policy-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid #f7fafc;
+        display: flex;
+        align-items: flex-start;
+    }
 
-                <hr class="my-4" />
+        .policy-section:last-child {
+            border-bottom: none;
+        }
 
-                <div class="text-center">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
-                        Return to Dashboard
-                    </a>
-                </div>
+    .policy-content h5 {
+        color: #2d3748;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .policy-content p {
+        color: #718096;
+        margin-bottom: 0;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    @* Header Section *@
+    <div class="privacy-header animate-fade-in">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-850 mb-2">@ViewData["Title"]</h1>
+                <p class="opacity-75 mb-0">Your trust is our priority. Learn how we protect your journey at Pathly.</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <span class="badge bg-white text-primary px-3 py-2 rounded-pill">
+                    Last updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")
+                </span>
+            </div>
+        </div>
+    </div>
+
+    @* Content Section *@
+    <div class="privacy-card shadow-sm overflow-hidden">
+        <div class="policy-section">
+            <div class="icon-box">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <div class="policy-content">
+                <h5>1. Data We Collect</h5>
+                <p>Pathly collects your name, email address, and the tasks or goals you create. This information is used strictly to provide you with a personalized productivity experience and to help you track your progress effectively.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <div class="icon-box">
+                <i class="bi bi-eye-slash"></i>
+            </div>
+            <div class="policy-content">
+                <h5>2. How We Use Your Data</h5>
+                <p>Your data is used exclusively to manage your account and synchronize your tasks across your devices. We have a strict policy: <strong>we never sell your data to third parties</strong>. Your focus should be on your goals, not on your privacy.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <div class="icon-box">
+                <i class="bi bi-server"></i>
+            </div>
+            <div class="policy-content">
+                <h5>3. Data Security</h5>
+                <p>We use industry-standard encryption (SSL/TLS) to ensure your personal information is stored securely. Our servers are monitored 24/7 to prevent unauthorized access and protect your roadmap to success.</p>
+            </div>
+        </div>
+
+        <div class="policy-section bg-light-subtle py-4 justify-content-center">
+            <div class="text-center">
+                <p class="text-muted mb-3 small">If you have any questions, feel free to contact our support team.</p>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary px-5 rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-arrow-left me-2"></i>Return to Dashboard
+                </a>
             </div>
         </div>
     </div>

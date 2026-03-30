@@ -83,56 +83,12 @@
             <div class="roadmap-line"></div>
 
             @* PHASE III: MILESTONES *@
-            <div class="roadmap-node wide-node animate-fade-in">
-                <div class="node-icon bg-warning text-dark shadow"><i class="bi bi-stack"></i></div>
-                <div class="action-header-pill shadow-sm">Phase III: Strategy Execution</div>
-
-                <div class="row g-4 w-100">
-                    @for (int i = 0; i < Model.Actions.Count; i++)
-                    {
-                        <div class="col-lg-4">
-                            <div class="action-card card h-100 shadow-sm border-0 border-top-warning border-4">
-                                <div class="card-body p-4 d-flex flex-column">
-                                    <input type="hidden" asp-for="Actions[i].Id" />
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="badge bg-soft-primary text-primary text-uppercase px-0">Milestone @(i + 1)</span>
-                                        <i class="bi bi-layers text-muted opacity-50"></i>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted text-uppercase mb-1">Title</label>
-                                        <input asp-for="Actions[i].Title" class="form-control fw-bold border-0 bg-light shadow-none" placeholder="Target outcome..." />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted text-uppercase mb-1">Due Date</label>
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text bg-light border-0"><i class="bi bi-calendar-event text-primary"></i></span>
-                                            <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted text-uppercase mb-1">Resources & Notes</label>
-                                        <textarea asp-for="Actions[i].Resources"
-                                                  class="form-control form-control-sm border-0 bg-light shadow-none"
-                                                  rows="2"
-                                                  placeholder="Links, tools, or references..."></textarea>
-                                    </div>
-
-                                    @if (Model.IsEditing)
-                                    {
-                                        <div class="mt-auto pt-3 border-top">
-                                            <div class="d-flex align-items-center text-muted small">
-                                                <i class="bi bi-info-circle me-2 text-info"></i>
-                                                <span>Tasks managed via <strong>Details</strong></span>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
+            <div class="milestones-grid">
+                @for (int i = 0; i < Model.Actions.Count; i++)
+                {
+                    <partial name="_ActionCardPartial" model="Model.Actions[i]"
+                             view-data='@new ViewDataDictionary(ViewData) { { "Index", i }, { "IsDetails", false } }' />
+                }
             </div>
 
             <div class="roadmap-line"></div>

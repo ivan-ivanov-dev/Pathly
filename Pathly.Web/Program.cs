@@ -37,12 +37,16 @@ namespace Pathly.Web
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied"; 
             });
 
+            builder.Services.Configure<AzureStorageSettings>(builder.Configuration.GetSection("AzureStorage"));
+
             builder.Services.AddScoped<ITaskService, TaskService>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGoalService, GoalService>();
             builder.Services.AddScoped<IRoadmapService, RoadmapService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<ISettingsService, SettingsService>();
+            builder.Services.AddScoped<IBlobService, BlobService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

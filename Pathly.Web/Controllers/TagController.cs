@@ -17,11 +17,14 @@ namespace Pathly.Web.Controllers
             _tagService = tagService;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var userId = _userManager.GetUserId(User); 
-            var tags = await _tagService.GetUserTagsAsync(userId);
-            return View(tags);
+            var userId = _userManager.GetUserId(User);
+            var viewModel = await _tagService.GetUserTagsAsync(userId, searchString);
+
+            ViewData["CurrentFilter"] = searchString;
+
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -35,19 +38,19 @@ namespace Pathly.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                return BadRequest(new { errors });
+                var error = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                return BadRequest(error);
             }
 
             try
             {
                 var userId = _userManager.GetUserId(User);
                 await _tagService.CreateTagAsync(model.Name, userId);
-                return Ok(new { success = true });
+                return Ok();
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { errors = new[] { ex.Message } });
+                return BadRequest(ex.Message);
             }
         }
 

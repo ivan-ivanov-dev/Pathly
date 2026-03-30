@@ -10,15 +10,15 @@
     <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
 }
 
-<div class="container-fluid py-4 animate-fade-in">
+<div class="dashboard-wrapper container-fluid py-5">
     @* Welcome Header *@
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-dark">Welcome back to Pathly</h1>
-        <p class="lead text-muted" id="dashboard-greeting"></p>
+    <div class="mb-5 ms-2">
+        <h1 class="display-header mb-2">Welcome back to Pathly</h1>
+        <p class="lead text-muted" id="dashboard-greeting">Rest is part of the strategy. Recharge now to conquer tomorrow.</p>
     </div>
 
     @* Stats Overview Card *@
-    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+    <div class="card soft-card mb-5 overflow-hidden">
         <div class="card-body p-4 p-md-5">
             <div class="row">
                 @* Today's Detailed Progress *@
@@ -29,83 +29,50 @@
                         : 0;
                         var todayRemaining = Model.Stats.TotalTasksDueToday - Model.Stats.CompletedTasksDueToday;
                     }
-                    <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <h4 class="fw-bold mb-1">Today's Execution</h4>
+                            <h3 class="fw-800 mb-1">Today's Execution</h3>
                             <p class="small text-muted mb-0">
                                 @if (todayPct == 100 && Model.Stats.TotalTasksDueToday > 0)
                                 {
-                                    <span class="text-success fw-bold animate-pulse"><i class="bi bi-check-circle-fill me-1"></i> Outstanding! You've conquered everything planned for today.</span>
+                                    <span class="text-success fw-bold animate-pulse"><i class="bi bi-check-circle-fill me-1"></i> Outstanding! Everything is done.</span>
                                 }
                                 else if (Model.Stats.TotalTasksDueToday == 0)
                                 {
-                                    <span>No tasks scheduled for today. Time to plan ahead?</span>
+                                    <span>No tasks scheduled for today.</span>
                                 }
                                 else
                                 {
-                                    <span>You have <strong>@todayRemaining</strong> task@(todayRemaining == 1 ? "" : "s") remaining for today.</span>
+                                    <span>You have <strong>@todayRemaining</strong> task@(todayRemaining == 1 ? "" : "s") left.</span>
                                 }
                             </p>
                         </div>
-                        <div class="text-end">
-                            <span class="badge bg-primary rounded-pill px-3">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday Tasks</span>
-                        </div>
+                        <span class="badge rounded-pill px-3 py-2 bg-primary">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday</span>
                     </div>
-                    <div class="progress" style="height: 20px; background-color: #f0f2f5;">
+                    <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated @(todayPct == 100 ? "bg-success" : "bg-primary")"
-                             role="progressbar"
-                             style="width: @todayPct%;"
-                             aria-valuenow="@todayPct"
-                             aria-valuemin="0"
-                             aria-valuemax="100">
-                            @if (todayPct > 5)
-                            {
-                                <span class="small fw-bold">@todayPct%</span>
-                            }
+                             role="progressbar" style="width: @todayPct%;">
                         </div>
                     </div>
                 </div>
 
-                @* Overall Momentum Detailed Progress *@
+                @* Overall Momentum *@
                 <div class="col-12">
                     @{
-                        // Weighted progress (Goals + Tasks)
                         var totalItems = Model.Stats.TotalTasks + Model.Stats.TotalGoals;
                         var completedItems = Model.Stats.CompletedTasks + Model.Stats.CompletedGoals;
-
-                        var totalPct = totalItems > 0
-                        ? (int)Math.Round((double)completedItems * 100 / totalItems)
-                        : 0;
+                        var totalPct = totalItems > 0 ? (int)Math.Round((double)completedItems * 100 / totalItems) : 0;
                     }
-                    <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <h4 class="fw-bold mb-1">Overall Pathly Momentum</h4>
-                            <p class="small text-muted mb-0">
-                                @if (totalPct == 100 && Model.Stats.TotalTasks > 0)
-                                {
-                                    <span class="text-success fw-bold"><i class="bi bi-trophy-fill me-1"></i> Absolute Mastery! Every single task in your journey is complete.</span>
-                                }
-                                else
-                                {
-                                    <span>Your total journey progress across all goals and roadmaps.</span>
-                                }
-                            </p>
+                            <h3 class="fw-800 mb-1">Overall Pathly Momentum</h3>
+                            <p class="small text-muted mb-0">Your total journey progress across all goals.</p>
                         </div>
-                        <div class="text-end">
-                            <span class="badge bg-dark rounded-pill px-3">@totalPct% Total Completion</span>
-                        </div>
+                        <span class="badge rounded-pill px-3 py-2 bg-dark">@totalPct% Complete</span>
                     </div>
-                    <div class="progress" style="height: 20px; background-color: #f0f2f5;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated @(totalPct == 100 ? "bg-success" : "bg-success")"
-                             role="progressbar"
-                             style="width: @totalPct%;"
-                             aria-valuenow="@totalPct"
-                             aria-valuemin="0"
-                             aria-valuemax="100">
-                            @if (totalPct > 5)
-                            {
-                                <span class="small fw-bold">@totalPct%</span>
-                            }
+                    <div class="progress">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                             role="progressbar" style="width: @totalPct%;">
                         </div>
                     </div>
                 </div>
@@ -114,39 +81,39 @@
     </div>
 
     @* Action Cards Grid *@
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row g-4">
         @* Set a Goal *@
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
-                <div class="card-body text-center p-4 d-flex flex-column">
-                    <div class="path-card-icon-circle bg-purple-soft mx-auto mb-3">🎯</div>
-                    <h5 class="card-title fw-bold">Set a Goal</h5>
-                    <p class="card-text text-muted small flex-grow-1">Establish clear objectives and define your desired outcomes to maintain long-term focus.</p>
-                    <a asp-controller="Goals" asp-action="Index" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Go to goals</a>
+        <div class="col-md-4">
+            <div class="card soft-card h-100 p-4 border-top border-primary border-4">
+                <div class="card-body d-flex flex-column">
+                    <div class="icon-box bg-blue-light"><i class="bi bi-bullseye"></i></div>
+                    <h4 class="fw-bold">Set a Goal</h4>
+                    <p class="text-muted small flex-grow-1">Establish clear objectives and define your desired outcomes.</p>
+                    <a asp-controller="Goals" asp-action="Index" class="btn btn-primary w-100 rounded-pill fw-bold py-2 mt-3 text-white">Go to goals</a>
                 </div>
             </div>
         </div>
 
         @* Build Roadmap *@
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
-                <div class="card-body text-center p-4 d-flex flex-column">
-                    <div class="path-card-icon-circle bg-teal-soft mx-auto mb-3">🗺️</div>
-                    <h5 class="card-title fw-bold text-primary">Build Roadmap</h5>
-                    <p class="card-text text-muted small flex-grow-1">Deconstruct your complex goals into structured phases and actionable milestones.</p>
-                    <a asp-controller="Roadmap" asp-action="Selection" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Create a roadmap</a>
+        <div class="col-md-4">
+            <div class="card soft-card h-100 p-4 border-top border-primary border-4">
+                <div class="card-body d-flex flex-column">
+                    <div class="icon-box bg-gold-light"><i class="bi bi-map"></i></div>
+                    <h4 class="fw-bold">Build Roadmap</h4>
+                    <p class="text-muted small flex-grow-1">Deconstruct complex goals into structured phases.</p>
+                    <a asp-controller="Roadmap" asp-action="Selection" class="btn btn-primary w-100 rounded-pill fw-bold py-2 mt-3 text-white">Create roadmap</a>
                 </div>
             </div>
         </div>
 
         @* Take Action *@
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
-                <div class="card-body text-center p-4 d-flex flex-column">
-                    <div class="path-card-icon-circle bg-orange-soft mx-auto mb-3">⚡</div>
-                    <h5 class="card-title fw-bold">Take Action</h5>
-                    <p class="card-text text-muted small flex-grow-1">Execute your daily plan and maintain consistency through disciplined task management.</p>
-                    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Go to Tasks</a>
+        <div class="col-md-4">
+            <div class="card soft-card h-100 p-4 border-top border-primary border-4">
+                <div class="card-body d-flex flex-column">
+                    <div class="icon-box bg-green-light"><i class="bi bi-lightning-charge"></i></div>
+                    <h4 class="fw-bold">Take Action</h4>
+                    <p class="text-muted small flex-grow-1">Execute your daily plan and maintain consistency.</p>
+                    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary w-100 rounded-pill fw-bold py-2 mt-3 text-white">Go to tasks</a>
                 </div>
             </div>
         </div>
