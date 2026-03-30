@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Roadmaps;
@@ -13,11 +14,13 @@ namespace Pathly.Web.Controllers
     public class RoadmapController : Controller
     {
         private readonly IRoadmapService _roadmapService;
+        private readonly IBlobService _blobService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public RoadmapController(IRoadmapService roadmapService, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public RoadmapController(IRoadmapService roadmapService,IBlobService blobService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _roadmapService = roadmapService;
+            _blobService = blobService;
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -202,6 +205,46 @@ namespace Pathly.Web.Controllers
             }
 
             return Json(new { success = true, isCompleted = isCompleted.Value });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadResource(IFormFile file, int actionId)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return Json(new { success = false });
+            }
+
+            string blobName = await _blobService.UploadFileAsync(file);
+
+            var result = await _blobService.AddResourceAsync(actionId, blobName);
+
+            return Json(new { success = result, fileName = blobName });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteResource(int actionId, string blobName)
+        {
+            var success = await _blobService.RemoveResourceAsync(actionId, blobName);
+
+            await _blobService.DeleteBlobAsync(blobName);//Remove from Azure Storage
+
+           if(success)
+           {
+               return Ok();
+           }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public IActionResult DownloadResource(string blobName)
+        {
+            var url = _blobService.GetReadOnlyLink(blobName);
+            if (url == null) return NotFound();
+            return Redirect(url);
         }
     }
 }
