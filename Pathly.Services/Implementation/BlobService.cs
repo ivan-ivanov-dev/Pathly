@@ -3,7 +3,9 @@ using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Pathly.Data;
+using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using System;
 using System.Collections.Generic;
@@ -16,13 +18,15 @@ namespace Pathly.Services.Implementation
     public class BlobService : IBlobService
     {
         private readonly BlobServiceClient _blobServiceClient;
+        private readonly AzureStorageSettings _storageSettings;
         private readonly ApplicationDbContext _context; 
         private readonly string _containerName;
 
-        public BlobService(IConfiguration configuration,ApplicationDbContext context)
+        public BlobService(IConfiguration configuration, IOptions<AzureStorageSettings> storageSettings,ApplicationDbContext context)
         {
-            _blobServiceClient = new BlobServiceClient(configuration["AzureStorage:ConnectionString"]);
-            _containerName = configuration["AzureStorage:ContainerName"];
+            _storageSettings = storageSettings.Value;
+            _blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
+            _containerName = configuration[_storageSettings.ContainerName];
             _context = context;
         }
 
