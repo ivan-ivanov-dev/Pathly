@@ -241,38 +241,47 @@ https://localhost:7xxx.
 To configure the startup project: `Right Click on the solution > Configure Startup Project > Check Single Startup Project` and then select Pathly.Web from the dropdown menu.
 
 ## **Architecture & Best Practices**
-This project is built with a focus on maintainability and clean code, following these core principles:
+The project follows a **Logically Decoupled 3-Layer Architecture**. It utilizes the **Service-Repository Pattern** to separate concerns 
+between the UI (Presentation), Business Logic (Services), and Data Persistence (EF Core).
 
-### *MVC Pattern Architecture*
+### *Core Design Patterns*
 
-#### The project is strictly organized using the Model-View-Controller design pattern to ensure a clean separation of concerns:
+* **Service Layer Pattern:**: Business logic is abstracted into dedicated Services (e.g., `RoadmapService`, `BlobService`).
+  This keeps Controllers "thin" and allows for high testability via dependency injection.
 
-* **Models**: Represent the core data structures and business logic. This includes the `Goal`, `Roadmap`, and `Task` entities. They utilize **Data Annotations** (`[Required]`, `[MaxLength]`)
-   to enforce data integrity directly at the database level.
-
-* **Views**: Built with **Razor Syntax**, the views are responsible for the presentation layer. By using **Layouts** and **Partial Views**, the UI remains consistent across the application while
+* **Repository-Style Persistence:**: Data access is managed through `ApplicationDbContext`, utilizing **LINQ** for efficient, server-side data aggregation.
   remaining decoupled from the underlying logic.
 
-* **Controllers**: Act as the intermediary "brain." They handle incoming HTTP requests, interact with the `ApplicationDbContext` to retrieve or update data, and return the appropriate
-  `View` or `Redirect`.
+* **ViewModels & AutoMapper Integration:**: Prevents "Overposting" security vulnerabilities by using specialized ViewModels for data transfer,
+  ensuring Domain Entities never leak directly to the client.
 
-### *DB realationships of entity models*
+### *Database Schema & Data Integrity*
 
 ![Pathly Logo](Pathly.Web/wwwroot/images/EntityRealationship.png)
 
-Pathly utilizes a relational schema centered around the AspNetUsers table to ensure data isolation. The hierarchy follows a strict One-to-Many flow: a single User can own multiple Goals, 
-each containing dedicated Roadmaps. These Roadmaps are broken down into Actions, which serve as milestones. Finally, daily Tasks are linked to these Actions, creating a traceable path 
-from a daily to-do item back to a high-level ambition. The schema also includes a Many-to-Many relationship between Tasks and Tags via the TaskTags join table, allowing for flexible cross-goal organization.
+* **Multi-Tenant Isolation:** The schema is strictly anchored to `AspNetUsers`, ensuring that every Goal, Roadmap, and Task is isolated per user.
 
-### *Used Principles:*
+* **Relational Hierarchy:** Implements a structured One-to-Many flow (`User → Goals → Roadmaps → Actions → Tasks`) with a Many-to-Many relationship for `Task Tags`.
 
-* *Single Responsibility:* Controllers manage HTTP requests, while the Database Context handles data persistence.
+* **Referential Integrity & Cascading:** Custom recursive logic handles complex deletions across linked entities,
+  ensuring the database remains free of orphaned records.
+
+### *Automated Data Seeding*
+
+#### To ensure a smooth functional experience for new developers and examiners:
+
+* **System Seeders:**: Implemented within `OnModelCreating`, the system automatically populates the database with initial
+  Tags,Tasks,Goals,Users, etc. and system-level configurations.
+
+### *Software Principles:*
+
 * *Open/Closed:* The architecture allows for adding new goal types or roadmap structures without modifying existing core logic.
 * **Dependency Injection (DI):** Utilizes the built-in .NET IoC container to manage the lifecycle of the `ApplicationDbContext` and other services.
-* **Data Validation:** Implements a dual-layer validation strategy using **Data Annotations** for server-side checks and **jQuery Validation** for real-time client-side feedback.
-* **DRY (Don't Repeat Yourself):** Extensive use of **Razor Layouts**, **Partial Views**, and **ViewSections** to ensure UI components are reused and easily updated.
-* **Referential Integrity & Data Pruning:** Implemented custom recursive deletion logic to handle **Foreign Key Constraints** across complex one-to-many and many-to-many relationships, 
-   ensuring the database remains clean without orphaned records.
+* **Dual-Layer Validation:**
+  * **Server-Side:** Robust Data Annotations and custom logic ensure data integrity.
+  * **Client-Side:** jQuery Unobtrusive Validation provides an immediate, premium user experience. 
+* **DRY (Don't Repeat Yourself):** Leverages **Partial Views** and **View Components** to modularize the UI, significantly reducing maintenance overhead.
+* **Asynchronous I/O:** All database and storage operations (Azure Blobs) are implemented with `async/await`.
 
 ## **Future Improvements**
 
