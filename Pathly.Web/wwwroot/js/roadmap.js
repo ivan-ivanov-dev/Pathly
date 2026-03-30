@@ -95,14 +95,14 @@ var RoadmapDetails = {
     }
 };
 var RoadmapResources = {
-    uploadFile: function (milestoneId, file) {
+    uploadFile: function (actionId, file) {
         if (!file) return;
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("milestoneId", milestoneId);
+        formData.append("actionId", actionId);
 
-        const zone = document.getElementById(`drop-zone-${milestoneId}`);
+        const zone = document.getElementById(`drop-zone-${actionId}`);
         const prompt = zone.querySelector(".drop-zone__prompt");
         const progressBar = zone.querySelector(".progress");
         const bar = zone.querySelector(".progress-bar");
@@ -129,7 +129,7 @@ var RoadmapResources = {
 
         element.style.opacity = "0.5";
 
-        fetch(`/Roadmap/DeleteResource?milestoneId=${milestoneId}&blobName=${blobName}`, {
+        fetch(`/Roadmap/DeleteResource?actionId=${milestoneId}&blobName=${blobName}`, {
             method: 'POST',
             headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
         })
