@@ -17,14 +17,16 @@ public class RoadmapControllerTests: ControllerTestsBase
     private Mock<IRoadmapService> _mockRoadmapService;
     private Mock<IMapper> _mockMapper;
     private RoadmapController _controller;
+    private Mock<IBlobService> _mockBlobService;
 
     [SetUp]
     public void Setup()
     {
         _mockRoadmapService = new Mock<IRoadmapService>();
         _mockMapper = new Mock<IMapper>();
+        _mockBlobService = new Mock<IBlobService>();
 
-        _controller = new RoadmapController(_mockRoadmapService.Object, _mockUserManager.Object, _mockMapper.Object);
+        _controller = new RoadmapController(_mockRoadmapService.Object,_mockBlobService.Object, _mockUserManager.Object, _mockMapper.Object);
 
         SetupUser(_controller);
         
