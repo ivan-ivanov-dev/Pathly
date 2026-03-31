@@ -22,7 +22,7 @@
 ## **About**
 
 Pathly is a high-performance strategic productivity engine designed to bridge the gap between long-term ambition and daily operational execution. 
-By utilizing a 3-Layer Micro-Strategic Planning framework, Pathly transforms abstract aspirations into actionable, data-driven roadmaps.
+By utilizing a **3-Layer Micro-Strategic Planning** framework, Pathly transforms abstract aspirations into actionable, data-driven roadmaps.
 
 The platform is engineered for high-achievers who require a structured environment to manage complex objectives without the overhead of "feature-bloat" 
 found in traditional project management suites.
@@ -54,13 +54,16 @@ Pathly provides the structure to ensure that what you do today actually matters 
 
 ### *The Pathly Workflow*
 
-* **Define the North Star:** Create a Goal with a target date and an "Ideal Outcome."
+**1. Define the North Star:** Create a **Goal** with a clear deadline, purpose and a description of your ideal outcome.
 
-* **Strategize:** Generate a Roadmap to bridge the gap between your current state and your goal.
+**2. Build the Strategy:** Generate a **Roadmap** to bridge the gap between where you are now and where you want to be as well as visualize the steps to get there.
 
-* **Breakdown:** Deconstruct the roadmap into specific Actions (Milestones).
+**3. Break it Down:** Deconstruct the roadmap into specific **Actions (Milestones)**. This is where you can also upload resources or guides to help you finish the step.
 
-* **Execute:** Link your daily Tasks to these actions and watch your momentum bars grow.
+**4. Plan the Time:** Use the **Event Calendar** to mark important deadlines or time-blocks. This helps you see how much time you actually have to work on your goals and
+also organize time better.
+
+**5. Execute Daily:** Create specific **Tasks** linked to your milestones. As you complete them on a daily basis, watch your progress bars grow in real-time on the dashboard.
 
 ## **Features**
 
