@@ -250,18 +250,25 @@ To configure the startup project: `Right Click on the solution > Configure Start
 The project follows a **Logically Decoupled 3-Layer Architecture**. It utilizes the **Service-Repository Pattern** to separate concerns 
 between the UI (Presentation), Business Logic (Services), and Data Persistence (EF Core).
 
-### *Core Design Patterns*
+### *Key Design Decisions*
 
-* **Service Layer Pattern:**: Business logic is abstracted into dedicated Services (e.g., `RoadmapService`, `BlobService`).
-  This keeps Controllers "thin" and allows for high testability via dependency injection.
+* **Azure Blob Storage vs. Local Storage for Resources:** Opted for Cloud storage to ensure the application is scalable and stateless. This decouples user assets from the web server, improving performance and security.
 
-* **Repository-Style Persistence:**: Data access is managed through `ApplicationDbContext`, utilizing **LINQ** for efficient, server-side data aggregation.
-  remaining decoupled from the underlying logic.
+* **AutoMapper Integration:** Used to enforce a strict boundary between Domain Entities and ViewModels. This prevents "Overposting" attacks and ensures that the internal database schema is never exposed directly to the client.
 
-* **ViewModels & AutoMapper Integration:**: Prevents "Overposting" security vulnerabilities by using specialized ViewModels for data transfer,
-  ensuring Domain Entities never leak directly to the client.
+* **Service-Repository Pattern:** Business logic is abstracted into dedicated Services (e.g., `RoadmapService`, `BlobService`), keeping controllers "thin" and focused solely on request routing.
+
+### *Data Integrity & Validation*
 
 ### *Database Schema & Data Integrity*
+
+Pathly implements a multi-layered validation strategy to ensure data remains consistent and secure:
+
+* **Server-Side:** Robust **Data Annotations** (`[Required]`, `[MaxLength]`,`[MinLength]`) coupled with custom logic in the service layer.
+
+* **Client-Side:** Real-time feedback via **jQuery Unobtrusive Validation** for a seamless user experience.
+
+* **Security Validations:** Implementation of **Anti-Forgery Tokens (CSRF protection)** and strict filename sanitization for all Azure Blob uploads.
 
 ![Pathly Logo](Pathly.Web/wwwroot/images/EntityRealationship.png)
 
@@ -277,7 +284,7 @@ between the UI (Presentation), Business Logic (Services), and Data Persistence (
 #### To ensure a smooth functional experience for new developers and examiners:
 
 * **System Seeders:**: Implemented within `OnModelCreating`, the system automatically populates the database with initial
-  Tags,Tasks,Goals,Users, etc. and system-level configurations.
+  `Tags`,`Tasks`,`Goals`,`Users`, etc. and system-level configurations.
 
 ### *Software Principles:*
 
