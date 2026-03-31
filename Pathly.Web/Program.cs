@@ -14,9 +14,12 @@ namespace Pathly.Web
 
             // Add services to the container.
 
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");//Get connection string from User Secrets, throw if not found
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    builder.Configuration.GetConnectionString(connectionString),
                     sqliteOptions => sqliteOptions.MigrationsAssembly("Pathly.Data")
                 )
             );
@@ -38,6 +41,7 @@ namespace Pathly.Web
             });
 
             builder.Services.Configure<AzureStorageSettings>(builder.Configuration.GetSection("AzureStorage"));
+            builder.Services.Configure<SeedSettings>(builder.Configuration.GetSection("SeedSettings"));
 
             builder.Services.AddScoped<ITaskService, TaskService>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
