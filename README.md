@@ -16,6 +16,7 @@
 - [Technologies Used](#technologies-used)
 - [Setup and Installation](#setup-and-installation)
 - [Architecture & Best Practices](#architecture--best-practices)
+- [Testing & Quality Assurance](#testing--quality-assurance)
 - [Future Roadmap](#future-roadmap)
 - [Licence](#license)
 
@@ -295,6 +296,22 @@ Pathly implements a multi-layered validation strategy to ensure data remains con
   * **Client-Side:** jQuery Unobtrusive Validation provides an immediate, premium user experience. 
 * **DRY (Don't Repeat Yourself):** Leverages **Partial Views** and **View Components** to modularize the UI, significantly reducing maintenance overhead.
 * **Asynchronous I/O:** All database and storage operations (Azure Blobs) are implemented with `async/await`.
+
+## **Testing & Quality Assurance**
+
+The reliability of Pathly's core logic is backed by a comprehensive tests, ensuring that strategic calculations and data flows remain accurate.
+
+* **High-Confidence Coverage:** Maintained **85%+ Unit Test coverage** across the entire service layer using **NUnit**.
+
+* **Mocking Strategy:** Utilized **Moq** to isolate business logic, allowing for tests that verify behavior without requiring a live database or Azure connection.
+
+* **Edge-Case Focus:** Testing goes beyond "happy path" scenarios. The suite includes:
+  
+  * **Resource Handling:** Verifying system behavior when file uploads are interrupted or missing.
+ 
+  * **Empty State Management:** Ensuring roadmaps behave correctly even when milestones or actions are not yet defined.
+ 
+  * **Progress Logic:** Validating that progress bar percentages are mathematically accurate across different goal types.
 
 ## **Future Improvements**
 
