@@ -13,14 +13,10 @@ namespace Pathly.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");//Get connection string from User Secrets, throw if not found
-
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    builder.Configuration.GetConnectionString(connectionString),
-                    sqliteOptions => sqliteOptions.MigrationsAssembly("Pathly.Data")
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.MigrationsAssembly("Pathly.Data")
                 )
             );
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
