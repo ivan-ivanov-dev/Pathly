@@ -17,6 +17,14 @@ namespace Pathly.Services.Mappings
             CreateMap<Goal, GoalViewModel>()
                 .ForMember(dest => dest.HasRoadmap, opt => opt.MapFrom(src => src.Roadmap != null))
                 .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Roadmap != null ? src.Roadmap.Id : (int?)null))
+                .ForMember(dest => dest.CompletedTasksCount, opt => opt.MapFrom(src =>
+                    src.Roadmap != null
+                    ? src.Roadmap.Actions.SelectMany(a => a.Tasks).Count(t => t.IsCompleted)
+                    : 0))
+                .ForMember(dest => dest.ProgressPercentage, opt => opt.MapFrom(src =>
+                    src.Roadmap != null && src.Roadmap.Actions.SelectMany(a => a.Tasks).Any()
+                    ? Math.Ceiling((double)src.Roadmap.Actions.SelectMany(a => a.Tasks).Count(t => t.IsCompleted) / src.Roadmap.Actions.SelectMany(a => a.Tasks).Count() * 100)
+                    : 0))
                 .ReverseMap()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
