@@ -7,22 +7,63 @@
     border-left: 6px solid var(--pathly-primary) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: #ffffff;
+    position: relative;
+    z-index: 1; /* Base level */
 }
 
+    .goal-row-card:has(.show) {
+        z-index: 1050 !important;
+        transform: none !important; /* Raise the card higher than other cards */
+    }
+
     .goal-row-card:hover {
-        transform: translateX(10px);
+        transform: translateX(10px) !important;
         box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+        z-index: 2;
     }
 
 .goal-completed {
-    border-left-color: #adb5bd !important;
     opacity: 0.75;
+    filter: grayscale(0.4);
+    background-color: #f8f9fa !important;
+    border-left: 5px solid #198754 !important;
+    transform: scale(0.98);
 }
+    .goal-completed:hover {
+        transform: scale(0.98) translateX(5px) !important;
+    }
+    .goal-completed .goal-icon-box {
+        background-color: #e9ecef !important;
+    }
+
+        .goal-completed .goal-icon-box i {
+            color: #6c757d !important; /* Muted icon */
+        }
 
     .goal-completed h5 {
         text-decoration: line-through;
         color: #6c757d;
     }
+
+.dropdown-item.text-pathly-green {
+    color: #198754 !important;
+}
+
+    .dropdown-item.text-pathly-green:hover {
+        background-color: rgba(25, 135, 84, 0.1);
+    }
+
+.dropdown-item.text-dark-blue {
+    color: #0f4c5c !important;
+    font-weight: 600;
+}
+    .dropdown-item.text-dark-blue:hover {
+        background-color: rgba(15, 76, 92, 0.1);
+    }
+
+.dropdown-item.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
 
 .goal-icon-box {
     width: 50px;
@@ -98,4 +139,20 @@
     letter-spacing: 1px;
     font-weight: 700;
     color: #adb5bd;
+}
+
+/* This allows the description to be 2 lines, then finish with '...' to prevent overflow */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    min-height: 3em;
+}
+
+/* When user hovers over the card - the whole description shows */
+.goal-row-card:hover .text-truncate-2 {
+    -webkit-line-clamp: unset;
+    display: block;
 }
