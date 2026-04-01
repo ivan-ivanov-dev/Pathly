@@ -17,5 +17,9 @@ namespace Pathly.ViewModels.Goals
         public bool HasRoadmap { get; set; }
         public int? RoadmapId { get; set; }
 
+        // Properties for calculating progress bar value
+        public int ProgressPercentage { get; set; }
+        public int CompletedTasksCount { get; set; }
+
     }
 }
