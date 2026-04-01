@@ -1,30 +1,69 @@
-﻿.goal-card {
-    border-top: 5px solid #0F4C5C !important; 
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
-    overflow: hidden;
+﻿:root {
+    --pathly-primary: #0F4C5C;
+    --pathly-accent: #E36414;
 }
 
-    .goal-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+.goal-row-card {
+    border-left: 6px solid var(--pathly-primary) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff;
+}
+
+    .goal-row-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
     }
 
 .goal-completed {
-    opacity: 0.65;
-    filter: grayscale(0.4);
-    border-top-color: #6c757d !important; 
+    border-left-color: #adb5bd !important;
+    opacity: 0.75;
 }
-
-    .goal-completed .card-body {
-        background-color: #f8f9fa;
-    }
 
     .goal-completed h5 {
         text-decoration: line-through;
-        color: #6c757d !important;
+        color: #6c757d;
     }
+
+.goal-icon-box {
+    width: 50px;
+    height: 50px;
+    background: rgba(15, 76, 92, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-soft-primary {
+    background-color: rgba(15, 76, 92, 0.1);
+    color: var(--pathly-primary);
+    border: none;
+}
+
+    .btn-soft-primary:hover {
+        background-color: var(--pathly-primary);
+        color: #fff;
+    }
+
+.btn-soft-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: none;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.progress {
+    overflow: visible;
+}
+
 .animate-fade-in {
-    animation: fadeIn 0.5s ease-in;
+    animation: slideInLeft 0.5s ease-out forwards;
 }
 
 @keyframes fadeIn {
@@ -36,6 +75,17 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 .details-container {

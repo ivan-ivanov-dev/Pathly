@@ -120,89 +120,125 @@
                 return routes;
             }
         }
-        @if (Model.Goals != null && Model.Goals.Goals.Any())
-        {
-            @foreach (var goal in Model.Goals.Goals)
+        @* Goals List Layout *@
+        <div class="row g-4">
+            @if (Model.Goals != null && Model.Goals.Goals.Any())
             {
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 goal-card animate-fade-in @(!goal.IsActive ? "goal-completed" : "")">
+                @foreach (var goal in Model.Goals.Goals)
+                {
+                    @* We change col-lg-4 to col-12 for the Row layout *@
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm rounded-4 goal-row-card animate-fade-in @(!goal.IsActive ? "goal-completed" : "")">
+                            <div class="card-body p-4">
+                                <div class="row align-items-center">
 
-                        @* Action Dropdown *@
-                        <div class="dropdown position-absolute top-0 end-0 m-3">
-                            <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                                <li><a class="dropdown-item small" asp-action="Edit" asp-route-id="@goal.Id"><i class="bi bi-pencil me-2"></i>Edit</a></li>
-                                <li><a class="dropdown-item small text-info" asp-action="Details" asp-route-id="@goal.Id"><i class="bi bi-info-circle me-2"></i>Details</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form asp-action="Delete" asp-route-id="@goal.Id" method="post" onsubmit="return confirm('Archive this goal?');">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-trash me-2"></i>Delete</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card-body p-4 d-flex flex-column">
-                            <h5 class="fw-bold text-dark mb-2 pe-4">@goal.Title</h5>
-
-                            <p class="text-muted small flex-grow-1">
-                                @(string.IsNullOrEmpty(goal.ShortDescription) ? "No description provided." : goal.ShortDescription)
-                            </p>
-
-                            <div class="mt-4 pt-3 border-top border-light">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        @if (goal.TargetDate.HasValue)
-                                        {
-                                            <div class="text-muted" style="font-size: 0.75rem;">
-                                                <i class="bi bi-calendar-event me-1"></i> @goal.TargetDate.Value.ToString("MMM dd, yyyy")
+                                    @* 1. Info Section *@
+                                    <div class="col-lg-4 mb-3 mb-lg-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="goal-icon-box me-3">
+                                                <i class="bi bi-bullseye fs-4 text-primary"></i>
                                             </div>
-                                        }
-
-                                        @* Completion Toggle *@
-                                        <form asp-action="ToggleStatus" asp-route-id="@goal.Id" method="post" class="mt-2">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm @(goal.IsActive ? "btn-outline-success" : "btn-success") rounded-pill px-3 fw-bold">
-                                                <i class="bi @(goal.IsActive ? "bi-circle" : "bi-check-circle-fill") me-1"></i>
-                                                @(goal.IsActive ? "Mark Done" : "Completed")
-                                            </button>
-                                        </form>
+                                            <div>
+                                                <h5 class="fw-bold text-dark mb-1">@goal.Title</h5>
+                                                <p class="text-muted small mb-0 text-truncate-2">
+                                                    @(string.IsNullOrEmpty(goal.ShortDescription) ? "Set your path and start moving." : goal.ShortDescription)
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    @if (goal.HasRoadmap)
-                                    {
-                                        <a asp-controller="Roadmap" asp-action="Details" asp-route-id="@goal.RoadmapId"
-                                           class="btn btn-primary btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-                                           style="width: 32px; height: 32px;" title="View Roadmap">
-                                            <i class="bi bi-map"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@goal.Id"
-                                           class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold">
-                                            + Roadmap
-                                        </a>
-                                    }
-                                </div>
+                                    @* 2. Progress Section (The Heart of the Row) *@
+                                    <div class="col-lg-4 mb-3 mb-lg-0">
+                                        <div class="px-lg-4">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="small fw-bold text-muted">Progress</span>
+                                                <span class="small fw-800 text-primary">@goal.ProgressPercentage%</span>
+                                            </div>
+                                            <div class="progress rounded-pill" style="height: 8px; background-color: rgba(15, 76, 92, 0.1);">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated rounded-pill"
+                                                     role="progressbar"
+                                                     style="width: @goal.ProgressPercentage%; background-color: var(--pathly-primary);">
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 d-flex gap-3">
+                                                <span class="badge bg-soft-info text-info rounded-pill" style="font-size: 0.65rem;">
+                                                    <i class="bi bi-check2-circle me-1"></i> @goal.CompletedTasksCount Tasks Done
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @* 3. Metadata & Actions *@
+                                    <div class="col-lg-4">
+                                        <div class="d-flex align-items-center justify-content-lg-end gap-3">
+                                            @if (goal.TargetDate.HasValue)
+                                            {
+                                                <div class="text-end d-none d-xl-block me-2">
+                                                    <div class="info-label mb-0" style="font-size: 0.6rem;">Deadline</div>
+                                                    <div class="small fw-bold text-dark">@goal.TargetDate.Value.ToString("MMM dd, yyyy")</div>
+                                                </div>
+                                            }
+
+                                            <div class="d-flex gap-2">
+                                                @if (goal.HasRoadmap)
+                                                {
+                                                    <a asp-controller="Roadmap" asp-action="Details" asp-route-id="@goal.RoadmapId"
+                                                       class="btn btn-soft-primary rounded-pill px-3 fw-bold btn-sm">
+                                                        <i class="bi bi-map me-1"></i> Roadmap
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@goal.Id"
+                                                       class="btn btn-outline-primary rounded-pill px-3 fw-bold btn-sm">
+                                                        <i class="bi bi-plus-lg me-1"></i> Roadmap
+                                                    </a>
+                                                }
+
+                                                @* Status Toggle *@
+                                                <form asp-action="ToggleStatus" asp-route-id="@goal.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm @(goal.IsActive ? "btn-soft-success" : "btn-success") rounded-pill px-3 fw-bold">
+                                                        <i class="bi @(goal.IsActive ? "bi-circle" : "bi-check-circle-fill") me-1"></i>
+                                                        @(goal.IsActive ? "Active" : "Done")
+                                                    </button>
+                                                </form>
+
+                                                @* Dropdown *@
+                                                <div class="dropdown">
+                                                    <button class="btn btn-light btn-sm rounded-circle shadow-none" data-bs-toggle="dropdown">
+                                                        <i class="bi bi-three-dots-vertical"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                                                        <li><a class="dropdown-item small" asp-action="Edit" asp-route-id="@goal.Id"><i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                                        <li><a class="dropdown-item small text-info" asp-action="Details" asp-route-id="@goal.Id"><i class="bi bi-info-circle me-2"></i>Details</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li>
+                                                            <form asp-action="Delete" asp-route-id="@goal.Id" method="post" onsubmit="return confirm('Archive this goal?');">
+                                                                @Html.AntiForgeryToken()
+                                                                <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-trash me-2"></i>Delete</button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> @* End Row *@
                             </div>
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                @* Empty State (No changes needed) *@
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-trophy display-1 text-muted opacity-25 mb-4"></i>
+                    <h3 class="fw-bold text-dark">No goals found</h3>
+                    <p class="text-muted">Every achievement starts with the decision to try.</p>
+                    <a asp-action="Create" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Define a Goal</a>
                 </div>
             }
-        }
-        else
-        {
-            @* Empty State *@
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-trophy display-1 text-muted opacity-25 mb-4"></i>
-                <h3 class="fw-bold text-dark">No goals found</h3>
-                <p class="text-muted">Every achievement starts with the decision to try.</p>
-                <a asp-action="Create" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Define a Goal</a>
-            </div>
-        }
-    </div>
+        </div>
 </div>
