@@ -203,3 +203,264 @@ body:not(.landing-page) .navbar {
     background-color: #e9ecef;
     transform: translateY(-2px);
 }
+
+/* MODERN REFINEMENTS */
+.fw-800 {
+    font-weight: 800;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--pathly-primary), #2a9d8f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Feature Cards: Floating & Glassmorphism */
+.feature-card {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: var(--card-radius);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(15, 76, 92, 0.1);
+        border-color: var(--pathly-primary);
+    }
+
+.active-feature {
+    border: 2px solid var(--pathly-primary);
+    background: linear-gradient(to bottom right, #ffffff, #f0f7ff);
+}
+
+/* Icon Boxes */
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-soft-primary {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.bg-soft-warning {
+    background: rgba(244, 166, 42, 0.1);
+    color: var(--pathly-accent);
+}
+
+.bg-soft-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.bg-soft-info {
+    background: rgba(13, 202, 240, 0.1);
+    color: #0dcaf0;
+}
+
+.bg-soft-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.bg-soft-accent {
+    background: rgba(244, 166, 42, 0.15);
+    color: #b97a15;
+}
+
+/* Hero Animation Blob */
+.floating-blob {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: var(--pathly-accent);
+    filter: blur(80px);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: 1;
+    animation: blob-float 10s infinite alternate;
+}
+
+@keyframes blob-float {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(40px, 20px) scale(1.1);
+    }
+}
+
+.floating-img {
+    animation: img-float 4s ease-in-out infinite;
+}
+
+@keyframes img-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Glass CTA */
+.glass-cta {
+    background: linear-gradient(135deg, var(--pathly-primary), #1a6d82);
+    border-radius: var(--card-radius);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Buttons */
+.btn-pathly-primary {
+    background: var(--pathly-primary);
+    color: white;
+    border-radius: var(--btn-radius);
+    font-weight: 700;
+}
+
+.btn-pathly-outline {
+    border: 2px solid var(--pathly-primary);
+    color: var(--pathly-primary);
+    border-radius: var(--btn-radius);
+    font-weight: 700;
+}
+
+/* Glass Effect for Problem/Solution Items */
+.glass-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 18px;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+}
+
+    .glass-item:hover {
+        background: #fff;
+        box-shadow: var(--shadow-md);
+        transform: translateX(5px);
+    }
+
+.border-success-soft {
+    border-left: 4px solid #28a745 !important;
+}
+
+/* Icon sizes */
+.icon-sm {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Step Cards */
+.step-card {
+    background: #fff;
+    border-radius: var(--card-radius);
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--pathly-primary);
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.active-step {
+    border: 2px solid var(--pathly-accent);
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+/* Background Variations */
+.bg-soft-light {
+    background-color: #fcfaf7;
+}
+
+.bg-soft-primary-light {
+    background-color: rgba(15, 76, 92, 0.03);
+}
+
+/* Journey Timeline Styles */
+.journey-timeline {
+    padding: 2rem 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--pathly-accent), var(--pathly-primary), #28a745);
+    transform: translateX(-50%);
+    opacity: 0.2;
+}
+
+.journey-dot {
+    width: 50px;
+    height: 50px;
+    background: var(--pathly-accent);
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 0 0 8px #fff;
+}
+
+.dot-primary {
+    background: var(--pathly-primary);
+}
+
+.dot-success {
+    background: #28a745;
+}
+
+.step-image-placeholder {
+    background: #fff;
+    padding: 3rem 1rem;
+    border-radius: 24px;
+    border: 1px solid rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.journey-step:hover .step-image-placeholder {
+    transform: scale(1.03);
+}
+
+.border-primary-soft {
+    border-bottom: 5px solid var(--pathly-primary);
+}
+
+.border-success-soft {
+    border-bottom: 5px solid #28a745;
+}
+
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
