@@ -23,7 +23,7 @@ namespace Pathly.Services.Mappings
                     : 0))
                 .ForMember(dest => dest.ProgressPercentage, opt => opt.MapFrom(src =>
                     src.Roadmap != null && src.Roadmap.Actions.SelectMany(a => a.Tasks).Any()
-                    ? Math.Ceiling((double)src.Roadmap.Actions.SelectMany(a => a.Tasks).Count(t => t.IsCompleted) / src.Roadmap.Actions.SelectMany(a => a.Tasks).Count() * 100)
+                    ? (int)((double)src.Roadmap.Actions.SelectMany(a => a.Tasks).Count(t => t.IsCompleted) / src.Roadmap.Actions.SelectMany(a => a.Tasks).Count() * 100)
                     : 0))
                 .ReverseMap()
                 .ForMember(dest => dest.User, opt => opt.Ignore())
