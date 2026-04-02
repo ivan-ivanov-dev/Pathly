@@ -2,32 +2,80 @@
 @model GoalCreateViewModel
 
 @{
-    ViewData["Title"] = "Create Goal";
+    ViewData["Title"] = "Define New Goal";
 }
 
-<div class="container mt-4">
-    <h2>Create Goal</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/goals.css" asp-append-version="true" />
+}
 
-    <form asp-action="Create" method="post">
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 animate-fade-in">
+
+            <!-- Breadcrumb/Back -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <a asp-action="Index" class="text-decoration-none text-muted small fw-bold">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Goals
+                </a>
+            </nav>
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-pathly-primary py-4 text-center border-0">
+                    <div class="goal-icon-box bg-white bg-opacity-10 mx-auto mb-3">
+                        <i class="bi bi-rocket-takeoff fs-3 text-white"></i>
+                    </div>
+                    <h3 class="text-white fw-bold mb-1">Set a New Milestone</h3>
+                    <p class="text-white-50 small mb-0">What is the next big thing you want to achieve?</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <!-- Title -->
+                        <div class="mb-4">
+                            <label asp-for="Title" class="info-label mb-2">Goal Title</label>
+                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-flag text-primary"></i></span>
+                                <input asp-for="Title" class="form-control border-start-0 ps-0 py-2 shadow-none" placeholder="e.g., Master Full-Stack Development" />
+                            </div>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label asp-for="ShortDescription" class="info-label mb-2">Short Description</label>
+                            <textarea asp-for="ShortDescription" class="form-control shadow-sm rounded-3 py-2 shadow-none" rows="3" placeholder="Briefly describe what this goal is about..."></textarea>
+                            <span asp-validation-for="ShortDescription" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Target Date & Status -->
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-6">
+                                <label asp-for="TargetDate" class="info-label mb-2">Target Date (Optional)</label>
+                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
+                                    <input asp-for="TargetDate" type="date" class="form-control border-start-0 ps-0 shadow-none" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <div class="form-check form-switch bg-light p-3 rounded-3 w-100 border shadow-sm">
+                                    <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="IsActive" checked>
+                                    <label class="form-check-label fw-bold text-dark" asp-for="IsActive">Set as Active Goal</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                <i class="bi bi-check2-circle me-2"></i>Create Goal
+                            </button>
+                            <a asp-action="Index" class="btn btn-link text-muted fw-bold text-decoration-none py-2">Maybe Later</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="ShortDescription" class="form-label"></label>
-            <textarea asp-for="ShortDescription" class="form-control"></textarea>
-            <span asp-validation-for="ShortDescription" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="TargetDate" class="form-label"></label>
-            <input asp-for="TargetDate" type="date" class="form-control" />
-            <span asp-validation-for="TargetDate" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+    </div>
 </div>

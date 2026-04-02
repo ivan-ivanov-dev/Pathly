@@ -1,34 +1,82 @@
 ﻿@using Pathly.ViewModels.Goals
 @model GoalEditViewModel
+
 @{
-    ViewData["Title"] = "Edit Goal";
+    ViewData["Title"] = "Edit Strategic Goal";
 }
 
-<div class="container mt-4">
-    <h2>Edit Goal</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/goals.css" asp-append-version="true" />
+}
 
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="Id" />
+@* CHANGE 1: Wrapped the whole page in the layout div to center the card *@
+<div class="goal-page-wrapper py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 animate-fade-in">
 
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+                @* Back Link *@
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <a asp-action="Index" class="text-decoration-none text-muted small fw-bold">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Goals
+                    </a>
+                </nav>
+
+                @* CHANGE 2: Used the same glassmorphism card style *@
+                <div class="card glass-card border-0 rounded-4 overflow-hidden">
+
+                    @* CHANGE 3: Used goal-form-header to get the Pathly green background *@
+                    <div class="goal-form-header bg-pathly-primary text-center">
+                        <div class="goal-icon-box bg-white bg-opacity-10 mx-auto mb-3">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+                        <h3 class="fw-bold mb-1">Refine Your Vision</h3>
+                        <p class="small mb-0 text-white-50">Adjust your path to stay aligned with your purpose.</p>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+                        <form asp-action="Edit" method="post">
+                            <input type="hidden" asp-for="Id" />
+                            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                            @* 1. Goal Title *@
+                            <div class="mb-4">
+                                <label asp-for="Title" class="info-label mb-2">Goal Title</label>
+                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-flag text-primary"></i></span>
+                                    <input asp-for="Title" class="form-control border-start-0 ps-0 py-2 shadow-none" placeholder="e.g., Master Full-Stack Development" />
+                                </div>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            @* 2. Description *@
+                            <div class="mb-4">
+                                <label asp-for="ShortDescription" class="info-label mb-2">Short Description</label>
+                                <textarea asp-for="ShortDescription" class="form-control shadow-sm rounded-3 py-2 shadow-none" rows="3" placeholder="Briefly describe what this goal is about..."></textarea>
+                                <span asp-validation-for="ShortDescription" class="text-danger small"></span>
+                            </div>
+
+                            @* 3. Target Date *@
+                            <div class="mb-5">
+                                <label asp-for="TargetDate" class="info-label mb-2">Target Date (Optional)</label>
+                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
+                                    <input asp-for="TargetDate" type="date" class="form-control border-start-0 ps-0 shadow-none" />
+                                </div>
+                                <span asp-validation-for="TargetDate" class="text-danger small"></span>
+                            </div>
+
+                            @* Actions *@
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                    <i class="bi bi-check2-circle me-2"></i>Update Strategic Goal
+                                </button>
+                                <a asp-action="Index" class="btn btn-link text-muted fw-bold text-decoration-none py-2">Cancel Changes</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="ShortDescription" class="form-label"></label>
-            <textarea asp-for="ShortDescription" class="form-control"></textarea>
-            <span asp-validation-for="ShortDescription" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="TargetDate" class="form-label"></label>
-            <input asp-for="TargetDate" type="date" class="form-control" />
-            <span asp-validation-for="TargetDate" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+    </div>
 </div>

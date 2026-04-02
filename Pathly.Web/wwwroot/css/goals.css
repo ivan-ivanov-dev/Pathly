@@ -1,6 +1,21 @@
 ﻿:root {
     --pathly-primary: #0F4C5C;
     --pathly-accent: #E36414;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --page-bg: #f4f7f6;
+}
+
+.bg-soft-info {
+    background-color: rgba(15, 76, 92, 0.1);
+    color: var(--pathly-primary);
+}
+
+.info-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 800;
+    color: #6c757d;
 }
 
 .goal-row-card {
@@ -8,7 +23,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: #ffffff;
     position: relative;
-    z-index: 1; /* Base level */
+    z-index: 1;
 }
 
     .goal-row-card:has(.show) {
@@ -17,10 +32,13 @@
     }
 
     .goal-row-card:hover {
-        transform: translateX(10px) !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
-        z-index: 2;
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
+
+.goal-form-header * {
+    color: white !important;
+}
 
 .goal-completed {
     opacity: 0.75;
@@ -75,10 +93,8 @@
     justify-content: center;
 }
 
-.btn-soft-primary {
-    background-color: rgba(15, 76, 92, 0.1);
-    color: var(--pathly-primary);
-    border: none;
+.bg-pathly-primary {
+    background-color: var(--pathly-primary) !important;
 }
 
     .btn-soft-primary:hover {
@@ -86,10 +102,9 @@
         color: #fff;
     }
 
-.btn-soft-success {
+.bg-soft-success {
     background-color: rgba(40, 167, 69, 0.1);
     color: #28a745;
-    border: none;
 }
 
 .text-truncate-2 {
@@ -104,13 +119,13 @@
 }
 
 .animate-fade-in {
-    animation: slideInLeft 0.5s ease-out forwards;
+    animation: slideInLeft 0.6s ease-out forwards;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
 
     to {
@@ -156,3 +171,39 @@
     -webkit-line-clamp: unset;
     display: block;
 }
+
+/* Page Level */
+.goal-page-wrapper {
+    background-color: var(--page-bg);
+    min-height: 100vh;
+    padding-top: 2rem;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+    .glass-card:hover {
+        transform: translateY(-5px); /* The "Floating" effect */
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+/* Fix Header Visibility */
+.goal-form-header {
+    background-color: var(--pathly-primary);
+    padding: 2.5rem 1rem;
+    color: white !important;
+}
+
+    .goal-form-header h3,
+    .goal-form-header p,
+    .goal-form-header i {
+        color: white !important;
+        opacity: 1 !important; /* Ensure they are visible */
+    }
