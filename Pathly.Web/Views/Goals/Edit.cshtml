@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="~/css/goals.css" asp-append-version="true" />
 }
 
-@* CHANGE 1: Wrapped the whole page in the layout div to center the card *@
 <div class="goal-page-wrapper py-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -22,10 +21,8 @@
                     </a>
                 </nav>
 
-                @* CHANGE 2: Used the same glassmorphism card style *@
                 <div class="card glass-card border-0 rounded-4 overflow-hidden">
 
-                    @* CHANGE 3: Used goal-form-header to get the Pathly green background *@
                     <div class="goal-form-header bg-pathly-primary text-center">
                         <div class="goal-icon-box bg-white bg-opacity-10 mx-auto mb-3">
                             <i class="bi bi-pencil-square fs-3"></i>
@@ -39,7 +36,6 @@
                             <input type="hidden" asp-for="Id" />
                             <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-                            @* 1. Goal Title *@
                             <div class="mb-4">
                                 <label asp-for="Title" class="info-label mb-2">Goal Title</label>
                                 <div class="input-group shadow-sm rounded-3 overflow-hidden">
@@ -49,14 +45,12 @@
                                 <span asp-validation-for="Title" class="text-danger small"></span>
                             </div>
 
-                            @* 2. Description *@
                             <div class="mb-4">
                                 <label asp-for="ShortDescription" class="info-label mb-2">Short Description</label>
                                 <textarea asp-for="ShortDescription" class="form-control shadow-sm rounded-3 py-2 shadow-none" rows="3" placeholder="Briefly describe what this goal is about..."></textarea>
                                 <span asp-validation-for="ShortDescription" class="text-danger small"></span>
                             </div>
 
-                            @* 3. Target Date *@
                             <div class="mb-5">
                                 <label asp-for="TargetDate" class="info-label mb-2">Target Date (Optional)</label>
                                 <div class="input-group shadow-sm rounded-3 overflow-hidden">
@@ -66,7 +60,6 @@
                                 <span asp-validation-for="TargetDate" class="text-danger small"></span>
                             </div>
 
-                            @* Actions *@
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
                                     <i class="bi bi-check2-circle me-2"></i>Update Strategic Goal

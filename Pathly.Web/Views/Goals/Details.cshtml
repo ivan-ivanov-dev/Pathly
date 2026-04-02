@@ -1,5 +1,6 @@
 ﻿@using Pathly.ViewModels.Goals
 @model GoalDetailsViewModel
+
 @{
     ViewData["Title"] = "Goal Details";
 }
@@ -8,93 +9,95 @@
     <link rel="stylesheet" href="~/css/goals.css" asp-append-version="true" />
 }
 
-<div class="container details-container py-5 animate-fade-in">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <a asp-action="Index" class="text-decoration-none text-muted small fw-bold">
-            <i class="bi bi-arrow-left me-1"></i> Back to Strategic Goals
-        </a>
-    </nav>
-
-    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-        <div style="height: 8px; background-color: #198754;"></div>
-
-        <div class="card-body p-5">
-            <div class="d-flex justify-content-between align-items-start mb-4">
-                <div>
-                    <span class="badge @(Model.IsActive ? "bg-success-subtle text-success" : "bg-light text-muted") rounded-pill px-3 mb-2">
-                        @(Model.IsActive ? "Active Goal" : "Goal Completed")
-                    </span>
-                    <h1 class="fw-bold text-dark display-6">@Model.Title</h1>
-                </div>
+<div class="goal-page-wrapper py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 animate-fade-in">
                 
-                <div class="d-flex gap-2">
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
-                        <i class="bi bi-pencil-square me-2"></i>Edit
+                @* Back Link *@
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <a asp-action="Index" class="text-decoration-none text-muted small fw-bold">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Strategic Goals
                     </a>
-                </div>
-            </div>
+                </nav>
 
-            <div class="row g-4 mt-2">
-                <div class="col-12">
-                    <p class="info-label mb-2">Description</p>
-                    <p class="lead text-muted">
-                        @(string.IsNullOrEmpty(Model.ShortDescription) ? "No description provided for this goal." : Model.ShortDescription)
-                    </p>
-                </div>
-
-                <div class="col-md-6 mt-5">
-                    <div class="p-3 bg-light rounded-4">
-                        <p class="info-label mb-1">Target Completion Date</p>
-                        <h5 class="fw-bold mb-0">
-                            <i class="bi bi-calendar-check me-2 text-primary"></i>
-                            @(Model.TargetDate.HasValue ? Model.TargetDate.Value.ToString("MMMM dd, yyyy") : "No deadline set")
-                        </h5>
+                <div class="card glass-card border-0 rounded-4 overflow-hidden">
+                    
+                    <div class="goal-form-header text-center position-relative">
+                        <div class="goal-icon-box bg-white bg-opacity-10 mx-auto mb-3">
+                            <i class="bi bi-eye fs-3"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">Goal Overview</h3>
+                        <div class="d-flex justify-content-center">
+                             <span class="badge @(Model.IsActive ? "bg-soft-success text-white border border-white border-opacity-25" : "bg-secondary text-white") rounded-pill px-3">
+                                <i class="bi @(Model.IsActive ? "bi-lightning-charge-fill" : "bi-check-circle-fill") me-1"></i>
+                                @(Model.IsActive ? "Currently Active" : "Goal Achieved")
+                            </span>
+                        </div>
+                        
+                        @* Floating Edit Button in Header *@
+                        <a asp-action="Edit" asp-route-id="@Model.Id" 
+                           class="btn btn-sm btn-light rounded-pill px-3 position-absolute top-0 end-0 m-4 shadow-sm fw-bold">
+                            <i class="bi bi-pencil me-1" style="color: #000 !important;"></i> Edit
+                        </a>
                     </div>
-                </div>
 
-                <div class="col-md-6 mt-5">
-                    <div class="p-3 bg-light rounded-4">
-                        <p class="info-label mb-1">Current Status</p>
-                        <h5 class="fw-bold mb-0">
-                            @if (Model.IsActive)
+                    <div class="card-body p-4 p-md-5">
+                        <div class="text-center mb-5">
+                            <h1 class="fw-bold text-dark display-6 mb-3">@Model.Title</h1>
+                            <p class="lead text-muted mx-auto" style="max-width: 600px;">
+                                @(string.IsNullOrEmpty(Model.ShortDescription) ? "No description provided for this goal." : Model.ShortDescription)
+                            </p>
+                        </div>
+
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-6">
+                                <div class="p-4 bg-light bg-opacity-50 rounded-4 border border-white shadow-sm h-100">
+                                    <p class="info-label mb-2 text-primary">Target Completion</p>
+                                    <h5 class="fw-bold mb-0 text-dark">
+                                        <i class="bi bi-calendar-check me-2"></i>
+                                        @(Model.TargetDate.HasValue ? Model.TargetDate.Value.ToString("MMMM dd, yyyy") : "No deadline set")
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-4 bg-light bg-opacity-50 rounded-4 border border-white shadow-sm h-100">
+                                    <p class="info-label mb-2 text-primary">Strategic Focus</p>
+                                    <h5 class="fw-bold mb-0 text-dark">
+                                        @if (Model.IsActive)
+                                        {
+                                            <i class="bi bi-arrow-up-right-circle me-2 text-success"></i> <span>In Progress</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-check-all me-2 text-muted"></i> <span>Completed</span>
+                                        }
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-top border-light text-center">
+                            @if (Model.RoadmapId.HasValue)
                             {
-                                <i class="bi bi-clock-history me-2 text-warning"></i> <span>In Progress</span>
+                                <p class="small text-muted mb-3">A roadmap strategy is already active for this goal.</p>
+                                <a asp-controller="Roadmap" asp-action="Details" asp-route-id="@Model.RoadmapId" 
+                                   class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm py-3">
+                                    <i class="bi bi-map-fill me-2"></i>Navigate Roadmap
+                                </a>
                             }
                             else
                             {
-                                <i class="bi bi-check-all me-2 text-success"></i> <span>Finished</span>
+                                <p class="small text-muted mb-3">Ready to break this goal down into steps?</p>
+                                <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@Model.Id" 
+                                   class="btn btn-outline-primary btn-lg rounded-pill px-5 fw-bold shadow-sm py-3">
+                                    <i class="bi bi-plus-circle-dotted me-2"></i>Design Roadmap
+                                </a>
                             }
-                        </h5>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="mt-5 pt-4 border-top">
-    <div class="row text-center">
-        <div class="col-md-12">
-            @if (Model.RoadmapId.HasValue)
-            {
-                @* Go to existing Roadmap Details *@
-                <a asp-controller="Roadmap" 
-                   asp-action="Details" 
-                   asp-route-id="@Model.RoadmapId" 
-                   class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow">
-                    <i class="bi bi-map me-2"></i>View Roadmap Strategy
-                </a>
-            }
-            else
-            {
-                @* Go to Create Roadmap and pass the GoalId *@
-                <a asp-controller="Roadmap" 
-                   asp-action="Create" 
-                   asp-route-goalId="@Model.Id" 
-                   class="btn btn-outline-primary btn-lg rounded-pill px-5 fw-bold shadow">
-                    <i class="bi bi-plus-circle me-2"></i>Create Roadmap Strategy
-                </a>
-            }
-        </div>
-    </div>
-</div>
         </div>
     </div>
 </div>

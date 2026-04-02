@@ -11,11 +11,12 @@
 }
 
 .info-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.5px;
     font-weight: 800;
-    color: #6c757d;
+    color: #8a929a;
+    display: block;
 }
 
 .goal-row-card {
@@ -36,8 +37,20 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
-.goal-form-header * {
+.goal-page-wrapper {
+    background-color: var(--page-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 0;
+}
+
+.goal-form-header {
+    background-color: var(--pathly-primary);
+    padding: 3rem 1.5rem;
     color: white !important;
+    position: relative;
 }
 
 .goal-completed {
@@ -146,14 +159,6 @@
 }
 .details-container {
     max-width: 800px;
-}
-
-.info-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    color: #adb5bd;
 }
 
 /* This allows the description to be 2 lines, then finish with '...' to prevent overflow */
