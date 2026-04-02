@@ -18,7 +18,6 @@ namespace Pathly.Web
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     sqlOptions => {
                         sqlOptions.MigrationsAssembly("Pathly.Data");
-                        // Add this line to handle those "transient failures"
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 5,
                             maxRetryDelay: TimeSpan.FromSeconds(30),
