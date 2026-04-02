@@ -1,62 +1,103 @@
 ﻿@using Pathly.ViewModels.TasksViewModels
 @model TaskDetailsViewModel
 
-<div class="modal-body p-4">
-    @* Task Header Info *@
+@* Header with Pathly Gradient matching Create *@
+<div class="modal-header modal-header-pathly border-0 d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="fw-bold text-white mb-0">
+            <i class="bi bi-info-circle-fill text-warning me-2"></i>Task Details
+        </h4>
+        <p class="text-white-50 small mb-0 mt-1">Reviewing: @Model.Title</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body p-4 bg-white">
+    @* Title and Tags Header *@
     <div class="mb-4">
-        <h4 class="fw-bold text-dark mb-1">@Model.Title</h4>
-        <div class="d-flex flex-wrap gap-2 mt-2">
+        <h3 class="fw-bold text-dark mb-2">@Model.Title</h3>
+        <div class="d-flex flex-wrap gap-2">
             @if (Model.Tags != null && Model.Tags.Any())
             {
                 @foreach (var tag in Model.Tags)
                 {
-                    <span class="badge rounded-pill task-tag-pill" style="font-size: 0.7rem;">@tag</span>
+                    <span class="badge rounded-pill task-tag-pill-view d-flex align-items-center">
+                        <i class="bi bi-hash"></i>@tag
+                    </span>
                 }
             }
             else
             {
-                <span class="text-muted small fst-italic">No tags assigned</span>
+                <span class="text-muted small fst-italic px-2">
+                    <i class="bi bi-tag me-1"></i>No tags assigned
+                </span>
             }
         </div>
     </div>
 
-    @* Description Section *@
-    <div class="bg-light p-3 rounded-3 mb-4">
-        <h6 class="text-muted text-uppercase mb-2" style="font-size: 0.7rem; font-weight: 700;">Description</h6>
-        <p class="mb-0 text-dark" style="line-height: 1.6;">@(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "No description provided.")</p>
+    @* Description Section - Styled as a "Focus Area" *@
+    <div class="p-3 rounded-4 mb-4" style="background-color: #f8fbfb; border: 1px solid #e9efef;">
+        <label class="uppercase-label text-primary fw-bold mb-2 d-block" style="font-size: 0.65rem;">
+            <i class="bi bi-justify-left me-1"></i> Description
+        </label>
+        <p class="mb-0 text-dark" style="line-height: 1.6; font-size: 0.95rem;">
+            @(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "No description provided for this task.")
+        </p>
     </div>
 
     @* Metadata Grid *@
     <div class="row g-3">
+        @* Priority Card *@
         <div class="col-sm-6">
-            <div class="p-3 border rounded-3 h-100">
-                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Priority</h6>
-                <p class="mb-0 fw-bold">@Model.Priority</p>
+            <div class="p-3 detail-card rounded-3 h-100">
+                <h6 class="uppercase-label text-muted mb-2">Priority</h6>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                    <span class="fw-bold">@Model.Priority</span>
+                </div>
             </div>
         </div>
+
+        @* Status Card *@
         <div class="col-sm-6">
-            <div class="p-3 border rounded-3 h-100">
-                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Status</h6>
-                <p class="mb-0 fw-bold @(Model.IsCompleted ? "text-success" : "text-primary")">
-                    @(Model.IsCompleted ? "✓ Completed" : "○ In Progress")
-                </p>
+            <div class="p-3 detail-card rounded-3 h-100">
+                <h6 class="uppercase-label text-muted mb-2">Status</h6>
+                <div class="d-flex align-items-center">
+                    <span class="status-indicator me-2 @(Model.IsCompleted ? "bg-success" : "bg-warning")"></span>
+                    <span class="fw-bold @(Model.IsCompleted ? "text-success" : "text-primary")">
+                        @(Model.IsCompleted ? "Completed" : "In Progress")
+                    </span>
+                </div>
             </div>
         </div>
+
+        @* Due Date Card *@
         <div class="col-sm-6">
-            <div class="p-3 border rounded-3 h-100">
-                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Due Date</h6>
-                <p class="mb-0">@(Model.DueDate?.ToString("MMMM dd, yyyy") ?? "—")</p>
+            <div class="p-3 detail-card rounded-3 h-100">
+                <h6 class="uppercase-label text-muted mb-2">Target Date</h6>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-calendar-check text-muted me-2"></i>
+                    <span class="text-dark">@(Model.DueDate?.ToString("MMMM dd, yyyy") ?? "No Deadline")</span>
+                </div>
             </div>
         </div>
+
+        @* Created Date Card *@
         <div class="col-sm-6">
-            <div class="p-3 border rounded-3 h-100">
-                <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.65rem;">Created On</h6>
-                <p class="mb-0 text-muted">@Model.CreatedOn.ToString("MMM dd, yyyy")</p>
+            <div class="p-3 detail-card rounded-3 h-100">
+                <h6 class="uppercase-label text-muted mb-2">Created</h6>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-clock-history text-muted me-2"></i>
+                    <span class="text-muted small">@Model.CreatedOn.ToString("MMM dd, yyyy")</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-end mt-4">
-        <button type="button" class="btn btn-dark px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+    @* Footer Action *@
+    <div class="d-flex justify-content-end mt-4 pt-2">
+        <button type="button" class="btn btn-primary px-5 rounded-pill fw-bold shadow-sm" data-bs-dismiss="modal">
+            Got it
+        </button>
     </div>
 </div>
