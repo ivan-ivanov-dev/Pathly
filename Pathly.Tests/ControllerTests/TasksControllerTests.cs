@@ -249,10 +249,8 @@ public class TasksControllerTests: ControllerTestsBase
         // Arrange
         int taskId = 1;
         var taskDetails = new TaskDetailsViewModel { Id = taskId, Title = "Task to Delete" };
-        var deleteModel = new TaskDeleteViewModel { Id = taskId, Title = "Task to Delete" };
 
         _mockTaskService.Setup(s => s.GetDetailsAsync(taskId, _userId)).ReturnsAsync(taskDetails);
-        _mockMapper.Setup(m => m.Map<TaskDeleteViewModel>(taskDetails)).Returns(deleteModel);
 
         // Act
         var result = await _controller.DeleteAsync(taskId);
@@ -261,7 +259,6 @@ public class TasksControllerTests: ControllerTestsBase
         Assert.IsInstanceOf<PartialViewResult>(result);
         var partialResult = (PartialViewResult)result;
         Assert.That(partialResult.ViewName, Is.EqualTo("DeletePartialView"));
-        Assert.That(partialResult.Model, Is.EqualTo(deleteModel));
     }
 
     [Test]
@@ -282,14 +279,13 @@ public class TasksControllerTests: ControllerTestsBase
     public async Task Delete_Post_ShouldReturnJsonSuccess_WhenAjaxAndSuccessful()
     {
         // Arrange
-        var model = new TaskDeleteViewModel { Id = 1 };
-        _mockTaskService.Setup(s => s.DeleteAsync(model.Id, _userId)).ReturnsAsync(true);
+        _mockTaskService.Setup(s => s.DeleteAsync(1, _userId)).ReturnsAsync(true);
 
         // Simulate AJAX Header
         _controller.ControllerContext.HttpContext.Request.Headers["X-Requested-With"] = "XMLHttpRequest";
 
         // Act
-        var result = await _controller.DeleteAsync(model);
+        var result = await _controller.DeleteAsync(1);
 
         // Assert
         Assert.IsInstanceOf<JsonResult>(result);
@@ -304,11 +300,10 @@ public class TasksControllerTests: ControllerTestsBase
     public async Task Delete_Post_ShouldRedirectToIndex_WhenNotAjax()
     {
         // Arrange
-        var model = new TaskDeleteViewModel { Id = 1 };
-        _mockTaskService.Setup(s => s.DeleteAsync(model.Id, _userId)).ReturnsAsync(true);
+        _mockTaskService.Setup(s => s.DeleteAsync(1, _userId)).ReturnsAsync(true);
 
         // Act
-        var result = await _controller.DeleteAsync(model);
+        var result = await _controller.DeleteAsync(1);
 
         // Assert
         Assert.IsInstanceOf<RedirectToActionResult>(result);
