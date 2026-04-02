@@ -14,7 +14,10 @@ namespace Pathly.DataModels
         public string? Description { get; set; }
 
         public TaskPriority Priority { get; set; } = TaskPriority.Low;
+        public TaskStatus Status { get; set; } = TaskStatus.Todo;
         public bool IsCompleted { get; set; }
+
+        public int Position { get; set; }
 
         public DateTime CreatedOn{ get; set; }
         public DateTime? DueDate { get; set; }
@@ -27,5 +30,11 @@ namespace Pathly.DataModels
 
         public int? ActionId { get; set; }
         public ActionItem? Action { get; set; }
+    }
+    public enum TaskStatus
+    {
+        Todo = 0,
+        InProgress = 1,
+        Done = 2
     }
 }
