@@ -160,9 +160,6 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.ActionId, opt => opt.Ignore());
 
-            CreateMap<TaskItem, TaskDeleteViewModel>().ReverseMap()
-                .ForMember(dest => dest.UserId, opt => opt.Ignore());
-
             // --- TAGS ---
             CreateMap<Tag, TagViewModel>().ReverseMap()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
