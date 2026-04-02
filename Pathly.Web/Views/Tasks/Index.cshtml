@@ -176,7 +176,14 @@
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                         <li><a class="dropdown-item small" href="javascript:void(0);" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item small text-danger" href="javascript:void(0);" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })" data-modal-title="Delete Task"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                                        <li>
+                                            <a class="dropdown-item small text-danger delete-task-btn"
+                                               href="javascript:void(0);"
+                                               data-id="@task.Id"
+                                               data-title="@task.Title">
+                                                <i class="bi bi-trash me-2"></i>Delete
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
