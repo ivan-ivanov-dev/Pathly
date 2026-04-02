@@ -6,6 +6,7 @@
     },
 
     bindEvents: function () {
+        $(document).on('click', '.delete-task-btn', (e) => this.handleDelete(e));
         document.addEventListener("click", (e) => this.handleModalClick(e));
         document.addEventListener("change", (e) => {
             if (e.target.classList.contains('priority-select-direct')) {

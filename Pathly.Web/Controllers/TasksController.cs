@@ -164,7 +164,7 @@ namespace Pathly.Web.Controllers
             var userId = _userManager.GetUserId(User);
             var success = await _taskService.DeleteAsync(id, userId);
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")//Check if the request is an AJAX request
             {
                 return Json(new
                 {
