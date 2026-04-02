@@ -157,33 +157,20 @@ namespace Pathly.Web.Controllers
         }
 
         /*Delete Tasks*/
-
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var userId = _userManager.GetUserId(User);
-
-            var task = await _taskService.GetDetailsAsync(id, userId);
-
-            if (task == null)
-            {
-                return NotFound();
-            }
-
-            var model = _mapper.Map<TaskDeleteViewModel>(task);
-
-            return PartialView("DeletePartialView", model);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(TaskDeleteViewModel model)
-        {
-            var userId = _userManager.GetUserId(User);
-            var success = await _taskService.DeleteAsync(model.Id, userId);
+            var success = await _taskService.DeleteAsync(id, userId);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return success ? Json(new { success = true }) : BadRequest();
+                return Json(new
+                {
+                    success = success,
+                    message = success ? "Task deleted successfully." : "You do not have permission to delete this task."
+                });
             }
 
             return RedirectToAction(nameof(Index));
