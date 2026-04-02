@@ -52,7 +52,7 @@
     letter-spacing: -0.01em;
     white-space: nowrap;
     overflow: hidden;
-    text-truncate: ellipsis;
+    text-overflow: ellipsis;
 }
 
 /* Bottom Right: Actions Wrapper */
