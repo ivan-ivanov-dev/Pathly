@@ -338,3 +338,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transition: all 0.2s ease;
 }
 
+/* Goal Selection Item in Modal */
+.goal-select-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+    .goal-select-item:hover {
+        background: #fff;
+        border-color: var(--pathly-primary);
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+.goal-mini-icon {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e9ecef;
+    border-radius: 10px;
+}
+
+.node-icon {
+    transition: transform 0.3s ease;
+}
+
+.planner-selection-card:hover .node-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.text-pathly-primary {
+    color: var(--pathly-primary); 
+}
