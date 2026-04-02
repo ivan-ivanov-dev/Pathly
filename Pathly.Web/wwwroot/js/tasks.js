@@ -16,6 +16,57 @@
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
     },
 
+    handleDelete: function (e) {
+        e.preventDefault();
+        const btn = $(e.currentTarget);
+        const taskId = btn.data('id');
+        const taskTitle = btn.data('title') || "this task";
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete "${taskTitle}". This cannot be undone!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0F4C5C',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'rounded-4 shadow-lg',
+                confirmButton: 'rounded-pill px-4',
+                cancelButton: 'rounded-pill px-4'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/Tasks/DeleteAsync/${taskId}`,
+                    type: 'POST',
+                    data: { __RequestVerificationToken: token },
+                    success: (response) => {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: response.message || 'Task removed.',
+                                icon: 'success',
+                                confirmButtonColor: '#0F4C5C',
+                                timer: 1500
+                            }).then(() => {
+                                const roadmapItem = document.getElementById(`task-item-${taskId}`) || document.getElementById(`task-wrapper-${taskId}`);
+                                if (roadmapItem) {
+                                    $(roadmapItem).fadeOut(300, () => roadmapItem.remove());
+                                } else {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    error: () => Swal.fire('Error!', 'Could not delete task.', 'error')
+                });
+            }
+        });
+    },
+
     initModalFocus: function () {
         const modalEl = document.getElementById('taskModal');
         if (!modalEl) return;
