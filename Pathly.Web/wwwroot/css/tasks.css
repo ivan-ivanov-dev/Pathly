@@ -208,3 +208,148 @@
 .border-bottom-dashed {
     border-bottom: 1px dashed #dee2e6;
 }
+
+.modal-content {
+    border: none;
+    border-radius: 15px; 
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modal-header-pathly {
+    background: linear-gradient(135deg, #0F4C5C 0%, #1a6a7d 100%);
+    border-radius: 0;
+    padding: 1.5rem;
+    margin: 0;
+}
+
+/* Tag Cloud Styling */
+.tag-selection-cloud {
+    max-height: 160px;
+    overflow-y: auto;
+    padding: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 transparent;
+}
+
+.btn-outline-pathly-tag {
+    color: #495057;
+    border: 2px solid #e9ecef;
+    background-color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+    .btn-outline-pathly-tag:hover {
+        transform: translateY(-2px);
+        border-color: #ced4da;
+        background-color: #f8f9fa;
+        color: #0F4C5C;
+    }
+
+.btn-check:checked + .btn-outline-pathly-tag {
+    background-color: #0F4C5C !important;
+    border-color: #0F4C5C !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(15, 76, 92, 0.3);
+    transform: scale(1.05);
+}
+
+/* Blue */
+.tag-chip:nth-child(5n+1) .btn-outline-pathly-tag {
+    border-left: 4px solid #0d6efd;
+}
+
+/* Green */
+.tag-chip:nth-child(5n+2) .btn-outline-pathly-tag {
+    border-left: 4px solid #198754;
+}
+
+/* Yellow */
+.tag-chip:nth-child(5n+3) .btn-outline-pathly-tag {
+    border-left: 4px solid #ffc107;
+}
+
+/* Orange */
+.tag-chip:nth-child(5n+4) .btn-outline-pathly-tag {
+    border-left: 4px solid #fd7e14;
+}
+
+/* Purple */
+.tag-chip:nth-child(5n+5) .btn-outline-pathly-tag {
+    border-left: 4px solid #6f42c1;
+}
+
+.uppercase-label {
+    letter-spacing: 1px;
+    font-size: 0.65rem !important;
+    text-transform: uppercase;
+}
+
+.extra-small {
+    font-size: 0.7rem;
+}
+
+.border-dashed {
+    border: 2px dashed #dee2e6 !important;
+}
+
+.task-form .form-control {
+    border: 2px solid transparent !important;
+    transition: all 0.3s ease;
+}
+
+    .task-form .form-control:focus {
+        background-color: #fff !important;
+        border-color: #0F4C5C !important;
+        box-shadow: 0 0 0 4px rgba(15, 76, 92, 0.1) !important;
+    }
+
+.form-floating > .form-control:focus ~ label {
+    color: #0F4C5C !important;
+}
+
+/* Details Specific Styling */
+.detail-card {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+    .detail-card:hover {
+        border-color: #0F4C5C;
+        background-color: #fcfcfc;
+    }
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.bg-soft-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.bg-soft-primary {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.bg-soft-warning {
+    background-color: #fff8e1;
+    color: #f57f17;
+}
+
+/* Re-using our tag pills with a slightly more 'view-only' style */
+.task-tag-pill-view {
+    border-left: 3px solid #0F4C5C;
+    background: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+}
