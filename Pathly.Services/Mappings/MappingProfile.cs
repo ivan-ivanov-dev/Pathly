@@ -52,6 +52,15 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.Roadmap, opt => opt.Ignore());
 
+            // --- Add this specific mapping ---
+            CreateMap<Goal, RoadmapCreateViewModel>()
+                .ForMember(dest => dest.SelectedGoalId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.NewGoalTitle, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalDescription, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalIsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.NewGoalTargetDate, opt => opt.Ignore())
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDetailsViewModel>()
                 .ForMember(dest => dest.RoadmapId, opt => opt.MapFrom(src => src.Id))
@@ -129,8 +138,6 @@ namespace Pathly.Services.Mappings
             CreateMap<TaskItem, TaskEditViewModel>()
                 .ForMember(dest => dest.SelectedTagIds, opt => opt.Ignore())
                 .ForMember(dest => dest.AvailableTags, opt => opt.Ignore());
-
-            // В MappingProfile.cs
 
             CreateMap<TaskEditViewModel, TaskItem>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
