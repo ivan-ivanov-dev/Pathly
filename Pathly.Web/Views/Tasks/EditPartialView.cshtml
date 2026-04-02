@@ -1,67 +1,96 @@
 ﻿@using Pathly.ViewModels.TasksViewModels
 @model TaskEditViewModel
 
-<div class="modal-body p-4">
-    <form asp-action="Edit" asp-controller="Tasks" method="post" class="task-form">
-        @Html.AntiForgeryToken()
+@* Header with Pathly Gradient *@
+<div class="modal-header modal-header-pathly border-0 d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="fw-bold text-white mb-0">
+            <i class="bi bi-pencil-square text-warning me-2"></i>Edit Task
+        </h4>
+        <p class="text-white-50 small mb-0 mt-1">Refine your plan of action.</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
 
+<div class="modal-body p-4 bg-white">
+    <form asp-action="Edit" asp-controller="Tasks" method="post" novalidate class="task-form">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
 
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+        @* Task Title *@
+        <div class="form-floating mb-3">
+            <input asp-for="Title" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Task Title" />
+            <label asp-for="Title" class="text-muted small">Task Title</label>
+            <span asp-validation-for="Title" class="text-danger extra-small"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label"></label>
-            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+        @* Description *@
+        <div class="form-floating mb-3">
+            <textarea asp-for="Description" class="form-control border-0 bg-light rounded-3 shadow-none"
+                      style="height: 120px" placeholder="Details..."></textarea>
+            <label asp-for="Description" class="text-muted small">Description</label>
+            <span asp-validation-for="Description" class="text-danger extra-small"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="DueDate" class="form-label"></label>
-            <input asp-for="DueDate" type="date" class="form-control" />
-            <span asp-validation-for="DueDate" class="text-danger"></span>
+        @* Due Date *@
+        <div class="mb-4">
+            <label class="form-label text-muted small fw-bold mb-1 uppercase-label">Target Completion</label>
+            <div class="input-group">
+                <span class="input-group-text border-0 bg-light"><i class="bi bi-calendar-event"></i></span>
+                <input asp-for="DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
+            </div>
+            <span asp-validation-for="DueDate" class="text-danger extra-small"></span>
         </div>
-        <div class="mb-3">
-            <label class="form-label fw-bold">Select Tag (Only 4 allowed)</label>
 
-            @if (!Model.AvailableTags.Any())
+        @* Tag Cloud Selection *@
+        <div class="mb-4">
+            <label class="form-label text-muted small fw-bold mb-2 uppercase-label d-flex justify-content-between">
+                <span><i class="bi bi-tags-fill me-1 text-primary"></i> Categorization</span>
+                <span class="badge bg-soft-primary text-primary border-0 rounded-pill px-2">Max 4</span>
+            </label>
+
+            @if (Model.AvailableTags != null && Model.AvailableTags.Any())
             {
-                <div class="alert alert-warning">
-                    You don’t have any tags yet.
-                    <a asp-controller="Tags" asp-action="Create">Create a tag</a>
+                <div class="tag-selection-cloud d-flex flex-wrap gap-2">
+                    @foreach (var tag in Model.AvailableTags)
+                    {
+                        var tagId = int.Parse(tag.Value);
+                        <div class="tag-chip">
+                            <input class="btn-check tag-checker"
+                                   type="checkbox"
+                                   name="SelectedTagIds"
+                                   id="edit-tag-@tag.Value"
+                                   value="@tag.Value"
+                                   @(Model.SelectedTagIds.Contains(tagId) ? "checked" : "") />
+
+                            <label class="btn btn-outline-pathly-tag rounded-pill px-3 py-1 shadow-sm" for="edit-tag-@tag.Value">
+                                <i class="bi bi-hash"></i>@tag.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div id="TagError" class="alert alert-danger p-2 mt-3 d-none animate-fade-in border-0 shadow-sm" style="font-size: 0.75rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> You can only select up to 4 tags.
                 </div>
             }
             else
             {
-                <div class="tag-checkbox-group">
-                    @foreach (var tag in Model.AvailableTags)
-                    {
-                        var tagId = int.Parse(tag.Value);
-                        <div class="form-check">
-                            <input class="form-check-input tag-checker"
-                                   type="checkbox"
-                                   name="SelectedTagIds"
-                                   value="@tag.Value"
-                                   @(Model.SelectedTagIds.Contains(tagId) ? "checked" : "") />
-                            <label class="form-check-label">@tag.Text</label>
-                        </div>
-                    }
+                <div class="p-3 bg-light rounded-3 text-center border-dashed">
+                    <p class="small text-muted mb-0 fst-italic">No tags available.</p>
                 </div>
-                <span id="TagError" class="text-danger small d-none mt-2">
-                    <i class="bi bi-exclamation-circle"></i>Please select no more than 4 tags per task.
-                </span>
             }
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        @* Footer Actions *@
+        <div class="d-flex gap-2 pt-2">
+            <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm w-100" style="background-color: #0F4C5C; border: none;">
+                Save Changes
+            </button>
+            <button type="button" class="btn btn-light rounded-pill px-4 py-2 text-muted fw-bold w-100" data-bs-dismiss="modal">
+                Discard
+            </button>
         </div>
     </form>
-
 </div>
