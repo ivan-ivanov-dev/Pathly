@@ -97,7 +97,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `/Tasks/DeleteAsync/${taskId}`,
+                    url: `/Tasks/Delete/${taskId}`,
                     type: 'POST',
                     data: { __RequestVerificationToken: token },
                     success: (response) => {
