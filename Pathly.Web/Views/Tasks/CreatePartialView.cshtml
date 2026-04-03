@@ -1,97 +1,99 @@
 ﻿@using Pathly.ViewModels.TasksViewModels
 @model TaskCreateViewModel
 
-<div class="modal-header modal-header-pathly border-0 d-flex justify-content-between align-items-center">
-    <div>
-        <h4 class="fw-bold text-white mb-0">
-            <i class="bi bi-lightning-charge-fill text-warning me-2"></i>New Micro-Task
-        </h4>
-        <p class="text-white-50 small mb-0 mt-1">Break your goals into actionable steps.</p>
+<div class="bg-white rounded-4 overflow-hidden shadow-lg">
+    <div class="modal-header modal-header-pathly border-0 d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold text-white mb-0">
+                <i class="bi bi-lightning-charge-fill text-warning me-2"></i>New Micro-Task
+            </h4>
+            <p class="text-white-50 small mb-0 mt-1">Break your goals into actionable steps.</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
 
-<div class="modal-body p-4">
-    <form id="createTaskForm" asp-controller="Tasks" asp-action="Create" method="post" novalidate class="task-form">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="ActionId" />
+    <div class="modal-body p-4">
+        <form id="createTaskForm" asp-controller="Tasks" asp-action="Create" method="post" novalidate class="task-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ActionId" />
 
-        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
-        @* Task Title *@
-        <div class="form-floating mb-3">
-            <input asp-for="Title" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Task Title" />
-            <label asp-for="Title" class="text-muted small">What needs to be done?</label>
-            <span asp-validation-for="Title" class="text-danger extra-small"></span>
-        </div>
-
-        @* Description *@
-        <div class="form-floating mb-3">
-            <textarea asp-for="Description" class="form-control border-0 bg-light rounded-3 shadow-none"
-                      style="height: 100px" placeholder="Details..."></textarea>
-            <label asp-for="Description" class="text-muted small">Context or instructions...</label>
-            <span asp-validation-for="Description" class="text-danger extra-small"></span>
-        </div>
-
-        <div class="row g-3 mb-4">
-            @* Due Date *@
-            <div class="col-md-12">
-                <label class="form-label text-muted small fw-bold mb-1 uppercase-label">Target Completion</label>
-                <div class="input-group">
-                    <span class="input-group-text border-0 bg-light"><i class="bi bi-calendar-event"></i></span>
-                    <input asp-for="DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
-                </div>
-                <span asp-validation-for="DueDate" class="text-danger extra-small"></span>
+            @* Task Title *@
+            <div class="form-floating mb-3">
+                <input asp-for="Title" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Task Title" />
+                <label asp-for="Title" class="text-muted small">What needs to be done?</label>
+                <span asp-validation-for="Title" class="text-danger extra-small"></span>
             </div>
-        </div>
 
-        @* Tag Cloud Selection *@
-        <div class="mb-4">
-            <label class="form-label text-muted small fw-bold mb-2 uppercase-label d-flex justify-content-between align-items-end">
-                <span><i class="bi bi-tags-fill me-1 text-primary"></i> Categorization</span>
-                <span class="badge bg-soft-primary text-primary border-0 rounded-pill px-2" style="font-size: 0.6rem;">Limit: 4</span>
-            </label>
+            @* Description *@
+            <div class="form-floating mb-3">
+                <textarea asp-for="Description" class="form-control border-0 bg-light rounded-3 shadow-none"
+                          style="height: 100px" placeholder="Details..."></textarea>
+                <label asp-for="Description" class="text-muted small">Context or instructions...</label>
+                <span asp-validation-for="Description" class="text-danger extra-small"></span>
+            </div>
 
-            @if (!Model.AvailableTags.Any())
-            {
-                <div class="p-3 bg-light rounded-3 text-center border-dashed">
-                    <p class="small text-muted mb-2">No tags available for categorization.</p>
-                    <a asp-controller="Tag" asp-action="Index" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                        <i class="bi bi-plus me-1"></i>Create Tag
-                    </a>
+            <div class="row g-3 mb-4">
+                @* Due Date *@
+                <div class="col-md-12">
+                    <label class="form-label text-muted small fw-bold mb-1 uppercase-label">Target Completion</label>
+                    <div class="input-group">
+                        <span class="input-group-text border-0 bg-light"><i class="bi bi-calendar-event"></i></span>
+                        <input asp-for="DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
+                    </div>
+                    <span asp-validation-for="DueDate" class="text-danger extra-small"></span>
                 </div>
-            }
-            else
-            {
-                <div class="tag-selection-cloud tag-checkbox-group d-flex flex-wrap gap-2 pt-1">
-                    @foreach (var tag in Model.AvailableTags)
-                    {
-                        <div class="tag-chip">
-                            <input class="btn-check tag-checker"
-                                   type="checkbox"
-                                   name="SelectedTagIds"
-                                   id="tag-@tag.Value"
-                                   value="@tag.Value" />
-                            <label class="btn btn-outline-pathly-tag rounded-pill px-3 py-1 shadow-sm" for="tag-@tag.Value">
-                                <i class="bi bi-hash"></i>@tag.Text
-                            </label>
-                        </div>
-                    }
-                </div>
-                <div id="TagError" class="alert alert-danger p-2 mt-3 d-none animate-fade-in border-0 shadow-sm" style="font-size: 0.75rem;">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Careful! You've reached the 4-tag limit.
-                </div>
-            }
-        </div>
+            </div>
 
-        @* Footer Actions *@
-        <div class="d-flex gap-2 pt-2">
-            <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm w-100">
-                Create Task
-            </button>
-            <button type="button" class="btn btn-light rounded-pill px-4 py-2 text-muted fw-bold w-100" data-bs-dismiss="modal">
-                Discard
-            </button>
-        </div>
-    </form>
-</div>
+            @* Tag Cloud Selection *@
+            <div class="mb-4">
+                <label class="form-label text-muted small fw-bold mb-2 uppercase-label d-flex justify-content-between align-items-end">
+                    <span><i class="bi bi-tags-fill me-1 text-primary"></i> Categorization</span>
+                    <span class="badge bg-soft-primary text-primary border-0 rounded-pill px-2" style="font-size: 0.6rem;">Limit: 4</span>
+                </label>
+
+                @if (!Model.AvailableTags.Any())
+                {
+                    <div class="p-3 bg-light rounded-3 text-center border-dashed">
+                        <p class="small text-muted mb-2">No tags available for categorization.</p>
+                        <a asp-controller="Tag" asp-action="Index" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <i class="bi bi-plus me-1"></i>Create Tag
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="tag-selection-cloud tag-checkbox-group d-flex flex-wrap gap-2 pt-1">
+                        @foreach (var tag in Model.AvailableTags)
+                        {
+                            <div class="tag-chip">
+                                <input class="btn-check tag-checker"
+                                       type="checkbox"
+                                       name="SelectedTagIds"
+                                       id="tag-@tag.Value"
+                                       value="@tag.Value" />
+                                <label class="btn btn-outline-pathly-tag rounded-pill px-3 py-1 shadow-sm" for="tag-@tag.Value">
+                                    <i class="bi bi-hash"></i>@tag.Text
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <div id="TagError" class="alert alert-danger p-2 mt-3 d-none animate-fade-in border-0 shadow-sm" style="font-size: 0.75rem;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Careful! You've reached the 4-tag limit.
+                    </div>
+                }
+            </div>
+
+            @* Footer Actions *@
+            <div class="d-flex gap-2 pt-2">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm w-100">
+                    Create Task
+                </button>
+                <button type="button" class="btn btn-light rounded-pill px-4 py-2 text-muted fw-bold w-100" data-bs-dismiss="modal">
+                    Discard
+                </button>
+            </div>
+        </form>
+    </div>
+    </div>
