@@ -1,23 +1,50 @@
-﻿/* Premium Glass Effects */
+﻿/* ==========================================================================
+   1. LAYOUT & GRID SYSTEM
+   ========================================================================== */
+
+.container-fluid {
+    max-width: 100% !important;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.container {
+    max-width: 1400px;
+}
+
+/* ==========================================================================
+   2. BRANDING & PREMIUM GLASS EFFECTS
+   ========================================================================== */
+
 .glass-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
 }
 
 .text-pathly {
     background: linear-gradient(135deg, #0F4C5C 0%, #E36414 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    font-weight: 800;
 }
+
+.ls-1 {
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   3. BUTTONS & INTERACTION
+   ========================================================================== */
 
 .btn-pathly-primary {
     background: #0F4C5C;
     border: none;
     color: white;
     font-weight: 600;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
     .btn-pathly-primary:hover {
@@ -27,96 +54,269 @@
         box-shadow: 0 8px 20px rgba(15, 76, 92, 0.25);
     }
 
-/* FullCalendar Styling Overrides */
+.btn-cancel-modal {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+    .btn-cancel-modal:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+
+.btn-outline-danger:hover {
+    background-color: #fff5f5;
+    color: #dc3545;
+}
+
+/* ==========================================================================
+   4. FULLCALENDAR CORE OVERRIDES (PREMIUM)
+   ========================================================================== */
 .fc {
-    --fc-border-color: #eee;
+    --fc-border-color: rgba(0, 0, 0, 0.04);
     --fc-button-bg-color: #0F4C5C;
-    --fc-button-border-color: #0F4C5C;
+    --fc-button-active-bg-color: #E36414;
+    --fc-today-bg-color: rgba(15, 76, 92, 0.02);
 }
 
-    .fc .fc-toolbar-title {
-        font-weight: 800;
-        color: #2d3436;
-        font-size: 1.6rem;
+    .fc .fc-daygrid-day-number {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #a0aec0;
+        padding: 8px 12px !important;
     }
 
-    .fc .fc-button-primary:not(:disabled):active,
-    .fc .fc-button-primary:not(:disabled).fc-button-active {
-        background-color: #E36414;
-        border-color: #E36414;
+    .fc .fc-col-header-cell-cushion {
+        padding: 12px 0 !important;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: #718096;
     }
 
-.fc-event {
-    cursor: pointer;
+/* ==========================================================================
+   5. PREMIUM EVENT CARDS
+   ========================================================================== */
+
+.fc-v-event, .fc-h-event {
+    background: transparent !important;
     border: none !important;
-    padding: 2px 6px;
-    border-radius: 6px !important;
-    font-weight: 500;
-    transition: opacity 0.2s;
+    display: block !important;
 }
 
-    .fc-event:hover {
-        opacity: 0.85;
+.fc-event-main {
+    padding: 0 !important;
+}
+
+.premium-event-wrapper {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    display: flex;
+    overflow: hidden;
+    margin: 2px 0;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+    width: 100%;
+}
+
+    .premium-event-wrapper:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        z-index: 100;
     }
+
+.event-accent-bar {
+    width: 5px;
+    background-color: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.event-content-body {
+    padding: 6px 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.event-meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-time-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.event-delete-btn {
+    font-size: 0.85rem;
+    color: #cbd5e0;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+    .event-delete-btn:hover {
+        color: #e53e3e;
+        transform: scale(1.1);
+    }
+
+.event-main-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #2d3748;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-location-text {
+    font-size: 0.65rem;
+    color: #718096;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.fc-daygrid-event-harness {
+    margin: 4px 6px !important;
+}
+
+/* ==========================================================================
+   6. FORMS & INPUTS (CREATE/EDIT PARTIALS)
+   ========================================================================== */
+
+.form-control, .form-select {
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(15, 76, 92, 0.15) !important;
+        border-color: #0F4C5C !important;
+    }
+
+.custom-switch .form-check-input:checked,
+.edit-custom-switch .form-check-input:checked {
+    background-color: #E36414;
+    border-color: #E36414;
+}
+
+.modern-date-picker {
+    cursor: pointer;
+    position: relative;
+    color: #4a5568;
+}
+
+    .modern-date-picker::-webkit-calendar-picker-indicator {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230F4C5C' class='bi bi-calendar3' viewBox='0 0 16 16'%3E%3Cpath d='M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 2 .384 2 .857v10.286c0 .473-.448.857-2 .857H2c-.552 0-1-.384-1-.857V3.857z'/%3E%3C/svg%3E");
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+        .modern-date-picker::-webkit-calendar-picker-indicator:hover {
+            transform: scale(1.15);
+        }
+
+    .modern-date-picker::-webkit-inner-spin-button,
+    .modern-date-picker::-webkit-clear-button {
+        display: none;
+    }
+
+/* ==========================================================================
+   7. MESSAGES & ERROR HANDLING
+   ========================================================================== */
 
 .partial-error-container {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 10px;
     background: #fff5f5;
-    border-left: 4px solid #fc8181;
+    border-left: 5px solid #fc8181;
     display: none;
+    font-size: 0.9rem;
+    color: #c53030;
 }
+
+/* ==========================================================================
+   8. LEGEND & INDICATORS
+   ========================================================================== */
 
 .legend-item {
     font-size: 0.9rem;
     color: #4a5568;
     display: flex;
     align-items: center;
+    padding: 4px 8px;
 }
 
 .legend-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    margin-right: 12px;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .bg-teal {
-    background: #0F4C5C;
+    background: #0F4C5C !important;
 }
 
 .bg-orange {
-    background: #E36414;
+    background: #E36414 !important;
 }
 
 .bg-purple {
-    background: #5f27cd;
+    background: #5f27cd !important;
 }
 
-/* Create Partial styling*/
-.custom-switch .form-check-input:checked {
-    background-color: #E36414;
-    border-color: #E36414;
+/* ==========================================================================
+   9. MISC UTILITIES
+   ========================================================================== */
+
+#calendar {
+    padding: 10px;
+    background: transparent;
 }
 
-.form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 0.25rem rgba(15, 76, 92, 0.15) !important;
-    border-color: #0F4C5C !important;
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
-/* Softening the inputs for that "premium" feel */
-.form-control, .form-select {
-    transition: all 0.2s ease-in-out;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Edit Partial styling*/
-.edit-custom-switch .form-check-input:checked {
-    background-color: #E36414;
-    border-color: #E36414;
+.modal-content {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
 }
 
-.btn-outline-danger:hover {
-    background-color: #fff5f5;
-    color: #dc3545;
+.modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: rgba(15, 76, 92, 0.03);
 }
+

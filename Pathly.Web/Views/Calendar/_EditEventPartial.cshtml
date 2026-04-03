@@ -1,5 +1,6 @@
 ﻿@model Pathly.ViewModels.Event.EventFormViewModel
 
+
 <!-- Modal Header -->
 <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #0F4C5C 0%, #166a7e 100%);">
     <div class="py-2 px-1">
@@ -96,23 +97,13 @@
         </div>
 
         <!-- Footer Actions -->
-        <div class="modal-footer border-0 px-0 pb-0 mt-4 d-flex justify-content-between">
-            <!-- Delete Action (Triggers SweetAlert via JS) -->
-            <button type="button" class="btn btn-outline-danger border-0 fw-bold px-3" onclick="confirmDelete(@Model.Id)">
-                <i class="bi bi-trash3 me-1"></i> Remove
-            </button>
-
+        <div class="modal-footer border-0 px-0 pb-0 mt-4 d-flex justify-content-end">
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-light px-4 fw-semibold text-muted" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-pathly-primary px-4 py-2 shadow">
+                <button type="button" class="btn btn-cancel-modal px-4 py-2 rounded-3" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-pathly-primary px-5 py-2 shadow-sm rounded-3">
                     Update Event
                 </button>
             </div>
         </div>
     </form>
 </div>
-
-@section Styles
-{
-    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
-}

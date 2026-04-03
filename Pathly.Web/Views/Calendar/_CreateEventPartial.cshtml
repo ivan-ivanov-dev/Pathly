@@ -1,10 +1,5 @@
 ﻿@model Pathly.ViewModels.Event.EventFormViewModel
 
-@section Styles
-{
-    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
-}
-
 <!-- Modal Header -->
 <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #0F4C5C 0%, #166a7e 100%);">
     <div class="py-2 px-1">
@@ -44,11 +39,19 @@
         <div class="row g-3 mb-4">
             <div class="col-md-6">
                 <label class="form-label small fw-bold text-muted">Starts</label>
-                <input asp-for="Start" type="datetime-local" class="form-control border-0 shadow-sm rounded-3" />
+                <input asp-for="Start"
+                       type="datetime-local"
+                       step="60"
+                       value="@Model.Start.ToString("yyyy-MM-ddTHH:mm")"
+                       class="form-control border-0 shadow-sm rounded-3 modern-date-picker" />
             </div>
             <div class="col-md-6">
                 <label class="form-label small fw-bold text-muted">Ends</label>
-                <input asp-for="End" type="datetime-local" class="form-control border-0 shadow-sm rounded-3" />
+                <input asp-for="End"
+                       type="datetime-local"
+                       step="60"
+                       value="@Model.End.ToString("yyyy-MM-ddTHH:mm")"
+                       class="form-control border-0 shadow-sm rounded-3 modern-date-picker" />
             </div>
             <div class="col-12 mt-2">
                 <div class="form-check form-switch custom-switch">
