@@ -8,6 +8,7 @@
 
     bindEvents: function () {
         $(document).on('click', '.delete-task-btn', (e) => this.handleDelete(e));
+        $(document).on('click', '.btn-status-pill', (e) => this.handleStatusToggle(e));
         document.addEventListener("click", (e) => this.handleModalClick(e));
 
         const searchInput = document.getElementById('kanbanSearch');
@@ -25,6 +26,44 @@
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
     },
 
+    handleStatusToggle: function (e) {
+        const btn = e.currentTarget;
+        const cardWrapper = btn.closest('.task-card-wrapper');
+        const taskId = cardWrapper.getAttribute('data-id');
+
+        fetch(`/Tasks/MarkTaskStatus/${taskId}`, {
+            method: "POST",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const targetStatus = data.isCompleted ? "3" : "1";
+                    const targetColumn = document.querySelector(`.kanban-column-body[data-status="${targetStatus}"]`);
+
+                    if (targetColumn && cardWrapper) {
+                        cardWrapper.style.transition = 'all 0.3s ease';
+                        cardWrapper.style.opacity = '0';
+                        cardWrapper.style.transform = 'scale(0.8)';
+
+                        setTimeout(() => {
+                            targetColumn.appendChild(cardWrapper);
+
+                            const isDone = data.isCompleted;
+                            btn.classList.toggle('btn-success', isDone);
+                            btn.classList.toggle('btn-outline-secondary', !isDone);
+                            btn.querySelector('i').className = isDone ? 'bi bi-check-lg' : 'bi bi-circle';
+                            cardWrapper.querySelector('.task-card').classList.toggle('task-completed', isDone);
+
+                            cardWrapper.style.opacity = '1';
+                            cardWrapper.style.transform = 'scale(1)';
+
+                            KanbanBoard.filterTasks();
+                        }, 300);
+                    }
+                }
+            });
+    },
     handleDelete: function (e) {
         e.preventDefault();
         const btn = $(e.currentTarget);
