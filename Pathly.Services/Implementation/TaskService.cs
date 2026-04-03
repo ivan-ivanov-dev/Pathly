@@ -168,7 +168,12 @@ namespace Pathly.Services.Implementation
 
             task.IsCompleted = !task.IsCompleted;
 
+            task.Status = task.IsCompleted
+                ? DataModels.TaskStatus.Done
+                : DataModels.TaskStatus.Todo;
+
             await _context.SaveChangesAsync();
+            return task.IsCompleted;
         }
 
         public async Task UpdatePriorityAsync(int id, TaskPriority priority, string userId)
