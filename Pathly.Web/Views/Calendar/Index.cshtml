@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Pathly | Calendar";
+}
+
+@section Styles 
+{
+    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
+}
+
+<div class="container-fluid py-4 page-content animate-fade-in">
+    <div class="row g-4">
+        <!-- Sidebar Column -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="glass-card p-4 rounded-4 shadow-sm border-0 sticky-top" style="top: 20px;">
+                <h4 class="fw-bold mb-1 text-pathly">Pathly Calendar</h4>
+                <p class="text-muted small mb-4">Plan your steps, visualize your goals.</p>
+
+                <button class="btn btn-pathly-primary w-100 py-3 rounded-3 mb-4 shadow-sm" onclick="openCreateModal()">
+                    <i class="bi bi-plus-lg me-2"></i>New Event
+                </button>
+
+                <div class="calendar-info mt-auto">
+                    <h6 class="text-uppercase fw-bold text-muted small mb-3 ls-1">Quick Legend</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="legend-item"><span class="legend-dot bg-teal"></span> Goals</div>
+                        <div class="legend-item"><span class="legend-dot bg-orange"></span> Tasks</div>
+                        <div class="legend-item"><span class="legend-dot bg-purple"></span> General</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Column -->
+        <div class="col-lg-9">
+            <div class="glass-card p-4 rounded-4 shadow-lg border-0 min-vh-80">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade shadow-2xl" id="eventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/calendar.js" asp-append-version="true"></script>
+}
