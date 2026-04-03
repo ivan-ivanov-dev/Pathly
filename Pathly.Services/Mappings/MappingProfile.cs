@@ -174,26 +174,25 @@ namespace Pathly.Services.Mappings
 
             // --- EVENTS ---
             CreateMap<Event, EventCalendarViewModel>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Title, opt => opt.Ignore())
-                .ForMember(dest => dest.Description, opt => opt.Ignore())
                 .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
                 .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
                 .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.ColorHex))
                 .ForMember(dest => dest.AllDay, opt => opt.MapFrom(src => src.IsAllDay));
 
             CreateMap<Event, EventFormViewModel>()
-                .ForMember(dest => dest.AvailableTasks, opt => opt.Ignore())
-                .ForMember(dest => dest.AvailableGoals, opt => opt.Ignore())
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
-                .ForMember(dest => dest.Task, opt => opt.Ignore())
-                .ForMember(dest => dest.TaskId, opt => opt.Ignore())
-                .ForMember(dest => dest.Goal, opt => opt.Ignore())
-                .ForMember(dest => dest.GoalId, opt => opt.Ignore());
+            .ForMember(dest => dest.AvailableTasks, opt => opt.Ignore())
+            .ForMember(dest => dest.AvailableGoals, opt => opt.Ignore())
+            .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
+            .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
+            .ForMember(dest => dest.ColorHex, opt => opt.MapFrom(src => src.ColorHex))
+            .ForMember(dest => dest.IsAllDay, opt => opt.MapFrom(src => src.IsAllDay))
+            .ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.UserId, opt => opt.Ignore()) 
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+            .ForMember(dest => dest.Task, opt => opt.Ignore())
+            .ForMember(dest => dest.Goal, opt => opt.Ignore());
         }
     }
 }
