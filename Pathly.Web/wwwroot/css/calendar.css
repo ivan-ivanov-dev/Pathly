@@ -1,0 +1,95 @@
+﻿/* Premium Glass Effects */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.text-pathly {
+    background: linear-gradient(135deg, #0F4C5C 0%, #E36414 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.btn-pathly-primary {
+    background: #0F4C5C;
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-pathly-primary:hover {
+        background: #166a7e;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(15, 76, 92, 0.25);
+    }
+
+/* FullCalendar Styling Overrides */
+.fc {
+    --fc-border-color: #eee;
+    --fc-button-bg-color: #0F4C5C;
+    --fc-button-border-color: #0F4C5C;
+}
+
+    .fc .fc-toolbar-title {
+        font-weight: 800;
+        color: #2d3436;
+        font-size: 1.6rem;
+    }
+
+    .fc .fc-button-primary:not(:disabled):active,
+    .fc .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #E36414;
+        border-color: #E36414;
+    }
+
+.fc-event {
+    cursor: pointer;
+    border: none !important;
+    padding: 2px 6px;
+    border-radius: 6px !important;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+    .fc-event:hover {
+        opacity: 0.85;
+    }
+
+.partial-error-container {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background: #fff5f5;
+    border-left: 4px solid #fc8181;
+    display: none;
+}
+
+.legend-item {
+    font-size: 0.9rem;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.bg-teal {
+    background: #0F4C5C;
+}
+
+.bg-orange {
+    background: #E36414;
+}
+
+.bg-purple {
+    background: #5f27cd;
+}
