@@ -200,12 +200,23 @@ namespace Pathly.Web.Controllers
         /*Mark Task Status*/
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkTaskStatus(int id)
         {
             var userId = _userManager.GetUserId(User);
-
-            await _taskService.MarkTaskStatusAsync(id, userId);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                bool newIsCompleted = await _taskService.MarkTaskStatusAsync(id, userId);
+                return Json(new
+                {
+                    success = true,
+                    isCompleted = newIsCompleted
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         /*Update Task Position*/
