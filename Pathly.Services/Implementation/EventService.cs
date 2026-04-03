@@ -80,15 +80,17 @@ namespace Pathly.Services
 
         public async Task<EventFormViewModel?> GetForEditAsync(int id, string userId)
         {
-            var events = await _context.Events
+            var @event = await _context.Events
                 .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
 
-            if (events == null)
+            if (@event == null)
             {
                 throw new UnauthorizedAccessException(ErrorMessages.EventNotFoundOrAccessDenied);
             }
 
-            var model = _mapper.Map<EventFormViewModel>(events);
+            var model = _mapper.Map<EventFormViewModel>(@event);
+
+            model.Id = @event.Id;
 
             var listData = await PrepareFormModelAsync(userId);
             model.AvailableTasks = listData.AvailableTasks;

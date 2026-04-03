@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Event;
 using System.Security.Claims;
@@ -10,10 +12,12 @@ namespace Pathly.Controllers
     public class CalendarController : Controller
     {
         private readonly IEventService _eventService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CalendarController(IEventService eventService)
+        public CalendarController(IEventService eventService, UserManager<ApplicationUser> userManager)
         {
             _eventService = eventService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -24,9 +28,20 @@ namespace Pathly.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEvents()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var events = await _eventService.GetAllForCalendarAsync(userId!);
-            return Json(events);
+            var userId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(userId))
+                return Json(new List<EventCalendarViewModel>());
+
+            try
+            {
+                var events = await _eventService.GetAllForCalendarAsync(userId);
+                return Json(events);
+            }
+            catch (InvalidOperationException)
+            {
+                return Json(new List<EventCalendarViewModel>());
+            }
         }
 
         [HttpGet]
@@ -61,12 +76,23 @@ namespace Pathly.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = await _eventService.GetForEditAsync(id, userId!);
+            var userId = _userManager.GetUserId(User);
 
-            if (model == null) return NotFound();
+            try
+            {
+                var model = await _eventService.GetForEditAsync(id, userId);
 
-            return PartialView("_EditEventPartial", model);
+                if (model == null)
+                {
+                    return NotFound("Event not found or access denied.");
+                }
+
+                return PartialView("_EditEventPartial", model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
         }
 
         [HttpPost]

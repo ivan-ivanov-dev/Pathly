@@ -27,7 +27,7 @@ namespace Pathly.ViewModels.Event
 
         public bool IsAllDay { get; set; }
 
-        public string? Location { get; set; } 
+        public string? Location { get; set; }
 
         public string ColorHex { get; set; } = "#0F4C5C";
 
