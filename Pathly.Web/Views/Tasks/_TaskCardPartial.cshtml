@@ -12,7 +12,10 @@
     };
 }
 
-<div class="task-card-wrapper animate-fade-in" data-id="@Model.Id">
+<div class="task-card-wrapper animate-fade-in"
+     data-id="@Model.Id"
+     data-title="@Model.Title.ToLower()"
+     data-priority="@((int)Model.Priority)">
     <div class="card shadow-sm task-card @(Model.IsCompleted ? "task-completed" : "")"
          data-priority-theme="@priorityTheme">
 

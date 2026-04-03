@@ -102,21 +102,22 @@
     </div>
 
     @* --- 3. KANBAN ARCHITECTURE --- *@
-    <div class="row g-4">
+    <div class="row g-4 d-flex align-items-stretch">
         @foreach (var status in new[] {
                 new { Title = "Pending Execution", ID = 1, Icon = "bi-list-ul", Color = "#6c757d", Enum = Pathly.DataModels.TaskStatus.Todo },
                 new { Title = "Active Development", ID = 2, Icon = "bi-lightning-charge", Color = "#0d6efd", Enum = Pathly.DataModels.TaskStatus.InProgress },
                 new { Title = "Finalized", ID = 3, Icon = "bi-check2-all", Color = "#198754", Enum = Pathly.DataModels.TaskStatus.Done }
                 })
         {
-            <div class="col-xl-4 col-md-12">
-                <div class="kanban-column shadow-sm border-dashed" data-status-group="@status.ID">
+            <div class="col-xl-4 col-md-12 d-flex">
+                <div class="kanban-column shadow-sm border-dashed d-flex flex-column w-100" data-status-group="@status.ID">
+
                     @* Column Header *@
                     <div class="d-flex justify-content-between align-items-center mb-4 px-1">
                         <div class="d-flex align-items-center">
                             <div class="rounded-3 p-2 d-flex align-items-center justify-content-center me-2"
-                                 style="background: rgba(0,0,0,0.05); width: 32px; height: 32px;">
-                                <i class="bi @status.Icon" style="color: @status.Color;"></i>
+                                 style="background-color:rgba(0,0,0,0.05);width:32px;height:32px;">
+                                <i class="bi @status.Icon" style="color:@status.Color;"></i>
                             </div>
                             <h6 class="kanban-column-title mb-0">@status.Title</h6>
                         </div>
@@ -125,25 +126,14 @@
                         </span>
                     </div>
 
-                    @* Draggable Task Container *@
-                    <div class="kanban-column-body py-1"
+                    @* Column Body *@
+                    <div class="kanban-column-body py-1 d-flex flex-column flex-grow-1"
                          data-status="@((int)status.Enum)"
-                         style="min-height: 600px;">
+                         style="min-height:80vh;transition:background-color 0.2s ease;">
 
-                        @if (!Model.Tasks.Any(t => t.Status == status.Enum))
+                        @foreach (var task in Model.Tasks.Where(t => t.Status == status.Enum))
                         {
-                            <div class="kanban-empty-state">
-                                <i class="bi bi-inbox-fill opacity-25"></i>
-                                <p class="small fw-bold mb-0">No active items</p>
-                                <span class="extra-small opacity-50">Drag tasks here or create new</span>
-                            </div>
-                        }
-                        else
-                        {
-                            @foreach (var task in Model.Tasks.Where(t => t.Status == status.Enum))
-                            {
-                                <partial name="_TaskCardPartial" model="task" />
-                            }
+                            <partial name="_TaskCardPartial" model="task" />
                         }
                     </div>
                 </div>
@@ -153,11 +143,13 @@
 </div>
 
 @* --- 4. MODAL FRAMEWORK --- *@
+@* --- 4. MODAL FRAMEWORK (Cleaned) --- *@
 <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content overflow-hidden">
-            @* The modal body is dynamically injected via tasks.js *@
-            <div id="taskModalBody"></div>
+        <div class="modal-content overflow-hidden border-0 shadow-lg bg-transparent">
+            <div id="taskModalBody">
+                @* Partial content (with its own header) injects here *@
+            </div>
         </div>
     </div>
 </div>
