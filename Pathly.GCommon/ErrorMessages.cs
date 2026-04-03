@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +47,14 @@ namespace Pathly.GCommon
 
         // General validation
         public const string TitleIsRequired = "Title is required.";
+
+        // Event validation
+        public const string EndDateMustBeAfterStartDate = "End date must be after start date.";
+        public const string StartDateCannotBeInThePast = "Start date cannot be in the past.";
+        public const string SelectedTaskDoesNotExist = "The selected task does not exist.";
+        public const string SelectedGoalDoesNotExist = "The selected goal does not exist.";
+        public const string EventNotFoundOrAccessDenied = "Event not found or access denied.";
+        public const string NoEventsFound = "No events found.";
 
         // This is a general message template for required fields, max length, and min length validations.It is used in Event Entities and ViewModels only.
         public const string RequiredField = "The {0} field is required.";
