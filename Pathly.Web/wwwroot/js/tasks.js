@@ -3,7 +3,7 @@
         this.bindEvents();
         this.initFooterTips();
         this.initModalFocus();
-        KanabanBoard.init();
+        KanbanBoard.init();
     },
 
     bindEvents: function () {
@@ -17,7 +17,7 @@
         if (priorityFilter) priorityFilter.addEventListener('change', () => KanbanBoard.filterTasks());
 
         document.addEventListener("change", (e) => {
-            if (e.target.classList.contains('priority-select-direct')) {
+            if (e.target.classList.contains('priority-select-direct') || e.target.classList.contains('priority-select-slim')) {
                 this.handlePriorityUpdate(e);
             }
             this.handleTagValidation(e);
@@ -262,17 +262,40 @@ const KanbanBoard = {
         const newStatus = evt.to.getAttribute('data-status');
         const newPosition = evt.newIndex;
 
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
         fetch('/Tasks/UpdatePosition', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': token 
+            },
             body: JSON.stringify({
-                taskId: parseInt(taskId),
+                id: parseInt(taskId),
                 newStatus: parseInt(newStatus),
-                newPosition: newPosition
+                newPosition: newPosition,
+                __RequestVerificationToken: token
             })
-        }).catch(err => {
-            Swal.fire('Error', 'Sync failed. Please refresh.', 'error');
-        });
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Sync failed.");
+
+                if (newStatus == "2") {
+                    evt.item.querySelector('.task-card').classList.add('task-completed');
+                    const checkBtn = evt.item.querySelector('.btn-status-pill');
+                    if (checkBtn) {
+                        checkBtn.classList.replace('btn-outline-secondary', 'btn-success');
+                        checkBtn.querySelector('i').classList.replace('bi-circle', 'bi-check-lg');
+                    }
+                } else {
+                    evt.item.querySelector('.task-card').classList.remove('task-completed');
+                }
+            })
+            .catch(err => {
+                console.error("Board Sync Error:", err);
+                Swal.fire('Error', 'Failed to save position. Please refresh.', 'error');
+            });
     }
 };
 
