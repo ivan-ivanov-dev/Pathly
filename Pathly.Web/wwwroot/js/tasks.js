@@ -3,11 +3,19 @@
         this.bindEvents();
         this.initFooterTips();
         this.initModalFocus();
+        KanabanBoard.init();
     },
 
     bindEvents: function () {
         $(document).on('click', '.delete-task-btn', (e) => this.handleDelete(e));
         document.addEventListener("click", (e) => this.handleModalClick(e));
+
+        const searchInput = document.getElementById('kanbanSearch');
+        const priorityFilter = document.getElementById('priorityFilter');
+
+        if (searchInput) searchInput.addEventListener('input', () => KanbanBoard.filterTasks());
+        if (priorityFilter) priorityFilter.addEventListener('change', () => KanbanBoard.filterTasks());
+
         document.addEventListener("change", (e) => {
             if (e.target.classList.contains('priority-select-direct')) {
                 this.handlePriorityUpdate(e);
@@ -190,6 +198,80 @@
                 tipText.innerText = newTip;
                 tipText.style.opacity = 1;
             }, 200);
+        });
+    }
+};
+
+const KanbanBoard = {
+    init: function () {
+        const columns = document.querySelectorAll('.kanban-column-body');
+        columns.forEach(column => {
+            new Sortable(column, {
+                group: 'kanban',
+                animation: 250,
+                ghostClass: 'bg-light',
+                onEnd: (evt) => this.handleTaskMove(evt)
+            });
+        });
+        this.filterTasks(); // Initial run
+    },
+
+    filterTasks: function () {
+        const query = document.getElementById('kanbanSearch')?.value.toLowerCase() || "";
+        const priority = document.getElementById('priorityFilter')?.value || "";
+        const cards = document.querySelectorAll('.task-card-wrapper');
+        let matches = 0;
+
+        cards.forEach(card => {
+            const title = card.getAttribute('data-title');
+            const cardPriority = card.getAttribute('data-priority');
+
+            const matchesSearch = title.includes(query);
+            const matchesPriority = priority === "" || cardPriority === priority;
+
+            if (matchesSearch && matchesPriority) {
+                card.classList.remove('filtered-out');
+                card.classList.add('filtered-in');
+                matches++;
+            } else {
+                card.classList.remove('filtered-in');
+                card.classList.add('filtered-out');
+            }
+        });
+
+        // Re-sort the DOM so matches are on top
+        document.querySelectorAll('.kanban-column-body').forEach(col => {
+            const children = Array.from(col.children);
+            children.sort((a, b) => {
+                const aIn = a.classList.contains('filtered-in') ? 0 : 1;
+                const bIn = b.classList.contains('filtered-in') ? 0 : 1;
+                return aIn - bIn;
+            });
+            children.forEach(child => col.appendChild(child));
+
+            // Check for empty column visual
+            const hasVisible = col.querySelectorAll('.task-card-wrapper.filtered-in').length > 0;
+            col.querySelector('.kanban-empty-state')?.classList.toggle('d-none', hasVisible);
+        });
+
+        document.getElementById('matchCount').innerText = `Found ${matches} relevant tasks`;
+    },
+
+    handleTaskMove: function (evt) {
+        const taskId = evt.item.getAttribute('data-id');
+        const newStatus = evt.to.getAttribute('data-status');
+        const newPosition = evt.newIndex;
+
+        fetch('/Tasks/UpdatePosition', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({
+                taskId: parseInt(taskId),
+                newStatus: parseInt(newStatus),
+                newPosition: newPosition
+            })
+        }).catch(err => {
+            Swal.fire('Error', 'Sync failed. Please refresh.', 'error');
         });
     }
 };
