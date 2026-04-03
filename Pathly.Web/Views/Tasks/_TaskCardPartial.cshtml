@@ -76,7 +76,7 @@
                         <form asp-action="MarkTaskStatus" method="post" class="m-0 d-inline-block">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@Model.Id" />
-                            <button type="submit" class="btn btn-status-pill @(Model.IsCompleted ? "btn-success" : "btn-outline-secondary")">
+                            <button type="button" class="btn-status-pill @(Model.IsCompleted ? "btn-success" : "btn-outline-secondary")" data-id="@Model.Id">
                                 <i class="bi @(Model.IsCompleted ? "bi-check-lg" : "bi-circle")"></i>
                             </button>
                         </form>

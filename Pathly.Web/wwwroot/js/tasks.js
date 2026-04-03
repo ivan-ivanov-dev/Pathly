@@ -27,6 +27,9 @@
     },
 
     handleStatusToggle: function (e) {
+        e.preventDefault(); //Stops the browser from leaving the page
+        e.stopPropagation();
+
         const btn = e.currentTarget;
         const cardWrapper = btn.closest('.task-card-wrapper');
         const taskId = cardWrapper.getAttribute('data-id');
