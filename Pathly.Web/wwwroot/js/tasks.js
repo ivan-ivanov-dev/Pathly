@@ -33,12 +33,19 @@
         const btn = e.currentTarget;
         const cardWrapper = btn.closest('.task-card-wrapper');
         const taskId = cardWrapper.getAttribute('data-id');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
         fetch(`/Tasks/MarkTaskStatus/${taskId}`, {
             method: "POST",
-            headers: { "X-Requested-With": "XMLHttpRequest" }
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "RequestVerificationToken": token
+            }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     const targetStatus = data.isCompleted ? "3" : "1";
