@@ -73,13 +73,12 @@
 
                     @* Status Checkmark *@
                     <div class="col-4 text-end">
-                        <form asp-action="MarkTaskStatus" method="post" class="m-0 d-inline-block">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@Model.Id" />
-                            <button type="button" class="btn-status-pill @(Model.IsCompleted ? "btn-success" : "btn-outline-secondary")" data-id="@Model.Id">
-                                <i class="bi @(Model.IsCompleted ? "bi-check-lg" : "bi-circle")"></i>
-                            </button>
-                        </form>
+                        <button type="button"
+                                class="btn-status-pill btn rounded-circle p-0 d-flex align-items-center justify-content-center @(Model.IsCompleted ? "btn-success" : "btn-outline-secondary")"
+                                data-id="@Model.Id"
+                                style="width: 28px; height: 28px; transition: all 0.2s ease;">
+                            <i class="bi @(Model.IsCompleted ? "bi-check-lg" : "bi-circle")"></i>
+                        </button>
                     </div>
                 </div>
             </div>

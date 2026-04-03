@@ -27,7 +27,7 @@
     },
 
     handleStatusToggle: function (e) {
-        e.preventDefault(); //Stops the browser from leaving the page
+        e.preventDefault();
         e.stopPropagation();
 
         const btn = e.currentTarget;
@@ -42,19 +42,15 @@
                 "RequestVerificationToken": token
             }
         })
-            .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const targetStatus = data.isCompleted ? "3" : "1";
+                    const targetStatus = data.isCompleted ? "2" : "0";
                     const targetColumn = document.querySelector(`.kanban-column-body[data-status="${targetStatus}"]`);
 
                     if (targetColumn && cardWrapper) {
-                        cardWrapper.style.transition = 'all 0.3s ease';
                         cardWrapper.style.opacity = '0';
-                        cardWrapper.style.transform = 'scale(0.8)';
+                        cardWrapper.style.transform = 'scale(0.95)';
 
                         setTimeout(() => {
                             targetColumn.appendChild(cardWrapper);
@@ -63,16 +59,19 @@
                             btn.classList.toggle('btn-success', isDone);
                             btn.classList.toggle('btn-outline-secondary', !isDone);
                             btn.querySelector('i').className = isDone ? 'bi bi-check-lg' : 'bi bi-circle';
-                            cardWrapper.querySelector('.task-card').classList.toggle('task-completed', isDone);
+
+                            const taskCard = cardWrapper.querySelector('.task-card');
+                            if (taskCard) taskCard.classList.toggle('task-completed', isDone);
 
                             cardWrapper.style.opacity = '1';
                             cardWrapper.style.transform = 'scale(1)';
 
-                            KanbanBoard.filterTasks();
-                        }, 300);
+                            if (this.filterTasks) this.filterTasks();
+                        }, 200);
                     }
                 }
-            });
+            })
+            .catch(err => console.error("Toggle Error:", err));
     },
     handleDelete: function (e) {
         e.preventDefault();
@@ -310,7 +309,6 @@ const KanbanBoard = {
         const taskId = evt.item.getAttribute('data-id');
         const newStatus = evt.to.getAttribute('data-status');
         const newPosition = evt.newIndex;
-
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
         fetch('/Tasks/UpdatePosition', {
@@ -318,28 +316,45 @@ const KanbanBoard = {
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
-                'RequestVerificationToken': token 
+                'RequestVerificationToken': token
             },
             body: JSON.stringify({
                 id: parseInt(taskId),
                 newStatus: parseInt(newStatus),
-                newPosition: newPosition,
-                __RequestVerificationToken: token
+                newPosition: newPosition
             })
         })
             .then(response => {
                 if (!response.ok) throw new Error("Sync failed.");
 
-                if (newStatus == "2") {
-                    evt.item.querySelector('.task-card').classList.add('task-completed');
-                    const checkBtn = evt.item.querySelector('.btn-status-pill');
+                const taskCard = evt.item.querySelector('.task-card');
+                const checkBtn = evt.item.querySelector('.btn-status-pill');
+                const icon = checkBtn?.querySelector('i');
+
+                if (newStatus === "2") {
+                    taskCard?.classList.add('task-completed');
                     if (checkBtn) {
-                        checkBtn.classList.replace('btn-outline-secondary', 'btn-success');
-                        checkBtn.querySelector('i').classList.replace('bi-circle', 'bi-check-lg');
+                        checkBtn.classList.remove('btn-outline-secondary');
+                        checkBtn.classList.add('btn-success');
                     }
-                } else {
-                    evt.item.querySelector('.task-card').classList.remove('task-completed');
+                    if (icon) {
+                        icon.classList.remove('bi-circle');
+                        icon.classList.add('bi-check-lg');
+                    }
                 }
+                else {
+                    taskCard?.classList.remove('task-completed');
+                    if (checkBtn) {
+                        checkBtn.classList.remove('btn-success');
+                        checkBtn.classList.add('btn-outline-secondary');
+                    }
+                    if (icon) {
+                        icon.classList.remove('bi-check-lg');
+                        icon.classList.add('bi-circle');
+                    }
+                }
+
+                this.filterTasks();
             })
             .catch(err => {
                 console.error("Board Sync Error:", err);
