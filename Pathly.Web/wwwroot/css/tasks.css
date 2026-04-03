@@ -262,6 +262,39 @@ body {
     border-radius: 0.5rem;
 }
 
+.kanban-column-header {
+    background: var(--pathly-primary);
+    margin: -1.25rem -1.25rem 1.5rem -1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem 1rem 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .kanban-column-header .kanban-column-title {
+        color: white !important;
+        margin: 0;
+    }
+
+    .kanban-column-header .column-count-badge {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+.kanban-column[data-status-group="1"] {
+    border-top: 5px solid #6c757d !important;
+}
+
+.kanban-column[data-status-group="2"] {
+    border-top: 5px solid var(--pathly-accent) !important;
+}
+
+.kanban-column[data-status-group="3"] {
+    border-top: 5px solid #198754 !important;
+}
+
 .modal-content {
     border: none !important;
     box-shadow: none !important;
