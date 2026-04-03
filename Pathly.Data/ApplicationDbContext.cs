@@ -20,6 +20,7 @@ namespace Pathly.Data
         public DbSet<Goal> Goals => Set<Goal>();
         public DbSet<ActionItem> Actions => Set<ActionItem>();
         public DbSet<Roadmap> Roadmaps => Set<Roadmap>();
+        public DbSet<Event> Events => Set<Event>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -100,6 +101,27 @@ namespace Pathly.Data
                 .WithMany()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Event -> User
+            builder.Entity<Event>()
+                .HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Event -> Task
+            builder.Entity<Event>()
+                .HasOne(e => e.Task)
+                .WithMany()
+                .HasForeignKey(e => e.TaskId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Event -> Goal
+            builder.Entity<Event>()
+                .HasOne(e => e.Goal)
+                .WithMany()
+                .HasForeignKey(e => e.GoalId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             //---------------------------//
             //SEEDING CONFIGURATIONS
