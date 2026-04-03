@@ -1,4 +1,57 @@
-﻿const TaskManager = {
+﻿// Connect Front-End to the Hub
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/kanbanHub")
+    .build();
+
+connection.on("ReceiveTaskMove", (taskId, newStatus, newPosition) => {
+    const taskElement = document.querySelector(`.task-card-wrapper[data-id='${taskId}']`);
+    const targetColumn = document.querySelector(`.kanban-column-body[data-status='${newStatus}']`);
+
+    if (taskElement && targetColumn) {
+        taskElement.style.opacity = '0.5';
+
+        const siblings = Array.from(targetColumn.querySelectorAll('.task-card-wrapper'));
+        if (newPosition >= siblings.length) {
+            targetColumn.appendChild(taskElement);
+        } else {
+            targetColumn.insertBefore(taskElement, siblings[newPosition]);
+        }
+
+        const taskCard = taskElement.querySelector('.task-card');
+        const checkBtn = taskElement.querySelector('.btn-status-pill');
+        const icon = checkBtn?.querySelector('i');
+
+        const statusStr = String(newStatus);
+
+        if (statusStr === "2") {
+            taskCard?.classList.add('task-completed');
+            if (checkBtn) {
+                checkBtn.classList.replace('btn-outline-secondary', 'btn-success');
+            }
+            if (icon) {
+                icon.classList.replace('bi-circle', 'bi-check-lg');
+            }
+        } else { 
+            taskCard?.classList.remove('task-completed');
+            if (checkBtn) {
+                checkBtn.classList.replace('btn-success', 'btn-outline-secondary');
+            }
+            if (icon) {
+                icon.classList.replace('bi-check-lg', 'bi-circle');
+            }
+        }
+
+        setTimeout(() => {
+            taskElement.style.opacity = '1';
+            KanbanBoard.filterTasks();
+        }, 50);
+    }
+});
+
+connection.start().catch(err => console.error(err.toString()));
+
+
+const TaskManager = {
     init: function () {
         this.bindEvents();
         this.initFooterTips();
@@ -336,6 +389,12 @@ const KanbanBoard = {
         })
             .then(response => {
                 if (!response.ok) throw new Error("Sync failed.");
+
+                // SignalR Integration
+                if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke("NotifyTaskMoved", taskId, parseInt(newStatus), newPosition)
+                        .catch(err => console.error("SignalR Invoke Error:", err));
+                }
 
                 const taskCard = evt.item.querySelector('.task-card');
                 const checkBtn = evt.item.querySelector('.btn-status-pill');
