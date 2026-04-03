@@ -1,0 +1,109 @@
+﻿@model Pathly.ViewModels.Event.EventFormViewModel
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
+}
+
+<!-- Modal Header -->
+<div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #0F4C5C 0%, #166a7e 100%);">
+    <div class="py-2 px-1">
+        <h5 class="modal-title text-white fw-bold d-flex align-items-center">
+            <i class="bi bi-calendar-plus-fill me-2"></i>
+            Schedule New Step
+        </h5>
+        <p class="text-white-50 small mb-0">Define your milestone on the path to success.</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body p-4 bg-light-subtle">
+    <!-- Local Validation Error Container (Targeted by JS) -->
+    <div class="partial-error-container mb-3 shadow-sm border-0 alert alert-danger" id="errorContainer" style="display:none;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span id="errorText" class="small fw-bold"></span>
+        </div>
+    </div>
+
+    <form asp-action="Create" asp-controller="Calendar" method="post" id="createEventForm" onsubmit="handleFormSubmit(this, event)">
+        @Html.AntiForgeryToken()
+
+        <!-- Main Title & Description -->
+        <div class="form-floating mb-3">
+            <input asp-for="Title" class="form-control border-0 shadow-sm rounded-3" placeholder="Event Title" />
+            <label asp-for="Title">What are we doing?</label>
+        </div>
+
+        <div class="form-floating mb-4">
+            <textarea asp-for="Description" class="form-control border-0 shadow-sm rounded-3" style="height: 100px" placeholder="Details"></textarea>
+            <label asp-for="Description">Notes or details...</label>
+        </div>
+
+        <!-- Date & Time Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Starts</label>
+                <input asp-for="Start" type="datetime-local" class="form-control border-0 shadow-sm rounded-3" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Ends</label>
+                <input asp-for="End" type="datetime-local" class="form-control border-0 shadow-sm rounded-3" />
+            </div>
+            <div class="col-12 mt-2">
+                <div class="form-check form-switch custom-switch">
+                    <input asp-for="IsAllDay" class="form-check-input" type="checkbox" role="switch">
+                    <label class="form-check-label small fw-semibold text-secondary" asp-for="IsAllDay">This is an all-day event</label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="opacity-10 my-4">
+
+        <!-- Links Section -->
+        <div class="card border-0 bg-white shadow-sm rounded-4 mb-4">
+            <div class="card-body p-3">
+                <h6 class="fw-bold text-pathly mb-3" style="color: #0F4C5C;">
+                    <i class="bi bi-link-45deg"></i> Connect to your Journey
+                </h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="GoalId" class="form-label small text-muted">Related Goal</label>
+                        <select asp-for="GoalId" asp-items="Model.AvailableGoals" class="form-select border-light bg-light-subtle rounded-3">
+                            <option value="">-- No Goal --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="TaskId" class="form-label small text-muted">Related Task</label>
+                        <select asp-for="TaskId" asp-items="Model.AvailableTasks" class="form-select border-light bg-light-subtle rounded-3">
+                            <option value="">-- No Task --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location & Color -->
+        <div class="row g-3 align-items-end">
+            <div class="col-8">
+                <div class="input-group input-group-sm border-0 shadow-sm rounded-3 overflow-hidden">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-geo-alt text-danger"></i></span>
+                    <input asp-for="Location" class="form-control border-0 py-2" placeholder="Add location..." />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex align-items-center justify-content-end">
+                    <label asp-for="ColorHex" class="small fw-bold text-muted me-2">Label:</label>
+                    <input asp-for="ColorHex" type="color" class="form-control form-control-color border-0 shadow-sm rounded-circle p-0" style="width: 38px; height: 38px;" />
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer border-0 px-0 pb-0 mt-4">
+            <button type="button" class="btn btn-light px-4 fw-semibold text-muted" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-pathly-primary px-5 py-2 shadow">
+                Create Event
+            </button>
+        </div>
+    </form>
+</div>

@@ -93,3 +93,30 @@
 .bg-purple {
     background: #5f27cd;
 }
+
+/* Create Partial styling*/
+.custom-switch .form-check-input:checked {
+    background-color: #E36414;
+    border-color: #E36414;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(15, 76, 92, 0.15) !important;
+    border-color: #0F4C5C !important;
+}
+
+/* Softening the inputs for that "premium" feel */
+.form-control, .form-select {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Edit Partial styling*/
+.edit-custom-switch .form-check-input:checked {
+    background-color: #E36414;
+    border-color: #E36414;
+}
+
+.btn-outline-danger:hover {
+    background-color: #fff5f5;
+    color: #dc3545;
+}
