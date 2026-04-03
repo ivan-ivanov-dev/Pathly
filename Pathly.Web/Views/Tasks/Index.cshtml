@@ -116,7 +116,7 @@
                     <div class="kanban-column-header">
                         <div class="d-flex align-items-center">
                             <i class="bi @status.Icon me-2 text-white"></i>
-                            <h6 class="kanban-column-title">@status.Title</h6>
+                            <h6 class="kanban-column-title mb-0 text-white">@status.Title</h6>
                         </div>
                         <span class="column-count-badge rounded-pill">
                             @Model.Tasks.Count(t => t.Status == status.Enum)
@@ -124,9 +124,9 @@
                     </div>
 
                     @* Column Body *@
-                    <div class="kanban-column-body py-1 d-flex flex-column flex-grow-1"
+                    <div class="kanban-column-body py-1 px-3 d-flex flex-column flex-grow-1"
                          data-status="@((int)status.Enum)"
-                         style="min-height:80vh;transition:background-color 0.2s ease;">
+                         style="min-height:80vh;">
 
                         @foreach (var task in Model.Tasks.Where(t => t.Status == status.Enum))
                         {
