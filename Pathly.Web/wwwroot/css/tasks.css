@@ -95,6 +95,10 @@ body {
     position: relative;
     overflow: hidden;
 }
+    .task-card .card-body {
+        position: relative;
+        padding-right: 3rem; /* Make room for the button so it doesn't overlap text */
+    }
 
 .task-card:hover {
     transform: translateY(-5px);
@@ -122,6 +126,11 @@ body {
     padding: 0;
     border-width: 2px;
     transition: all 0.2s ease;
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .btn-status-pill:hover {
@@ -186,6 +195,8 @@ body {
     font-weight: 800;
     color: #adb5bd;
     transition: color 0.2s ease;
+    margin-top: 1rem;
+    display: block;
 }
 
 .btn-details:hover {
