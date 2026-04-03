@@ -1,0 +1,94 @@
+﻿@using Pathly.DataModels
+@model Pathly.ViewModels.TasksViewModels.TaskViewModel
+
+@{
+    var priorityTheme = Model.Priority switch
+    {
+        TaskPriority.Low => "success",
+        TaskPriority.Medium => "warning",
+        TaskPriority.High => "orange",
+        TaskPriority.Critical => "danger",
+        _ => "success"
+    };
+}
+
+<div class="task-card-wrapper animate-fade-in"
+     data-id="@Model.Id"
+     data-title="@Model.Title.ToLower()"
+     data-priority="@((int)Model.Priority)">
+    <div class="card shadow-sm task-card @(Model.IsCompleted ? "task-completed" : "")"
+         data-priority-theme="@priorityTheme">
+
+        @* Thick Top Priority Bar *@
+        <div class="priority-accent bg-@priorityTheme"></div>
+
+        <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="fw-bold mb-0 text-dark pe-3">@Model.Title</h6>
+                <div class="dropdown">
+                    <button class="btn btn-link text-muted p-0 border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                        <li><a class="dropdown-item small" href="#" data-modal-url="@Url.Action("Edit", "Tasks", new { id = Model.Id })"><i class="bi bi-pencil me-2"></i>Edit Task</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item small text-danger delete-task-btn" data-id="@Model.Id" data-title="@Model.Title"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @* Visual Tags Section *@
+            <div class="d-flex flex-wrap gap-1 mb-3">
+                @if (Model.Tags != null && Model.Tags.Any())
+                {
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="badge rounded-pill task-tag">#@tag</span>
+                    }
+                }
+            </div>
+
+            @* Structured Footer Section *@
+            <div class="mt-2 pt-3 border-top border-light">
+                <div class="row g-0 align-items-center">
+                    <div class="col-8">
+                        @* Due Date Indicator *@
+                        <div class="d-flex align-items-center text-muted mb-2 fw-semibold" style="font-size: 0.7rem;">
+                            <i class="bi bi-calendar3 me-2 text-@priorityTheme"></i>
+                            @(Model.DueDate?.ToString("MMM dd, yyyy") ?? "No Deadline")
+                        </div>
+
+                        @* Priority Selector Form *@
+                        <form asp-action="UpdatePriority" asp-controller="Tasks" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <select name="priority"
+                                    class="form-select priority-select-slim bg-soft-@priorityTheme"
+                                    onchange="this.form.submit()"
+                                    asp-for="@Model.Priority"
+                                    asp-items="Html.GetEnumSelectList<TaskPriority>()">
+                            </select>
+                        </form>
+                    </div>
+
+                    @* Status Checkmark *@
+                    <div class="col-4 text-end">
+                        <button type="button"
+                                class="btn-status-pill btn rounded-circle p-0 d-flex align-items-center justify-content-center @(Model.IsCompleted ? "btn-success" : "btn-outline-secondary")"
+                                data-id="@Model.Id"
+                                style="width: 28px; height: 28px; transition: all 0.2s ease;">
+                            <i class="bi @(Model.IsCompleted ? "bi-check-lg" : "bi-circle")"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-link btn-sm text-decoration-none btn-details"
+                        data-modal-url="@Url.Action("Details", "Tasks", new { id = Model.Id })">
+                    VIEW DETAILS
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

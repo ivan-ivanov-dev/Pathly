@@ -6,8 +6,6 @@ namespace Pathly.DataModels
 {
     public class Tag
     {
-        
-        
         public int Id { get; set; }
         [Required]
         [MaxLength(ValidationConstants.MaxTagNameLength)]

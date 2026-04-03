@@ -14,6 +14,8 @@ namespace Pathly.ViewModels.TasksViewModels
 
         [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength, ErrorMessage = ErrorMessages.TaskItemDescriptionCannotExceed500Characters)]
         public string? Description { get; set; }
+        public TaskStatus Status { get; set; }
+        public int Position { get; set; }
         public DateTime? DueDate { get; set; }
         public List<int> SelectedTagIds { get; set; } = new List<int>();
         public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();

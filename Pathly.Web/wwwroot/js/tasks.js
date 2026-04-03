@@ -3,13 +3,22 @@
         this.bindEvents();
         this.initFooterTips();
         this.initModalFocus();
+        KanbanBoard.init();
     },
 
     bindEvents: function () {
         $(document).on('click', '.delete-task-btn', (e) => this.handleDelete(e));
+        $(document).on('click', '.btn-status-pill', (e) => this.handleStatusToggle(e));
         document.addEventListener("click", (e) => this.handleModalClick(e));
+
+        const searchInput = document.getElementById('kanbanSearch');
+        const priorityFilter = document.getElementById('priorityFilter');
+
+        if (searchInput) searchInput.addEventListener('input', () => KanbanBoard.filterTasks());
+        if (priorityFilter) priorityFilter.addEventListener('change', () => KanbanBoard.filterTasks());
+
         document.addEventListener("change", (e) => {
-            if (e.target.classList.contains('priority-select-direct')) {
+            if (e.target.classList.contains('priority-select-direct') || e.target.classList.contains('priority-select-slim')) {
                 this.handlePriorityUpdate(e);
             }
             this.handleTagValidation(e);
@@ -17,6 +26,53 @@
         document.addEventListener("submit", (e) => this.handleFormSubmit(e), true);
     },
 
+    handleStatusToggle: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const btn = e.currentTarget;
+        const cardWrapper = btn.closest('.task-card-wrapper');
+        const taskId = cardWrapper.getAttribute('data-id');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        fetch(`/Tasks/MarkTaskStatus/${taskId}`, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "RequestVerificationToken": token
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const targetStatus = data.isCompleted ? "2" : "0";
+                    const targetColumn = document.querySelector(`.kanban-column-body[data-status="${targetStatus}"]`);
+
+                    if (targetColumn && cardWrapper) {
+                        cardWrapper.style.opacity = '0';
+                        cardWrapper.style.transform = 'scale(0.95)';
+
+                        setTimeout(() => {
+                            targetColumn.appendChild(cardWrapper);
+
+                            const isDone = data.isCompleted;
+                            btn.classList.toggle('btn-success', isDone);
+                            btn.classList.toggle('btn-outline-secondary', !isDone);
+                            btn.querySelector('i').className = isDone ? 'bi bi-check-lg' : 'bi bi-circle';
+
+                            const taskCard = cardWrapper.querySelector('.task-card');
+                            if (taskCard) taskCard.classList.toggle('task-completed', isDone);
+
+                            cardWrapper.style.opacity = '1';
+                            cardWrapper.style.transform = 'scale(1)';
+
+                            if (this.filterTasks) this.filterTasks();
+                        }, 200);
+                    }
+                }
+            })
+            .catch(err => console.error("Toggle Error:", err));
+    },
     handleDelete: function (e) {
         e.preventDefault();
         const btn = $(e.currentTarget);
@@ -191,6 +247,129 @@
                 tipText.style.opacity = 1;
             }, 200);
         });
+    }
+};
+
+const KanbanBoard = {
+    init: function () {
+        const columns = document.querySelectorAll('.kanban-column-body');
+        columns.forEach(column => {
+            new Sortable(column, {
+                group: 'kanban',
+                animation: 250,
+                ghostClass: 'bg-light',
+                onEnd: (evt) => this.handleTaskMove(evt)
+            });
+        });
+        this.filterTasks(); // Initial run
+    },
+
+    filterTasks: function () {
+        const query = document.getElementById('kanbanSearch')?.value.toLowerCase() || "";
+        const priority = document.getElementById('priorityFilter')?.value || "";
+        const cards = document.querySelectorAll('.task-card-wrapper');
+        let matches = 0;
+
+        cards.forEach(card => {
+            const title = (card.getAttribute('data-title') || "").toLowerCase();
+            const cardPriority = card.getAttribute('data-priority');
+
+            const matchesSearch = title.includes(query);
+            const matchesPriority = priority === "" || cardPriority === priority;
+
+            if (matchesSearch && matchesPriority) {
+                card.classList.remove('filtered-out');
+                card.classList.add('filtered-in');
+                matches++;
+            } else {
+                card.classList.remove('filtered-in');
+                card.classList.add('filtered-out');
+            }
+        });
+
+        document.querySelectorAll('.kanban-column-body').forEach(col => {
+            const children = Array.from(col.children).filter(c => c.classList.contains('task-card-wrapper'));
+
+            children.sort((a, b) => {
+                const aIn = a.classList.contains('filtered-in') ? 0 : 1;
+                const bIn = b.classList.contains('filtered-in') ? 0 : 1;
+                return aIn - bIn;
+            });
+
+            children.forEach(child => col.appendChild(child));
+
+            const visibleInCol = col.querySelectorAll('.task-card-wrapper.filtered-in').length;
+            const columnParent = col.closest('.kanban-column');
+            const badge = columnParent?.querySelector('.column-count-badge');
+            if (badge) {
+                badge.innerText = visibleInCol;
+            }
+
+            const hasVisible = visibleInCol > 0;
+            col.querySelector('.kanban-empty-state')?.classList.toggle('d-none', hasVisible);
+        });
+
+        const matchDisplay = document.getElementById('matchCount');
+        if (matchDisplay) {
+            matchDisplay.innerText = `Found ${matches} relevant tasks`;
+        }
+    },
+
+    handleTaskMove: function (evt) {
+        const taskId = evt.item.getAttribute('data-id');
+        const newStatus = evt.to.getAttribute('data-status');
+        const newPosition = evt.newIndex;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        fetch('/Tasks/UpdatePosition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({
+                id: parseInt(taskId),
+                newStatus: parseInt(newStatus),
+                newPosition: newPosition
+            })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Sync failed.");
+
+                const taskCard = evt.item.querySelector('.task-card');
+                const checkBtn = evt.item.querySelector('.btn-status-pill');
+                const icon = checkBtn?.querySelector('i');
+
+                if (newStatus === "2") {
+                    taskCard?.classList.add('task-completed');
+                    if (checkBtn) {
+                        checkBtn.classList.remove('btn-outline-secondary');
+                        checkBtn.classList.add('btn-success');
+                    }
+                    if (icon) {
+                        icon.classList.remove('bi-circle');
+                        icon.classList.add('bi-check-lg');
+                    }
+                }
+                else {
+                    taskCard?.classList.remove('task-completed');
+                    if (checkBtn) {
+                        checkBtn.classList.remove('btn-success');
+                        checkBtn.classList.add('btn-outline-secondary');
+                    }
+                    if (icon) {
+                        icon.classList.remove('bi-check-lg');
+                        icon.classList.add('bi-circle');
+                    }
+                }
+
+                this.filterTasks();
+            })
+            .catch(err => {
+                console.error("Board Sync Error:", err);
+                Swal.fire('Error', 'Failed to save position. Please refresh.', 'error');
+            });
     }
 };
 

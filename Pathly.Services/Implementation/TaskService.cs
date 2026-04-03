@@ -92,13 +92,15 @@ namespace Pathly.Services.Implementation
                 tasksQuery = tasksQuery.Where(t => t.TaskTags.Any(tt => queryModel.SelectedTagIds.Contains(tt.TagId)));
             }
 
-            if (queryModel.Ascending.HasValue && queryModel.Ascending.Value)
+            if (queryModel.Ascending.HasValue)
             {
-                tasksQuery = tasksQuery.OrderBy(t => t.CreatedOn);
+                tasksQuery = queryModel.Ascending.Value
+                    ? tasksQuery.OrderBy(t => t.Status).ThenBy(t => t.CreatedOn)
+                    : tasksQuery.OrderBy(t => t.Status).ThenByDescending(t => t.CreatedOn);
             }
             else
             {
-                tasksQuery = tasksQuery.OrderByDescending(t => t.CreatedOn);
+                tasksQuery = tasksQuery.OrderBy(t => t.Status).ThenBy(t => t.Position);
             }
 
             var pagedTasks = await PagedList<TaskViewModel>.ToPagedListAsync(
@@ -151,7 +153,7 @@ namespace Pathly.Services.Implementation
                 .ToListAsync();
         }
 
-        public async Task MarkTaskStatusAsync(int id, string userId)
+        public async Task<bool> MarkTaskStatusAsync(int id, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
 
@@ -166,7 +168,12 @@ namespace Pathly.Services.Implementation
 
             task.IsCompleted = !task.IsCompleted;
 
+            task.Status = task.IsCompleted
+                ? DataModels.TaskStatus.Done
+                : DataModels.TaskStatus.Todo;
+
             await _context.SaveChangesAsync();
+            return task.IsCompleted;
         }
 
         public async Task UpdatePriorityAsync(int id, TaskPriority priority, string userId)
@@ -184,6 +191,61 @@ namespace Pathly.Services.Implementation
 
             task.Priority =priority;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTaskPositionAsync(int id, string userId, DataModels.TaskStatus newStatus, int newPosition)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+                if (task == null)
+                {
+                    throw new InvalidOperationException("Task not found");
+                }
+
+                var oldStatus = task.Status;
+                var oldPosition = task.Position;
+
+                if (oldStatus != newStatus)
+                {
+                    await _context.Tasks
+                        .Where(t => t.UserId == userId && t.Status == oldStatus && t.Position > oldPosition)
+                        .ExecuteUpdateAsync(s => s.SetProperty(t => t.Position, t => t.Position - 1));
+
+                    await _context.Tasks
+                        .Where(t => t.UserId == userId && t.Status == newStatus && t.Position >= newPosition)
+                        .ExecuteUpdateAsync(s => s.SetProperty(t => t.Position, t => t.Position + 1));
+                }
+                else if (oldPosition != newPosition)
+                {
+                    if (newPosition < oldPosition)
+                    {
+                        await _context.Tasks
+                            .Where(t => t.UserId == userId && t.Status == oldStatus && t.Position >= newPosition && t.Position < oldPosition)
+                            .ExecuteUpdateAsync(s => s.SetProperty(t => t.Position, t => t.Position + 1));
+                    }
+                    else
+                    {
+                        await _context.Tasks
+                            .Where(t => t.UserId == userId && t.Status == oldStatus && t.Position > oldPosition && t.Position <= newPosition)
+                            .ExecuteUpdateAsync(s => s.SetProperty(t => t.Position, t => t.Position - 1));
+                    }
+                }
+
+                task.Status = newStatus;
+                task.Position = newPosition;
+                task.IsCompleted = (newStatus == DataModels.TaskStatus.Done);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
         }
 
         public async Task UpdateWithTagsAsync(int id, TaskEditViewModel model, string userId)

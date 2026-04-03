@@ -111,6 +111,8 @@ namespace Pathly.Services.Mappings
             CreateMap<TaskItem, TaskViewModel>()
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
                     src.TaskTags.Select(tt => tt.Tag.Name).ToList()))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position))
                 .ReverseMap()
                 .ForMember(dest => dest.TaskTags, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
@@ -129,6 +131,8 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => DataModels.TaskStatus.Todo))
+                .ForMember(dest => dest.Position, opt => opt.Ignore())
                 .ForMember(dest => dest.IsCompleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Priority, opt => opt.Ignore())
                 .ForMember(dest => dest.ActionId, opt => opt.MapFrom(src => src.ActionId))

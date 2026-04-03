@@ -30,6 +30,11 @@ namespace Pathly.Web.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
+            if (queryModel.PageSize == 9)
+            {
+                queryModel.PageSize = 999;
+            }
+
             var model = await _taskService.GetAllTasksAsync(queryModel, userId);
 
             return View(model);
@@ -195,12 +200,45 @@ namespace Pathly.Web.Controllers
         /*Mark Task Status*/
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkTaskStatus(int id)
         {
             var userId = _userManager.GetUserId(User);
+            try
+            {
+                bool newIsCompleted = await _taskService.MarkTaskStatusAsync(id, userId);
+                return Json(new
+                {
+                    success = true,
+                    isCompleted = newIsCompleted
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
-            await _taskService.MarkTaskStatusAsync(id, userId);
-            return RedirectToAction(nameof(Index));
+        /*Update Task Position*/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePosition([FromBody] TaskUpdatePositionViewModel model)//The [FromBody] attribute tells ASP.NET Core to look for the data in the request body rather than the query string.
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                await _taskService.UpdateTaskPositionAsync(model.Id, userId, model.NewStatus, model.NewPosition);
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         /*Update Task Priority*/
