@@ -1,4 +1,22 @@
-﻿const TaskManager = {
+﻿// Connect Front-End to the Hub
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/kanbanHub")
+    .build();
+
+connection.on("ReceiveTaskMove", (taskId, newStatus, newPosition) => {
+    const taskElement = document.querySelector(`[data-task-id='${taskId}']`);
+    const targetColumn = document.querySelector(`[data-status='${newStatus}']`);
+
+    if (taskElement && targetColumn) {
+        targetColumn.appendChild(taskElement);
+        kanban.filterTasks();
+    }
+});
+
+connection.start().catch(err => console.error(err.toString()));
+
+
+const TaskManager = {
     init: function () {
         this.bindEvents();
         this.initFooterTips();
@@ -336,6 +354,12 @@ const KanbanBoard = {
         })
             .then(response => {
                 if (!response.ok) throw new Error("Sync failed.");
+
+                // SignalR Integration
+                if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke("NotifyTaskMoved", taskId, parseInt(newStatus), newPosition)
+                        .catch(err => console.error("SignalR Invoke Error:", err));
+                }
 
                 const taskCard = evt.item.querySelector('.task-card');
                 const checkBtn = evt.item.querySelector('.btn-status-pill');
