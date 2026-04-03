@@ -68,7 +68,7 @@ namespace Pathly.Services
                 throw new ArgumentException(ErrorMessages.EndDateMustBeAfterStartDate);
             }
 
-            ModelIsValid(model, userId).Wait();
+            await ModelIsValid(model, userId);
 
             var newEvent = _mapper.Map<Event>(model);
             newEvent.UserId = userId;
@@ -107,7 +107,7 @@ namespace Pathly.Services
                 throw new UnauthorizedAccessException(ErrorMessages.EventNotFoundOrAccessDenied);
             }
 
-            ModelIsValid(model, userId).Wait();
+            await ModelIsValid(model, userId);
 
             _mapper.Map(model, existingEvent);
 
