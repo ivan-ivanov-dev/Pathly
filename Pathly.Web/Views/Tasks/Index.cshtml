@@ -3,42 +3,68 @@
 @model TaskListViewModel
 
 @{
-    ViewData["Title"] = "Task Inventory";
+    ViewData["Title"] = "Strategic Board";
 }
 
-@section Styles {
+@section Styles
+{
     <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
 }
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+<div class="container py-5 animate-fade-in">
+    @* --- 1. STRATEGIC HEADER --- *@
+    <div class="tasks-header mb-5">
         <div>
-            <h2 class="fw-bold text-dark mb-1">Task Inventory</h2>
-            <p class="text-muted small mb-0">Manage and track your strategic micro-tasks</p>
+            <h2 class="tracking-tight mb-1">Execution Pipeline</h2>
+            <p class="text-muted fw-semibold small text-uppercase letter-spacing-1">
+                Strategic Overview & Task Management
+            </p>
         </div>
-
-        <a href="#"
-           class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold"
-           data-modal-url="@Url.Action("Create", "Tasks")"
-           data-modal-title="Create Task">
-            <i class="bi bi-plus-lg me-2"></i>New Task
-        </a>
+        <div class="d-flex gap-3">
+            <div class="d-none d-md-flex align-items-center me-3 border-end pe-4">
+                <div class="text-end me-3">
+                    <div class="small text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Total Output</div>
+                    <div class="fw-800 text-dark">@Model.Tasks.Count() Tasks</div>
+                </div>
+                <div class="text-end">
+                    <div class="small text-muted fw-bold text-uppercase" style="font-size: 0.6rem;">Completion</div>
+                    <div class="fw-800 text-success">
+                        @{
+                            var total = Model.Tasks.Count();
+                            var done = Model.Tasks.Count(t => t.Status == Pathly.DataModels.TaskStatus.Done);
+                            var percent = total > 0 ? (done * 100) / total : 0;
+                        }
+                        @percent%
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-dark rounded-3 px-4 shadow-sm fw-bold d-flex align-items-center"
+                    data-modal-url="@Url.Action("Create", "Tasks")" data-modal-title="Create Strategic Task">
+                <i class="bi bi-plus-lg me-2"></i> NEW INITIATIVE
+            </button>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 mb-5">
+    @* --- 2. ENHANCED FILTER SYSTEM --- *@
+    <div class="card filter-card mb-5 shadow-sm border-0">
         <div class="card-body p-3">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" name="SearchByTitle" class="form-control border-0 bg-light shadow-none"
-                               value="@Context.Request.Query["SearchByTitle"]" placeholder="Search tasks..." />
+            <form method="get" id="filterForm" class="row g-3 align-items-center">
+                <div class="col-lg-4 col-md-12">
+                    <div class="input-group bg-light-subtle rounded-3 px-2 border">
+                        <span class="input-group-text bg-transparent border-0 pe-2 text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="SearchByTitle"
+                               class="form-control border-0 bg-transparent shadow-none py-2 fw-semibold"
+                               placeholder="Search initiatives..."
+                               value="@Context.Request.Query["SearchByTitle"]" />
                     </div>
                 </div>
 
-                <div class="col-md-2">
-                    <select name="Priority" class="form-select form-select-sm border-0 bg-light shadow-none">
-                        <option value="">All Priorities</option>
+                <div class="col-lg-2 col-md-3">
+                    <div class="uppercase-label mb-1 ms-1">Priority</div>
+                    <select name="Priority" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
+                        <option value="">All Levels</option>
                         @foreach (var p in Enum.GetValues<TaskPriority>())
                         {
                             <option value="@((int)p)" selected="@(Context.Request.Query["Priority"] == ((int)p).ToString())">@p</option>
@@ -46,229 +72,91 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
-                    <select name="IsCompleted" class="form-select form-select-sm border-0 bg-light shadow-none">
-                        <option value="">All Statuses</option>
-                        <option value="true" selected="@(Context.Request.Query["IsCompleted"] == "true")">Completed</option>
-                        <option value="false" selected="@(Context.Request.Query["IsCompleted"] == "false")">In Progress</option>
+                <div class="col-lg-2 col-md-3">
+                    <div class="uppercase-label mb-1 ms-1">Categorization</div>
+                    <select name="SelectedTagIds" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
+                        <option value="">All Tags</option>
+                        @foreach (var tag in Model.AvailableFilterTags)
+                        {
+                            <option value="@tag.Id" selected="@(Context.Request.Query["SelectedTagIds"].Contains(tag.Id.ToString()))">
+                                #@tag.Name
+                            </option>
+                        }
                     </select>
                 </div>
-                @*A multiple select dropdown for filtering by tags*@
-                <div class="col-md-2">
-                    <div class="position-relative">
-                        <select name="SelectedTagIds"
-                                class="form-select form-select-sm border-0 bg-light shadow-none"
-                                multiple
-                                size="1"
-                                onfocus="this.size=5;"
-                                onblur="this.size=1;"
-                                onchange="this.size=1; this.blur();"
-                                style="position: absolute; z-index: 1000;">
-                            <option value="" disabled>Filter by Tags...</option>
-                            @foreach (var tag in Model.AvailableFilterTags)
-                            {
-                                <option value="@tag.Id"
-                                        selected="@(Context.Request.Query["SelectedTagIds"].Contains(tag.Id.ToString()))">
-                                    #@tag.Name
-                                </option>
-                            }
-                        </select>
-                        <div style="height: 31px;"></div>
-                    </div>
-                </div>
 
-                <div class="col-md-2">
-                    <input type="date" name="DueDate" class="form-control form-control-sm border-0 bg-light shadow-none"
+                <div class="col-lg-2 col-md-3">
+                    <div class="uppercase-label mb-1 ms-1">Deadline</div>
+                    <input type="date" name="DueDate"
+                           class="form-control form-control-sm border-0 bg-light-subtle fw-bold text-muted py-2"
                            value="@Context.Request.Query["DueDate"]" />
                 </div>
 
-                <div class="col-12 mt-3">
-                    <button type="submit" class="btn btn-dark btn-sm w-100 rounded-pill fw-bold py-2 shadow-sm">
-                        <i class="bi bi-filter me-2"></i>Apply Active Filters
+                <div class="col-lg-2 col-md-3 mt-lg-4">
+                    <button type="submit" class="btn btn-primary w-100 rounded-3 fw-800 shadow-sm py-2">
+                        REFINE VIEW
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
+    @* --- 3. KANBAN ARCHITECTURE --- *@
     <div class="row g-4">
-        @if (Model.Tasks.TotalPages > 1)
+        @foreach (var status in new[] {
+                new { Title = "Pending Execution", ID = 1, Icon = "bi-list-ul", Color = "#6c757d", Enum = Pathly.DataModels.TaskStatus.Todo },
+                new { Title = "Active Development", ID = 2, Icon = "bi-lightning-charge", Color = "#0d6efd", Enum = Pathly.DataModels.TaskStatus.InProgress },
+                new { Title = "Finalized", ID = 3, Icon = "bi-check2-all", Color = "#198754", Enum = Pathly.DataModels.TaskStatus.Done }
+                })
         {
-            <div class="d-flex justify-content-center mt-5">
-                <nav aria-label="Task pagination">
-                    <ul class="pagination pagination-animated">
-                        @* Previous page *@
-                        <li class="page-item @(!Model.Tasks.HasPrevious ? "disabled" : "")">
-                            <a class="page-link border-0 shadow-sm rounded-circle mx-1"
-                               asp-action="Index"
-                               asp-all-route-data="@GetPaginationRoutes(Model.Tasks.CurrentPage - 1)"
-                               aria-label="Previous">
-                                <i class="bi bi-chevron-left"></i>
-                            </a>
-                        </li>
-
-                        @* Page number *@
-                        @for (int i = 1; i <= Model.Tasks.TotalPages; i++)
-                        {
-                            <li class="page-item @(i == Model.Tasks.CurrentPage ? "active" : "")">
-                                <a class="page-link border-0 shadow-sm rounded-circle mx-1"
-                                   asp-action="Index"
-                                   asp-all-route-data="@GetPaginationRoutes(i)">@i</a>
-                            </li>
-                        }
-
-                        @* Next Page *@
-                        <li class="page-item @(!Model.Tasks.HasNext ? "disabled" : "")">
-                            <a class="page-link border-0 shadow-sm rounded-circle mx-1"
-                               asp-action="Index"
-                               asp-all-route-data="@GetPaginationRoutes(Model.Tasks.CurrentPage + 1)"
-                               aria-label="Next">
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        }
-
-        @functions {
-            Dictionary<string, string> GetPaginationRoutes(int page)
-            {
-                var routes = new Dictionary<string, string> { { "PageNumber", page.ToString() } };
-
-                foreach (var key in Context.Request.Query.Keys)
-                {
-                    if (key != "PageNumber")
-                    {
-                        routes[key] = Context.Request.Query[key]!;
-                    }
-                }
-                return routes;
-            }
-        }
-        @if (Model.Tasks != null && Model.Tasks.Any())
-        {
-            @foreach (var task in Model.Tasks)
-            {
-                @* Logic to map colors based on Priority *@
-                var priorityTheme = task.Priority switch
-                {
-                    TaskPriority.Low => "success",
-                    TaskPriority.Medium => "warning",
-                    TaskPriority.High => "orange",
-                    TaskPriority.Critical => "danger",
-                    _ => "success"
-                };
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm task-card animate-fade-in @(task.IsCompleted ? "task-completed" : "")"
-                         data-priority-theme="@priorityTheme">
-
-                        <div class="card-body p-4 d-flex flex-column">
-
-                            @* SECTION 1: HEADER *@
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="fw-bold mb-0 text-dark text-truncate pe-2">@task.Title</h5>
-                                <div class="dropdown">
-                                    <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                        <li><a class="dropdown-item small" href="javascript:void(0);" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a class="dropdown-item small text-danger delete-task-btn"
-                                               href="javascript:void(0);"
-                                               data-id="@task.Id"
-                                               data-title="@task.Title">
-                                                <i class="bi bi-trash me-2"></i>Delete
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+            <div class="col-xl-4 col-md-12">
+                <div class="kanban-column shadow-sm border-dashed" data-status-group="@status.ID">
+                    @* Column Header *@
+                    <div class="d-flex justify-content-between align-items-center mb-4 px-1">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center me-2"
+                                 style="background: rgba(0,0,0,0.05); width: 32px; height: 32px;">
+                                <i class="bi @status.Icon" style="color: @status.Color;"></i>
                             </div>
-
-                            @* SECTION 2: TAGS *@
-                            <div class="mb-4">
-                                <div class="d-flex flex-wrap gap-1 mb-3">
-                                    @if (task.Tags != null && task.Tags.Any())
-                                    {
-                                        @foreach (var tag in task.Tags)
-                                        {
-                                            <span class="badge rounded-pill task-tag-pill" style="font-size: 0.7rem;">@tag</span>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted small fst-italic">No tags</span>
-                                    }
-                                </div>
-                                <button class="btn btn-sm btn-light w-100 rounded-pill text-muted fw-bold border-0 shadow-none"
-                                        data-modal-url="@Url.Action("Details", "Tasks", new { id = task.Id })"
-                                        data-modal-title="Task Intelligence">
-                                    See Details
-                                </button>
-                            </div>
-
-                            @* SECTION 3: FOOTER *@
-                            <div class="mt-auto pt-3 border-top border-light">
-                                <div class="row align-items-center">
-                                    <div class="col-7">
-                                        <div class="text-muted mb-2" style="font-size: 0.75rem;">
-                                            <i class="bi bi-clock-history me-1"></i> @(task.DueDate?.ToString("MMM dd") ?? "No date")
-                                        </div>
-                                        <form asp-action="UpdatePriority" asp-controller="Tasks" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@task.Id" />
-                                            <select name="priority"
-                                                    class="form-select form-select-sm priority-select-direct pathly-dropdown bg-soft-@priorityTheme"
-                                                    data-task-id="@task.Id"
-                                                    asp-for="@task.Priority"
-                                                    asp-items="Html.GetEnumSelectList<TaskPriority>()">
-                                            </select>
-                                        </form>
-                                    </div>
-                                    <div class="col-5 text-end">
-                                        <form asp-action="MarkTaskStatus" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@task.Id" />
-                                            <button type="submit" class="btn btn-status-circle @(task.IsCompleted ? "btn-success" : "btn-outline-success")">
-                                                <i class="bi @(task.IsCompleted ? "bi-check-all" : "bi-check-lg")"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <h6 class="kanban-column-title mb-0">@status.Title</h6>
                         </div>
+                        <span class="column-count-badge rounded-pill">
+                            @Model.Tasks.Count(t => t.Status == status.Enum)
+                        </span>
                     </div>
-                </div>
-            }
-        }
-        else
-        {
-            @* EMPTY STATE MESSAGE *@
-            <div class="col-12 text-center py-5 animate-fade-in">
-                <div class="py-5">
-                    <i class="bi bi-clipboard-x display-1 text-muted opacity-25 mb-4"></i>
-                    <h3 class="fw-bold text-dark">No tasks found in your inventory</h3>
-                    <p class="text-muted mx-auto mb-4" style="max-width: 400px;">
-                        Your strategic journey begins with a single step. Start by defining your micro-tasks to build momentum toward your larger goals.
-                    </p>
-                    <a href="javascript:void(0);"
-                       class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold"
-                       data-modal-url="@Url.Action("Create", "Tasks")"
-                       data-modal-title="Create Task">
-                        <i class="bi bi-plus-lg me-2"></i>Create Your First Task
-                    </a>
+
+                    @* Draggable Task Container *@
+                    <div class="kanban-column-body py-1"
+                         data-status="@((int)status.Enum)"
+                         style="min-height: 600px;">
+
+                        @if (!Model.Tasks.Any(t => t.Status == status.Enum))
+                        {
+                            <div class="kanban-empty-state">
+                                <i class="bi bi-inbox-fill opacity-25"></i>
+                                <p class="small fw-bold mb-0">No active items</p>
+                                <span class="extra-small opacity-50">Drag tasks here or create new</span>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var task in Model.Tasks.Where(t => t.Status == status.Enum))
+                            {
+                                <partial name="_TaskCardPartial" model="task" />
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
 
+@* --- 4. MODAL FRAMEWORK --- *@
 <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-content overflow-hidden">
+            @* The modal body is dynamically injected via tasks.js *@
             <div id="taskModalBody"></div>
         </div>
     </div>
