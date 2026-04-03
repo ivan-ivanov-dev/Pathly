@@ -4,6 +4,7 @@ using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
+using Pathly.Web.Hubs;
 namespace Pathly.Web
 {
     public class Program
@@ -55,6 +56,8 @@ namespace Pathly.Web
 
             builder.Services.AddAutoMapper(typeof(Services.Mappings.MappingProfile).Assembly);
 
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -73,6 +76,8 @@ namespace Pathly.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.MapHub<KanbanHub>("/kanbanHub");
 
             app.UseAuthentication();
             app.UseAuthorization();
