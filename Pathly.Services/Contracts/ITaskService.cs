@@ -1,5 +1,6 @@
 ﻿using Pathly.DataModels;
 using Pathly.ViewModels.TasksViewModels;
+using TaskStatus = Pathly.DataModels.TaskStatus;
 
 namespace Pathly.Services.Contracts
 {
@@ -12,6 +13,9 @@ namespace Pathly.Services.Contracts
         Task MarkTaskStatusAsync(int id, string userId);
         Task UpdatePriorityAsync(int id, TaskPriority priority, string userId);
         Task<List<int>> GetTaskTagIdsAsync(int taskId, string userId);
+
+        Task UpdateTaskPositionAsync(int id, string userId, TaskStatus newStatus, int newPosition);
+
         Task UpdateWithTagsAsync(int id, TaskEditViewModel model, string userId);
     }
 }
