@@ -271,7 +271,7 @@ const KanbanBoard = {
         let matches = 0;
 
         cards.forEach(card => {
-            const title = card.getAttribute('data-title');
+            const title = (card.getAttribute('data-title') || "").toLowerCase();
             const cardPriority = card.getAttribute('data-priority');
 
             const matchesSearch = title.includes(query);
@@ -287,22 +287,32 @@ const KanbanBoard = {
             }
         });
 
-        // Re-sort the DOM so matches are on top
         document.querySelectorAll('.kanban-column-body').forEach(col => {
-            const children = Array.from(col.children);
+            const children = Array.from(col.children).filter(c => c.classList.contains('task-card-wrapper'));
+
             children.sort((a, b) => {
                 const aIn = a.classList.contains('filtered-in') ? 0 : 1;
                 const bIn = b.classList.contains('filtered-in') ? 0 : 1;
                 return aIn - bIn;
             });
+
             children.forEach(child => col.appendChild(child));
 
-            // Check for empty column visual
-            const hasVisible = col.querySelectorAll('.task-card-wrapper.filtered-in').length > 0;
+            const visibleInCol = col.querySelectorAll('.task-card-wrapper.filtered-in').length;
+            const columnParent = col.closest('.kanban-column');
+            const badge = columnParent?.querySelector('.column-count-badge');
+            if (badge) {
+                badge.innerText = visibleInCol;
+            }
+
+            const hasVisible = visibleInCol > 0;
             col.querySelector('.kanban-empty-state')?.classList.toggle('d-none', hasVisible);
         });
 
-        document.getElementById('matchCount').innerText = `Found ${matches} relevant tasks`;
+        const matchDisplay = document.getElementById('matchCount');
+        if (matchDisplay) {
+            matchDisplay.innerText = `Found ${matches} relevant tasks`;
+        }
     },
 
     handleTaskMove: function (evt) {
