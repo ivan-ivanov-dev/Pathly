@@ -203,6 +203,27 @@ namespace Pathly.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /*Update Task Position*/
+        [HttpPost]
+        public async Task<IActionResult> UpdatePosition([FromBody] TaskUpdatePositionViewModel model)//The [FromBody] attribute tells ASP.NET Core to look for the data in the request body rather than the query string.
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                await _taskService.UpdateTaskPositionAsync(model.Id, userId, model.NewStatus, model.NewPosition);
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
         /*Update Task Priority*/
 
         [HttpPost]
