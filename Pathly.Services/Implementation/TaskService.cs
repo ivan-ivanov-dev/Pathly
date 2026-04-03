@@ -153,7 +153,7 @@ namespace Pathly.Services.Implementation
                 .ToListAsync();
         }
 
-        public async Task MarkTaskStatusAsync(int id, string userId)
+        public async Task<bool> MarkTaskStatusAsync(int id, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
 

@@ -10,7 +10,7 @@ namespace Pathly.Services.Contracts
         Task CreateAsync(TaskCreateViewModel model,string userId);
         Task<bool> DeleteAsync(int id, string userId);
         Task<TaskDetailsViewModel?> GetDetailsAsync(int id, string userId);
-        Task MarkTaskStatusAsync(int id, string userId);
+        Task<bool> MarkTaskStatusAsync(int id, string userId);
         Task UpdatePriorityAsync(int id, TaskPriority priority, string userId);
         Task<List<int>> GetTaskTagIdsAsync(int taskId, string userId);
 
