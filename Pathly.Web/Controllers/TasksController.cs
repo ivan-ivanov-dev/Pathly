@@ -30,6 +30,11 @@ namespace Pathly.Web.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
+            if (queryModel.PageSize == 9)
+            {
+                queryModel.PageSize = 999;
+            }
+
             var model = await _taskService.GetAllTasksAsync(queryModel, userId);
 
             return View(model);
@@ -205,6 +210,7 @@ namespace Pathly.Web.Controllers
 
         /*Update Task Position*/
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePosition([FromBody] TaskUpdatePositionViewModel model)//The [FromBody] attribute tells ASP.NET Core to look for the data in the request body rather than the query string.
         {
             if (model == null)
