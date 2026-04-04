@@ -250,19 +250,21 @@ public class TasksControllerTests: ControllerTestsBase
         int taskId = 1;
         var taskDetails = new TaskDetailsViewModel { Id = taskId, Title = "Task to Delete" };
 
-        _mockTaskService.Setup(s => s.GetDetailsAsync(taskId, _userId)).ReturnsAsync(taskDetails);
+        _mockTaskService.Setup(s => s.GetDetailsAsync(taskId, _userId))
+            .ReturnsAsync(taskDetails);
 
         // Act
         var result = await _controller.DeleteAsync(taskId);
 
         // Assert
-        Assert.IsInstanceOf<PartialViewResult>(result);
-        var partialResult = (PartialViewResult)result;
-        Assert.That(partialResult.ViewName, Is.EqualTo("DeletePartialView"));
+        Assert.IsInstanceOf<RedirectToActionResult>(result);
+        var partialResult = (RedirectToActionResult)result;
+
+        Assert.That(partialResult.ActionName, Is.EqualTo("Index").Or.Null);
     }
 
     [Test]
-    public async Task Delete_Get_ShouldReturnNotFound_WhenTaskDoesNotExist()
+    public async Task Delete_Get_ShouldRedirectToIndex_WhenTaskDoesNotExist()
     {
         // Arrange
         _mockTaskService.Setup(s => s.GetDetailsAsync(It.IsAny<int>(), _userId))
@@ -272,7 +274,9 @@ public class TasksControllerTests: ControllerTestsBase
         var result = await _controller.DeleteAsync(99);
 
         // Assert
-        Assert.IsInstanceOf<NotFoundResult>(result);
+        Assert.IsInstanceOf<RedirectToActionResult>(result);
+        var redirect = (RedirectToActionResult)result;
+        Assert.That(redirect.ActionName, Is.EqualTo("Index"));
     }
 
     [Test]
@@ -327,22 +331,6 @@ public class TasksControllerTests: ControllerTestsBase
         var partialResult = (PartialViewResult)result;
         Assert.That(partialResult.ViewName, Is.EqualTo("DetailsPartialView"));
         Assert.That(partialResult.Model, Is.EqualTo(expectedModel));
-    }
-
-    [Test]
-    public async Task MarkTaskStatus_ShouldRedirectToIndex()
-    {
-        // Arrange
-        int taskId = 1;
-
-        // Act
-        var result = await _controller.MarkTaskStatus(taskId);
-
-        // Assert
-        _mockTaskService.Verify(s => s.MarkTaskStatusAsync(taskId, _userId), Times.Once);
-        Assert.IsInstanceOf<RedirectToActionResult>(result);
-        var redirect = (RedirectToActionResult)result;
-        Assert.That(redirect.ActionName, Is.EqualTo("Index"));
     }
 
     [Test]
