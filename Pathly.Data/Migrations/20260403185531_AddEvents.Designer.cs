@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pathly.Data;
 
@@ -11,9 +12,11 @@ using Pathly.Data;
 namespace Pathly.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260403185531_AddEvents")]
+    partial class AddEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,15 +372,15 @@ namespace Pathly.Data.Migrations
                         {
                             Id = "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b2eb3044-b407-4fe7-a4da-8892d64419b8",
+                            ConcurrencyStamp = "3dec418d-71ef-4c96-83b1-68ca57854fff",
                             Email = "test@pathly.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@PATHLY.COM",
                             NormalizedUserName = "TEST@PATHLY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELRWjfLI2gE/0g6NsVobuFNlWqdqvrlUqLkJHbWzoxUu0wGn4u7Vr9PVuIwgpRfvhQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE8AGEUkx5HDmZiGh02I2ChJG/XYpybF1wMV/YK4q7KAROhbkFhqTYIW/5c7ksvohA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b89737f1-5589-432c-aeec-9c05c4d83016",
+                            SecurityStamp = "25082a99-f4f1-46be-ab4c-5b5c951b4411",
                             TwoFactorEnabled = false,
                             UserName = "test@pathly.com"
                         },
@@ -385,15 +388,15 @@ namespace Pathly.Data.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e9267e94-405e-4781-a3da-e4f1a4116b20",
+                            ConcurrencyStamp = "2cd0adda-73ea-4633-a12c-7082f762beef",
                             Email = "admin@pathly.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PATHLY.COM",
                             NormalizedUserName = "ADMIN@PATHLY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEINJJfWu7MuHRXuAus7Sh9z2xHIYQT+U7Srhj3kGGzdEP8CyO91AhrVwLPAutJKqSQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENJ1qIGu0ZcUJUp6+/9T/Yy7PgxmMi+VlhD9Ey4ZW1SYpkd+acpm8FwsAUm6AitQwg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b95646c0-2b7c-4f92-9ae3-687779b383f0",
+                            SecurityStamp = "760f62f7-b1ce-4883-915b-75f56efce18f",
                             TwoFactorEnabled = false,
                             UserName = "admin@pathly.com"
                         });
@@ -455,249 +458,6 @@ namespace Pathly.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Events");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ColorHex = "#4e73df",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1939),
-                            Description = "Planning for the new quarter",
-                            End = new DateTime(2026, 4, 1, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            GoalId = 1,
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 1, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Q2 Kickoff",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ColorHex = "#1cc88a",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1946),
-                            Description = "No interruptions allowed",
-                            End = new DateTime(2026, 4, 3, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 3, 8, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Deep Work: Coding",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ColorHex = "#f6c23e",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1948),
-                            End = new DateTime(2026, 4, 12, 17, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 11, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Productivity Seminar",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ColorHex = "#36b9cc",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1951),
-                            Description = "Sync with the roadmap",
-                            End = new DateTime(2026, 4, 15, 15, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 15, 14, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Mid-April Check-in",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ColorHex = "#e74a3b",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1952),
-                            End = new DateTime(2026, 4, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = true,
-                            Start = new DateTime(2026, 4, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Easter Sunday",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ColorHex = "#5a5c69",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1959),
-                            Description = "Team updates",
-                            End = new DateTime(2026, 4, 21, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 21, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Morning Sync",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ColorHex = "#6610f2",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1960),
-                            Description = "New tech stack",
-                            End = new DateTime(2026, 4, 21, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 21, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Lunch & Learn",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ColorHex = "#4e73df",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1962),
-                            Description = "Project Alpha",
-                            End = new DateTime(2026, 4, 21, 17, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 21, 15, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Client Call",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ColorHex = "#858796",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1963),
-                            Description = "Updating schema",
-                            End = new DateTime(2026, 4, 29, 1, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 28, 23, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "DB Migration",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ColorHex = "#1cc88a",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1966),
-                            Description = "Clearing the backlog",
-                            End = new DateTime(2026, 4, 30, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 4, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            TaskId = 10,
-                            Title = "April Task Sweep",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ColorHex = "#e74a3b",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1967),
-                            End = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = true,
-                            Start = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Labour Day Holiday",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ColorHex = "#36b9cc",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1969),
-                            Description = "Design work",
-                            End = new DateTime(2026, 5, 4, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Focus Block A",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ColorHex = "#e74a3b",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1970),
-                            Description = "Bug fix",
-                            End = new DateTime(2026, 5, 4, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Emergency Meeting",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ColorHex = "#5a5c69",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1971),
-                            Description = "Daily standup",
-                            End = new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 4, 10, 30, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Quick Sync",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ColorHex = "#6610f2",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1973),
-                            Description = "Celebrating achievement",
-                            End = new DateTime(2026, 5, 12, 17, 0, 0, 0, DateTimeKind.Unspecified),
-                            GoalId = 2,
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 12, 16, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Goal #2 Milestone",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ColorHex = "#1cc88a",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1974),
-                            Description = "Upskilling in .NET Testing",
-                            End = new DateTime(2026, 5, 22, 17, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = true,
-                            Start = new DateTime(2026, 5, 18, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Learning Week",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ColorHex = "#f6c23e",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1976),
-                            Description = "Wireframing session",
-                            End = new DateTime(2026, 5, 25, 17, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 25, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "UX Workshop",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ColorHex = "#858796",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1978),
-                            Description = "Friday Wrap-up",
-                            End = new DateTime(2026, 5, 29, 16, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 29, 15, 0, 0, 0, DateTimeKind.Unspecified),
-                            TaskId = 5,
-                            Title = "Weekly Report",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ColorHex = "#4e73df",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1979),
-                            Description = "Reviewing May performance",
-                            End = new DateTime(2026, 5, 31, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 31, 11, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "May Summary",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ColorHex = "#36b9cc",
-                            CreatedOn = new DateTime(2026, 4, 4, 0, 18, 59, 867, DateTimeKind.Utc).AddTicks(1980),
-                            Description = "Late night productivity",
-                            End = new DateTime(2026, 6, 1, 1, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsAllDay = false,
-                            Start = new DateTime(2026, 5, 31, 22, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Side Project Push",
-                            UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
-                        });
                 });
 
             modelBuilder.Entity("Pathly.DataModels.Goal", b =>
@@ -748,7 +508,7 @@ namespace Pathly.Data.Migrations
                             Id = 2,
                             IsActive = true,
                             ShortDescription = "Complete the implementation of AutoMapper and Seeding in the current project.",
-                            TargetDate = new DateTime(2026, 5, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(979),
+                            TargetDate = new DateTime(2026, 5, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8546),
                             Title = "Master Pathly Architecture",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -757,7 +517,7 @@ namespace Pathly.Data.Migrations
                             Id = 3,
                             IsActive = false,
                             ShortDescription = "Successfully finished the basics of C# programming.",
-                            TargetDate = new DateTime(2025, 11, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1040),
+                            TargetDate = new DateTime(2025, 11, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8592),
                             Title = "SoftUni Fundamentals Module",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         });
@@ -963,13 +723,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 1,
                             ActionId = 1,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1389),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8862),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1394),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8866),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 3,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 1",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -977,13 +737,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 2,
                             ActionId = 1,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1402),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8871),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1406),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8872),
                             IsCompleted = false,
-                            Position = 1,
+                            Position = 0,
                             Priority = 4,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 1",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -991,13 +751,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 3,
                             ActionId = 1,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1415),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8874),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1416),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8875),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 1,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 1",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1005,13 +765,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 4,
                             ActionId = 2,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1418),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8877),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1420),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8878),
                             IsCompleted = false,
                             Position = 0,
                             Priority = 2,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 2",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1019,13 +779,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 5,
                             ActionId = 2,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1424),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8880),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1428),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8881),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 3,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 2",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1033,13 +793,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 6,
                             ActionId = 2,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1432),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8884),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1433),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8885),
                             IsCompleted = false,
-                            Position = 1,
+                            Position = 0,
                             Priority = 4,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 2",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1047,13 +807,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 7,
                             ActionId = 3,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1435),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8934),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1456),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8935),
                             IsCompleted = true,
-                            Position = 4,
+                            Position = 0,
                             Priority = 1,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 3",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1061,13 +821,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 8,
                             ActionId = 3,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1458),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8937),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1460),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8938),
                             IsCompleted = false,
-                            Position = 5,
+                            Position = 0,
                             Priority = 2,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 3",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1075,13 +835,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 9,
                             ActionId = 3,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1462),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8940),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1463),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8941),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 3,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 3",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1089,13 +849,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 10,
                             ActionId = 4,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1470),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8944),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1471),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8945),
                             IsCompleted = false,
                             Position = 0,
                             Priority = 4,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 4",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1103,13 +863,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 11,
                             ActionId = 4,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1474),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8947),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1475),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8948),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 1,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 4",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1117,13 +877,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 12,
                             ActionId = 4,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1477),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8950),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1478),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8950),
                             IsCompleted = false,
-                            Position = 3,
+                            Position = 0,
                             Priority = 2,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 4",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1131,13 +891,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 13,
                             ActionId = 5,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1480),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8953),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1481),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8953),
                             IsCompleted = true,
-                            Position = 8,
+                            Position = 0,
                             Priority = 3,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 5",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1145,13 +905,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 14,
                             ActionId = 5,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1483),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8955),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1487),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8956),
                             IsCompleted = false,
-                            Position = 9,
+                            Position = 0,
                             Priority = 4,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 5",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1159,13 +919,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 15,
                             ActionId = 5,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1531),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8958),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1533),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8959),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 1,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 5",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1173,13 +933,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 16,
                             ActionId = 6,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1538),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8960),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1539),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8961),
                             IsCompleted = false,
                             Position = 0,
                             Priority = 2,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 6",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1187,13 +947,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 17,
                             ActionId = 6,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1541),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8963),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1542),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8964),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 3,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 6",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1201,13 +961,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 18,
                             ActionId = 6,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1545),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8966),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1546),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8967),
                             IsCompleted = false,
-                            Position = 5,
+                            Position = 0,
                             Priority = 4,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 6",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1215,13 +975,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 19,
                             ActionId = 7,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1552),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8969),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1553),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8970),
                             IsCompleted = true,
-                            Position = 12,
+                            Position = 0,
                             Priority = 1,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 7",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1229,13 +989,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 20,
                             ActionId = 7,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1555),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8971),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1556),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8972),
                             IsCompleted = false,
-                            Position = 13,
+                            Position = 0,
                             Priority = 2,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 7",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1243,13 +1003,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 21,
                             ActionId = 7,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1558),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8974),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1560),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8975),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 3,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 7",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1257,13 +1017,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 22,
                             ActionId = 8,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1595),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8976),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1597),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8977),
                             IsCompleted = false,
                             Position = 0,
                             Priority = 4,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 8",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1271,13 +1031,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 23,
                             ActionId = 8,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1601),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8979),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1603),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8980),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 1,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 8",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1285,13 +1045,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 24,
                             ActionId = 8,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1606),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8982),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1608),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8982),
                             IsCompleted = false,
-                            Position = 7,
+                            Position = 0,
                             Priority = 2,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 8",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1299,13 +1059,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 25,
                             ActionId = 9,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1611),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8984),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1612),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8985),
                             IsCompleted = true,
-                            Position = 16,
+                            Position = 0,
                             Priority = 3,
-                            Status = 2,
+                            Status = 0,
                             Title = "Task 1 for Action 9",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1313,13 +1073,13 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 26,
                             ActionId = 9,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1615),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8987),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1617),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8987),
                             IsCompleted = false,
-                            Position = 17,
+                            Position = 0,
                             Priority = 4,
-                            Status = 3,
+                            Status = 0,
                             Title = "Task 2 for Action 9",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
@@ -1327,20 +1087,20 @@ namespace Pathly.Data.Migrations
                         {
                             Id = 27,
                             ActionId = 9,
-                            CreatedOn = new DateTime(2026, 3, 25, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1621),
+                            CreatedOn = new DateTime(2026, 3, 24, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8989),
                             Description = "Seed description",
-                            DueDate = new DateTime(2026, 4, 9, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1623),
+                            DueDate = new DateTime(2026, 4, 8, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8990),
                             IsCompleted = true,
                             Position = 0,
                             Priority = 1,
-                            Status = 1,
+                            Status = 0,
                             Title = "Task 3 for Action 9",
                             UserId = "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
                         },
                         new
                         {
                             Id = 28,
-                            CreatedOn = new DateTime(2026, 4, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1633),
+                            CreatedOn = new DateTime(2026, 4, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8993),
                             Description = "Unlinked task description",
                             IsCompleted = false,
                             Position = 0,
@@ -1352,10 +1112,10 @@ namespace Pathly.Data.Migrations
                         new
                         {
                             Id = 29,
-                            CreatedOn = new DateTime(2026, 4, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1637),
+                            CreatedOn = new DateTime(2026, 4, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8995),
                             Description = "Unlinked task description",
                             IsCompleted = false,
-                            Position = 1,
+                            Position = 0,
                             Priority = 2,
                             Status = 0,
                             Title = "General Task 2",
@@ -1364,10 +1124,10 @@ namespace Pathly.Data.Migrations
                         new
                         {
                             Id = 30,
-                            CreatedOn = new DateTime(2026, 4, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1665),
+                            CreatedOn = new DateTime(2026, 4, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8997),
                             Description = "Unlinked task description",
                             IsCompleted = false,
-                            Position = 2,
+                            Position = 0,
                             Priority = 2,
                             Status = 0,
                             Title = "General Task 3",
@@ -1376,10 +1136,10 @@ namespace Pathly.Data.Migrations
                         new
                         {
                             Id = 31,
-                            CreatedOn = new DateTime(2026, 4, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1668),
+                            CreatedOn = new DateTime(2026, 4, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(8998),
                             Description = "Unlinked task description",
                             IsCompleted = false,
-                            Position = 3,
+                            Position = 0,
                             Priority = 2,
                             Status = 0,
                             Title = "General Task 4",
@@ -1388,10 +1148,10 @@ namespace Pathly.Data.Migrations
                         new
                         {
                             Id = 32,
-                            CreatedOn = new DateTime(2026, 4, 4, 3, 18, 59, 867, DateTimeKind.Local).AddTicks(1671),
+                            CreatedOn = new DateTime(2026, 4, 3, 21, 55, 31, 450, DateTimeKind.Local).AddTicks(9000),
                             Description = "Unlinked task description",
                             IsCompleted = false,
-                            Position = 4,
+                            Position = 0,
                             Priority = 2,
                             Status = 0,
                             Title = "General Task 5",

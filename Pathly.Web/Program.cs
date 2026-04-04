@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
+using Pathly.Services;
 using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
 using Pathly.Web.Hubs;
@@ -54,6 +55,7 @@ namespace Pathly.Web
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<ISettingsService, SettingsService>();
             builder.Services.AddScoped<IBlobService, BlobService>();
+            builder.Services.AddScoped<IEventService, EventService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

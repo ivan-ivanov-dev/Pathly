@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Pathly | Calendar";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #f8f6f2 !important;
+            background-image: radial-gradient(at 0% 0%, rgba(15, 76, 92, 0.03) 0, transparent 50%), radial-gradient(at 50% 0%, rgba(227, 100, 20, 0.03) 0, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7) !important;
+            border-radius: 24px !important;
+        }
+    </style>
+}
+
+<div class="container-fluid py-4 page-content animate-fade-in">
+    <!-- Top Hero Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 rounded-4 shadow-sm border-0">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4">
+                    <div>
+                        <h2 class="fw-bold mb-1 text-pathly">Pathly Calendar</h2>
+                        <p class="text-muted mb-0">Plan your steps, visualize your goals.</p>
+                    </div>
+
+                    <!-- Centered Legend for Desktop -->
+                    <div class=" quick-legend-container d-flex gap-4 align-items-center bg-white bg-opacity-50 px-4 py-2 rounded-pill shadow-sm">
+                        <span class="small fw-bold text-uppercase text-muted ls-1 me-2">Quick Legend:</span>
+                        <div class="legend-item"><span class="legend-dot bg-teal"></span> Goals</div>
+                        <div class="legend-item"><span class="legend-dot bg-orange"></span> Tasks</div>
+                        <div class="legend-item"><span class="legend-dot bg-purple"></span> General</div>
+                    </div>
+
+                    <button class="btn btn-pathly-primary py-3 px-5 rounded-3 shadow-sm" onclick="openCreateModal()">
+                        <i class="bi bi-plus-lg me-2"></i>New Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Calendar -->
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="glass-card p-4 rounded-4 shadow-lg border-0 min-vh-80">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade shadow-2xl" id="eventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/calendar.js" asp-append-version="true"></script>
+}

@@ -91,6 +91,8 @@
                     <nav class="sidebar-nav">
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
                            asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Calendar" ? "active" : "")"
+                           asp-controller="Calendar" asp-action="Index">Event Calendar</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
                            asp-controller="Tasks" asp-action="Index">Tasks</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Goals" ? "active" : "")"
@@ -98,7 +100,7 @@
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Roadmap" ? "active" : "")"
                            asp-controller="Roadmap" asp-action="Selection">Roadmaps</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")"
-                           asp-controller="Tag" asp-action="Index">Tags</a>
+                           asp-controller="Tag" asp-action="Index">Tag Gallery</a>
                         @if (User.IsInRole("Administrator"))
                         {
                             <div class="sidebar-divider my-2 border-bottom opacity-25"></div>
@@ -154,6 +156,10 @@
                        asp-controller="Dashboard" asp-action="Index">
                         <span class="sidebar-link-text">Dashboard</span>
                     </a>
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Calendar" ? "active" : "")"
+                       asp-controller="Calendar" asp-action="Index">
+                        <span class="sidebar-link-text">Events Calendar</span>
+                    </a>
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
                        asp-controller="Tasks" asp-action="Index">
                         <span class="sidebar-link-text">Tasks</span>
@@ -168,7 +174,7 @@
                     </a>
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")"
                        asp-controller="Tag" asp-action="Index">
-                        <span class="sidebar-link-text">Tags</span>
+                        <span class="sidebar-link-text">Tag Gallery</span>
                     </a>
                     @if (User.IsInRole("Administrator"))
                     {
@@ -242,6 +248,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> @* SweetAllert2 *@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script> @* SortableJS *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script> @* SignalR *@
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>@* FullCalendar *@
     <script src="~/js/site.js"></script>
     <script src="~/js/auth.js"></script>
     <script src="~/js/sidebar.js"></script>

@@ -28,6 +28,8 @@ namespace Pathly.Services.Implementation
                 var roadmaps = _context.Roadmaps.Where(r => userGoalIds.Contains(r.GoalId));
                 var userRoadmapIds = await roadmaps.Select(r => r.Id).ToListAsync();
 
+                _context.Events.RemoveRange(_context.Events.Where(e => e.UserId == userId));
+
                 _context.Tags.RemoveRange(_context.Tags.Where(t => t.UserId == userId));
                 _context.Tasks.RemoveRange(_context.Tasks.Where(t => t.UserId == userId));
                 _context.Actions.RemoveRange(_context.Actions.Where(a => userRoadmapIds.Contains(a.RoadmapId)));

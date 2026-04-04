@@ -2,6 +2,7 @@
 using Pathly.DataModels;
 using Pathly.ViewModels;
 using Pathly.ViewModels.Dashboard;
+using Pathly.ViewModels.Event;
 using Pathly.ViewModels.Goals;
 using Pathly.ViewModels.Roadmaps;
 using Pathly.ViewModels.Tags;
@@ -59,7 +60,11 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.NewGoalDescription, opt => opt.Ignore())
                 .ForMember(dest => dest.NewGoalIsActive, opt => opt.Ignore())
                 .ForMember(dest => dest.NewGoalTargetDate, opt => opt.Ignore())
-                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore())
+                .ForMember(dest => dest.Why, opt => opt.Ignore())
+                .ForMember(dest => dest.IdealOutcome, opt => opt.Ignore())
+                .ForMember(dest => dest.IsEditing, opt => opt.Ignore())
+                .ForMember(dest => dest.Actions, opt => opt.Ignore());
 
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDetailsViewModel>()
@@ -170,6 +175,28 @@ namespace Pathly.Services.Mappings
 
             // --- DASHBOARD ---
             CreateMap<DashboardFocusListsViewModel, DashboardFocusListsViewModel>();
+
+            // --- EVENTS ---
+            CreateMap<Event, EventCalendarViewModel>()
+                .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
+                .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.ColorHex))
+                .ForMember(dest => dest.AllDay, opt => opt.MapFrom(src => src.IsAllDay));
+
+            CreateMap<Event, EventFormViewModel>()
+            .ForMember(dest => dest.AvailableTasks, opt => opt.Ignore())
+            .ForMember(dest => dest.AvailableGoals, opt => opt.Ignore())
+            .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
+            .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
+            .ForMember(dest => dest.ColorHex, opt => opt.MapFrom(src => src.ColorHex))
+            .ForMember(dest => dest.IsAllDay, opt => opt.MapFrom(src => src.IsAllDay))
+            .ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.UserId, opt => opt.Ignore()) 
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+            .ForMember(dest => dest.Task, opt => opt.Ignore())
+            .ForMember(dest => dest.Goal, opt => opt.Ignore());
         }
     }
 }
