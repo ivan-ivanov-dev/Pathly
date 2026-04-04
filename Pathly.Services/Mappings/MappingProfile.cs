@@ -60,7 +60,11 @@ namespace Pathly.Services.Mappings
                 .ForMember(dest => dest.NewGoalDescription, opt => opt.Ignore())
                 .ForMember(dest => dest.NewGoalIsActive, opt => opt.Ignore())
                 .ForMember(dest => dest.NewGoalTargetDate, opt => opt.Ignore())
-                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore());
+                .ForMember(dest => dest.RoadmapId, opt => opt.Ignore())
+                .ForMember(dest => dest.Why, opt => opt.Ignore())
+                .ForMember(dest => dest.IdealOutcome, opt => opt.Ignore())
+                .ForMember(dest => dest.IsEditing, opt => opt.Ignore())
+                .ForMember(dest => dest.Actions, opt => opt.Ignore());
 
             // --- ROADMAPS & ACTIONS ---
             CreateMap<Roadmap, RoadmapDetailsViewModel>()
