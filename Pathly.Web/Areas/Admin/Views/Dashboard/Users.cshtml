@@ -32,28 +32,31 @@
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td>@user.Email</td>
+                            <td class="fw-medium">@user.Email</td>
                             <td>@user.UserName</td>
-                            <td>
+                            <td id="role-container-@user.Id">
                                 @foreach (var role in user.Roles)
                                 {
-                                    <span class="badge @(role == "Administrator" ? "bg-danger" : "bg-primary") rounded-pill">@role</span>
+                                    <span class="badge @(role == "Administrator" ? "bg-danger" : "bg-primary") rounded-pill px-3">@role</span>
                                 }
                             </td>
-                            <td>
-                                <select class="form-select form-select-sm shadow-sm"
-                                        onchange="updateRole('@user.Id', this.value)"
-                                        style="width: auto; border-radius: 10px;">
-                                    <option value="User" selected="@(user.Roles.Contains("User"))">User</option>
-                                    <option value="Administrator" selected="@(user.Roles.Contains("Administrator"))">Administrator</option>
-                                </select>                                
-                            </td>
-                            <td>
-                                <button class="btn btn-sm @(user.IsLockedOut ? "btn-warning" : "btn-outline-warning")"
-                                        onclick="toggleLockout('@user.Id', '@user.Email', @(user.IsLockedOut.ToString().ToLower()))"
-                                        title="@(user.IsLockedOut ? "Unlock User" : "Lock User")">
-                                    <i class="bi @(user.IsLockedOut ? "bi-lock-fill" : "bi-unlock")"></i>
-                                </button>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end align-items-center gap-2">
+                                    <select class="form-select form-select-sm shadow-sm"
+                                            onchange="updateRole('@user.Id', this.value)"
+                                            style="width: 160px; border-radius: 8px;">
+                                        <option value="User" selected="@(user.Roles.Contains("User"))">User</option>
+                                        <option value="Administrator" selected="@(user.Roles.Contains("Administrator"))">Administrator</option>
+                                    </select>
+
+                                    <button class="btn btn-sm @(user.IsLockedOut ? "btn-warning" : "btn-outline-warning")"
+                                            style="border-radius: 8px; width: 38px; height: 31px;"
+                                            onclick="toggleLockout('@user.Id', '@user.Email', @(user.IsLockedOut.ToString().ToLower()))"
+                                            title="@(user.IsLockedOut ? "Unlock User" : "Lock User")">
+                                        <i class="bi @(user.IsLockedOut ? "bi-lock-fill" : "bi-unlock")"></i>
+                                    </button>
+
+                                </div>
                             </td>
                         </tr>
                     }
@@ -96,7 +99,7 @@
                 }
             });
         }
-                function updateRole(userId, newRoleName) {
+                        function updateRole(userId, newRoleName) {
             $.ajax({
                 url: '@Url.Action("ChangeRole", "Dashboard", new { area = "Admin" })',
                 type: 'POST',
@@ -107,6 +110,11 @@
                 },
                 success: function (response) {
                     if (response.success) {
+                        const container = $(`#role-container-${userId}`);
+                        const badgeClass = (newRoleName === "Administrator") ? "bg-danger" : "bg-primary";
+
+                        container.html(`<span class="badge ${badgeClass} rounded-pill px-3">${newRoleName}</span>`);
+
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top-end',
@@ -121,6 +129,7 @@
                         });
                     } else {
                         Swal.fire('Error!', response.message, 'error');
+                        location.reload();
                     }
                 },
                 error: function() {
