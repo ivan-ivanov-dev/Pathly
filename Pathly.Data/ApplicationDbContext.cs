@@ -141,6 +141,7 @@ namespace Pathly.Data
             builder.ApplyConfiguration(new ActionItemConfiguration());                     // 7. Actions
             builder.ApplyConfiguration(new TaskItemConfiguration());                       // 8. Tasks
             builder.ApplyConfiguration(new TaskTagConfiguration());                        // 9. Linking Tasks & Tags
+            builder.ApplyConfiguration(new EventConfiguration());                        // 10. Events
         }
     }
 }
