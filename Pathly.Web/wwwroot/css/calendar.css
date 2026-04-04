@@ -320,3 +320,82 @@
     background: rgba(15, 76, 92, 0.03);
 }
 
+/* ==========================================================================
+   10. WEEK VIEW & TIME GRID ENHANCEMENTS
+   ========================================================================== */
+
+/* Soften the time-grid lines */
+.fc-timegrid-slot {
+    height: 3em !important; /* Makes slots a bit more compact */
+    border-bottom: 1px solid rgba(0,0,0,0.02) !important;
+}
+
+.fc-timegrid-axis-cushion, .fc-timegrid-slot-label-cushion {
+    font-size: 0.7rem !important;
+    text-transform: uppercase;
+    color: #a0aec0 !important;
+    font-weight: 600;
+}
+
+/* The "Now" Indicator line */
+.fc-timegrid-now-indicator-line {
+    border-color: #E36414 !important;
+    border-width: 2px !important;
+}
+
+.fc-timegrid-now-indicator-arrow {
+    border-color: #E36414 !important;
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+}
+
+/* ==========================================================================
+   11. LINKED ITEM ICONS
+   ========================================================================== */
+
+.event-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.linked-icon {
+    font-size: 0.75rem;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+    .linked-icon.goal {
+        color: #0F4C5C;
+        background: rgba(15, 76, 92, 0.1);
+    }
+
+    .linked-icon.task {
+        color: #E36414;
+        background: rgba(227, 100, 20, 0.1);
+    }
+
+/* Fix for Week view event overlapping */
+.fc-timegrid-event {
+    margin: 1px !important;
+    box-shadow: none !important;
+}
+
+    .fc-timegrid-event .premium-event-wrapper {
+        height: 100%;
+        border-radius: 6px;
+    }
+
+/* ==========================================================================
+   12. CALENDAR HEADER REFINEMENT
+   ========================================================================== */
+
+.fc-col-header-cell {
+    background: rgba(0,0,0,0.01);
+    padding: 10px 0 !important;
+}
+
+    .fc-col-header-cell.fc-day-today {
+        background: rgba(227, 100, 20, 0.03) !important;
+    }
+

@@ -23,8 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
         dayMaxEvents: true,
 
         eventDataTransform: function (eventData) {
-            console.log("Raw Event Data from Server:", eventData);
-
             return {
                 id: eventData.id || eventData.Id,
                 title: eventData.title || eventData.Title,
@@ -32,40 +30,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: eventData.end || eventData.End,
                 allDay: eventData.allDay || eventData.AllDay,
                 extendedProps: {
-                    Color: eventData.color || eventData.Color,
-                    Description:  eventData.description || eventData.Description
+                    Color: eventData.color || eventData.Color || eventData.colorHex,
+                    Description: eventData.description || eventData.Description,
+                    GoalTitle: eventData.goalTitle || "",
+                    TaskTitle: eventData.taskTitle || ""
                 }
             };
         },
 
         eventContent: function (arg) {
             const title = arg.event.title || "Untitled";
-            // Check if property is 'Color' or 'colorHex' based on your JSON
-            const color = arg.event.extendedProps.colorHex || arg.event.extendedProps.Color || "#0F4C5C";
-            const location = arg.event.extendedProps.location || "";
+            const color = arg.event.extendedProps.Color || "#0F4C5C";
+            const goalTitle = arg.event.extendedProps.GoalTitle;
+            const taskTitle = arg.event.extendedProps.TaskTitle;
 
-            // Format Time: e.g., "10:30 AM"
             const timeStr = arg.event.start ? arg.event.start.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
+                hour: '2-digit', minute: '2-digit', hour12: true
             }) : "";
 
-            // The Template
             let html = `
-                <div class="premium-event-wrapper" style="--accent-color: ${color}; --bg-color: ${color}15">
+                <div class="premium-event-wrapper" style="--accent-color: ${color}">
                     <div class="event-accent-bar"></div>
                     <div class="event-content-body">
                         <div class="event-meta-top">
                             <span class="event-time-badge">${timeStr}</span>
-                            <i class="bi bi-x-circle-fill event-delete-btn" onclick="event.stopPropagation(); confirmDelete('${arg.event.id}')"></i>
+                            <div class="event-icons">
+                                ${goalTitle ? `<i class="bi bi-target2 linked-icon goal" title="Linked to Goal: ${goalTitle}"></i>` : ''}
+                                ${taskTitle ? `<i class="bi bi-check2-circle linked-icon task" title="Linked to Task: ${taskTitle}"></i>` : ''}
+                                <i class="bi bi-x-circle-fill event-delete-btn" onclick="event.stopPropagation(); confirmDelete('${arg.event.id}')"></i>
+                            </div>
                         </div>
                         <div class="event-main-title">${title}</div>
-                        ${location ? `<div class="event-location-text"><i class="bi bi-geo-alt-fill"></i> ${location}</div>` : ''}
                     </div>
                 </div>
             `;
-
             return { html: html };
         },
 
