@@ -30,61 +30,63 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: eventData.end || eventData.End,
                 allDay: eventData.allDay || eventData.AllDay,
                 extendedProps: {
-                    Color: eventData.color || eventData.Color || eventData.colorHex,
-                    Description: eventData.description || eventData.Description,
-                    GoalTitle: eventData.goalTitle || "",
-                    TaskTitle: eventData.taskTitle || ""
+                    Color: eventData.color || eventData.Color || eventData.colorHex || "#0F4C5C",
+                    Description: eventData.description || eventData.Description || "",
+                    Location: eventData.location || eventData.Location || "",
+                    GoalTitle: eventData.goalTitle || eventData.GoalTitle || "",
+                    TaskTitle: eventData.taskTitle || eventData.TaskTitle || ""
                 }
             };
         },
 
         eventContent: function (arg) {
+            const props = arg.event.extendedProps || {};
             const title = arg.event.title || "Untitled";
-            const color = arg.event.extendedProps.Color || "#0F4C5C";
-            const goalTitle = arg.event.extendedProps.GoalTitle;
-            const taskTitle = arg.event.extendedProps.TaskTitle;
+            const color = props.Color || "#0F4C5C";
+            const goal = props.GoalTitle || "";
+            const task = props.TaskTitle || "";
+            const loc = props.Location || "";
+            const desc = props.Description || "";
 
             const timeStr = arg.event.start ? arg.event.start.toLocaleTimeString([], {
                 hour: '2-digit', minute: '2-digit', hour12: true
             }) : "";
 
             let html = `
-                <div class="premium-event-wrapper" style="--accent-color: ${color}">
+                <div class="premium-event-wrapper" style="--accent-color: ${color}; width: 100%;">
                     <div class="event-accent-bar"></div>
                     <div class="event-content-body">
                         <div class="event-meta-top">
                             <span class="event-time-badge">${timeStr}</span>
                             <div class="event-icons">
-                                ${goalTitle ? `<i class="bi bi-target2 linked-icon goal" title="Linked to Goal: ${goalTitle}"></i>` : ''}
-                                ${taskTitle ? `<i class="bi bi-check2-circle linked-icon task" title="Linked to Task: ${taskTitle}"></i>` : ''}
-                                <i class="bi bi-x-circle-fill event-delete-btn" onclick="event.stopPropagation(); confirmDelete('${arg.event.id}')"></i>
+                                ${goal ? `<i class="bi bi-target2 linked-icon goal" title="Goal: ${goal}"></i>` : ''}
+                                ${task ? `<i class="bi bi-check2-circle linked-icon task" title="Task: ${task}"></i>` : ''}
                             </div>
                         </div>
                         <div class="event-main-title">${title}</div>
+            
+                        <div class="event-details-pane">
+                            ${desc ? `<div class="event-desc-text">${desc}</div>` : ''}
+                            <div class="event-info-cluster">
+                                ${loc ? `<div class="event-location-text"><i class="bi bi-geo-alt-fill"></i> ${loc}</div>` : ''}
+                                ${goal ? `<div class="event-link-info goal-link"><i class="bi bi-link-45deg"></i> ${goal}</div>` : ''}
+                                ${task ? `<div class="event-link-info task-link"><i class="bi bi-link-45deg"></i> ${task}</div>` : ''}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `;
+                </div>`;
+
             return { html: html };
         },
 
         eventClick: function (info) {
             const eventId = info.event.id;
-
-            if (!eventId || eventId === "0") {
-                console.warn("Invalid ID detected:", eventId);
-                Swal.fire('Context Error', 'The event ID is missing. Please refresh.', 'error');
-                return;
-            }
-
+            if (!eventId || eventId === "0") return;
             openEditModal(eventId);
         },
 
-        eventDrop: function (info) {
-            updateEventTimes(info.event);
-        },
-        eventResize: function (info) {
-            updateEventTimes(info.event);
-        }
+        eventDrop: function (info) { updateEventTimes(info.event); },
+        eventResize: function (info) { updateEventTimes(info.event); }
     });
 
     calendar.render();

@@ -82,21 +82,30 @@
     --fc-today-bg-color: rgba(15, 76, 92, 0.02);
 }
 
-    .fc .fc-daygrid-day-number {
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #a0aec0;
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-daygrid-day-number,
+    .fc .fc-list-day-text,
+    .fc .fc-list-day-side-text {
+        color: #0F4C5C !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        font-size: 1.05rem;
         padding: 8px 12px !important;
     }
 
-    .fc .fc-col-header-cell-cushion {
-        padding: 12px 0 !important;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-        font-weight: 700;
-        color: #718096;
+    .fc a {
+        text-decoration: none !important;
+        box-shadow: none !important;
     }
+
+    .fc .fc-toolbar-title {
+        color: #0F4C5C;
+        font-weight: 800;
+    }
+
+.fc-theme-standard td, .fc-theme-standard th {
+    border: 1px solid #eef2f7 !important;
+}
 
 /* ==========================================================================
    5. PREMIUM EVENT CARDS
@@ -112,6 +121,71 @@
     padding: 0 !important;
 }
 
+.event-details-pane {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease;
+    opacity: 0;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 6px;
+}
+
+.event-desc-text {
+    font-size: 0.9rem !important;
+    color: #2d3436 !important;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.event-info-cluster {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 5px;
+}
+
+.event-location-text {
+    font-size: 0.8rem !important;
+    color: #4a5568 !important;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.goal-link {
+    background: rgba(15, 76, 92, 0.1) !important;
+    color: #0F4C5C !important;
+}
+
+.task-link {
+    background: rgba(227, 100, 20, 0.1) !important;
+    color: #E36414 !important;
+}
+
+.event-link-info {
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    color: var(--accent-color);
+    background: rgba(28, 200, 138, 0.1); 
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-top: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .premium-event-wrapper {
     background: white;
     border-radius: 10px;
@@ -119,16 +193,25 @@
     display: flex;
     overflow: hidden;
     margin: 2px 0;
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease;
     border: 1px solid rgba(0,0,0,0.03);
     width: 100%;
 }
 
     .premium-event-wrapper:hover {
-        transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-height: 45px;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         z-index: 100;
     }
+        .premium-event-wrapper:hover .event-details-pane {
+            max-height: 100px;
+            opacity: 1;
+        }
+
+.fc-event:hover {
+    z-index: 999 !important;
+}
 
 .event-accent-bar {
     width: 5px;
@@ -256,19 +339,33 @@
    8. LEGEND & INDICATORS
    ========================================================================== */
 
+.quick-legend-container {
+    background: white;
+    border-radius: 50px;
+    padding: 10px 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
 .legend-item {
-    font-size: 0.9rem;
-    color: #4a5568;
     display: flex;
     align-items: center;
-    padding: 4px 8px;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5568;
+    padding: 0 !important;
 }
 
 .legend-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 0 !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -347,6 +444,20 @@
     border-color: #E36414 !important;
     border-top-color: transparent !important;
     border-bottom-color: transparent !important;
+}
+
+.fc-daygrid-event {
+    white-space: normal !important;
+    align-items: flex-start !important;
+}
+
+.fc-daygrid-event-harness {
+    margin: 2px 4px !important;
+}
+
+.fc-daygrid-day-events {
+    position: relative;
+    z-index: 2;
 }
 
 /* ==========================================================================
