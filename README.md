@@ -6,7 +6,6 @@
 
 > **Bridge the gap between high-level ambition and daily execution with Micro-Strategic Planning.**  
 > *Try it out and see for yourself:* [https://pathly.azurewebsites.net](pathly-buaheye9cfh5gkc0.germanywestcentral-01.azurewebsites.net)
-
 ![Pathly Logo](Pathly.Web/wwwroot/images/PathlyLogo.png)
 
 
