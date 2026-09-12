@@ -19,6 +19,11 @@ namespace Pathly.Web.Controllers
         }
         public async Task<IActionResult> Index(string searchString)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var viewModel = await _tagService.GetUserTagsAsync(userId, searchString);
 
@@ -58,6 +63,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             await _tagService.DeleteTagAsync(id, userId);
             return RedirectToAction(nameof(Index));

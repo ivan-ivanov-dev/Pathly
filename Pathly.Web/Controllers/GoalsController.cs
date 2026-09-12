@@ -22,6 +22,16 @@ namespace Pathly.Web.Controllers
         }
         public async Task<IActionResult> Index(GoalQueryModel queryModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(queryModel);
+            }
+
+            // Clamp paging parameters so untrusted, user-controlled values can never
+            // reach PagedList's TotalPages calculation (and the view's page-number loop) unbounded.
+            queryModel.PageNumber = Math.Max(1, queryModel.PageNumber);
+            queryModel.PageSize = Math.Clamp(queryModel.PageSize, 1, 100);
+
             var userId = _userManager.GetUserId(User);
             var goals = await _goalService.GetAllAsync(queryModel ,userId);
 
@@ -71,6 +81,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var goal = await _goalService.GetDetailsAsync(id, userId);
             if (goal == null)
@@ -117,6 +132,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             // Validate id to ensure it's a valid id
             if (id <= 0)
             {
@@ -136,6 +156,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             await _goalService.DeleteAsync(id, userId);
             return RedirectToAction(nameof(Index));
@@ -145,6 +170,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleStatus(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             await _goalService.ToggleGoalStatusAsync(id,userId);
             return RedirectToAction(nameof(Index));

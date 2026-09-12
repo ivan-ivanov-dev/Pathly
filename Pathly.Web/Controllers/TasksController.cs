@@ -28,6 +28,11 @@ namespace Pathly.Web.Controllers
 
         public async Task<IActionResult> Index(TaskQueryModel queryModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             if (queryModel.PageSize == 9)
@@ -45,6 +50,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAsync(int? actionId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var tags = await _tagService.GetUserTagsAsync(userId);
 
@@ -101,6 +111,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var taskDetails = await _taskService.GetDetailsAsync(id,userId);
 
@@ -122,7 +137,7 @@ namespace Pathly.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(TaskEditViewModel model)
+        public async Task<IActionResult> EditAsync(TaskEditViewModel model, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith)
         {
             var id = model.Id;
             var userId = _userManager.GetUserId(User);
@@ -153,9 +168,9 @@ namespace Pathly.Web.Controllers
 
             await _taskService.UpdateWithTagsAsync(id, model, userId);
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (xRequestedWith == "XMLHttpRequest")
             {
-                return Ok(); 
+                return Ok();
             }
 
             return RedirectToAction("Index", "Tasks");
@@ -164,12 +179,17 @@ namespace Pathly.Web.Controllers
         /*Delete Tasks*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var success = await _taskService.DeleteAsync(id, userId);
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")//Check if the request is an AJAX request
+            if (xRequestedWith == "XMLHttpRequest")//Check if the request is an AJAX request
             {
                 return Json(new
                 {
@@ -186,6 +206,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             var model = await _taskService.GetDetailsAsync(id, userId);
@@ -203,6 +228,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkTaskStatus(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
             var userId = _userManager.GetUserId(User);
             try
             {
@@ -224,6 +254,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePosition([FromBody] TaskUpdatePositionViewModel model)//The [FromBody] attribute tells ASP.NET Core to look for the data in the request body rather than the query string.
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             if (model == null)
             {
                 return BadRequest();
@@ -246,6 +281,11 @@ namespace Pathly.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePriority(int id, TaskPriority priority)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             await _taskService.UpdatePriorityAsync(id,priority, userId);

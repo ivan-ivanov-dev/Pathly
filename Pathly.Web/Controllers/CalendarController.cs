@@ -76,6 +76,11 @@ namespace Pathly.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             try
@@ -116,6 +121,8 @@ namespace Pathly.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid) return BadRequest();
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _eventService.DeleteAsync(id, userId!);
             return Ok();

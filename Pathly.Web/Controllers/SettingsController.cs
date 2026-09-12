@@ -38,6 +38,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(SettingsViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Index), model);
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
@@ -63,6 +68,11 @@ namespace Pathly.Web.Controllers
             if (string.IsNullOrEmpty(model.CurrentPassword) || string.IsNullOrEmpty(model.NewPassword))
             {
                 ModelState.AddModelError("", "Password fields are required.");
+                return View("Index", model);
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return View("Index", model);
             }
 

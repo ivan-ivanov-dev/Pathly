@@ -35,6 +35,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create(int? goalId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var model = new RoadmapCreateViewModel { IsEditing = false };
 
@@ -63,6 +68,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var model = await _roadmapService.GetRoadmapForEditAsync(id, userId);
 
@@ -115,6 +125,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var roadmap = await _roadmapService.GetRoadmapDetailAsync(id, userId);
 
@@ -129,6 +144,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveAssignments(int actionId, int roadmapId, string selectedTaskIds)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             var taskIds = string.IsNullOrEmpty(selectedTaskIds)
@@ -146,6 +166,11 @@ namespace Pathly.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var success = await _roadmapService.DeleteRoadmapAsync(id, userId);
             if (success)
@@ -158,6 +183,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Planner(int actionId, int roadmapId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var tasks = await _roadmapService.GetUnlinkedTasksAsync(userId);
 
@@ -175,6 +205,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UnlinkTask(int taskId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
             var success = await _roadmapService.UnlinkTaskFromActionAsync(taskId, userId);
             if(success)
@@ -195,6 +230,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleTaskStatus(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var userId = _userManager.GetUserId(User);
 
             var isCompleted = await _roadmapService.ToggleTaskCompletionAsync(id, userId);
@@ -211,6 +251,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadResource(IFormFile file, int actionId)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false });
+            }
+
             if (file == null || file.Length == 0)
             {
                 return Json(new { success = false });
@@ -227,6 +272,11 @@ namespace Pathly.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteResource(int actionId, string blobName)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var success = await _blobService.RemoveResourceAsync(actionId, blobName);
 
             await _blobService.DeleteBlobAsync(blobName);//Remove from Azure Storage
@@ -242,6 +292,11 @@ namespace Pathly.Web.Controllers
         [HttpGet]
         public IActionResult DownloadResource(string blobName)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var url = _blobService.GetReadOnlyLink(blobName);
             if (url == null) return NotFound();
             return Redirect(url);
