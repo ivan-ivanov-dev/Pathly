@@ -14,6 +14,15 @@
 }
 
 .linker-card {
+    /* Reset native <button> chrome so it renders identically to the old div-based card */
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+
     border-radius: 20px;
     background: #ffffff;
     cursor: pointer;

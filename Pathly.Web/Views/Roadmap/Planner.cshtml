@@ -68,11 +68,9 @@
                     @foreach (var task in Model.UnlinkedTasks)
                     {
                         <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 linker-card border-0 shadow-sm"
+                            <button type="button" class="card h-100 linker-card border-0 shadow-sm"
                                  id="planner-card-@task.Id"
-                                 role="button" tabindex="0"
-                                 onclick="RoadmapUI.toggleLocalSelection(this, @task.Id)"
-                                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();RoadmapUI.toggleLocalSelection(this, @task.Id);}">
+                                 onclick="RoadmapUI.toggleLocalSelection(this, @task.Id)">
 
                                 <div class="card-body p-4 d-flex flex-column">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -94,7 +92,7 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     }
                 </div>

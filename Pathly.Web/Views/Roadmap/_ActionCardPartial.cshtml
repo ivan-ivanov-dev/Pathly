@@ -75,6 +75,7 @@
                                             <!-- NOSONAR: native checkbox already has full keyboard support (Space toggles + fires onclick) -->
                                             <input type="checkbox"
                                                    class="form-check-input task-toggle-check"
+                                                   aria-label="Mark '@task.Title' as complete"
                                                    @(task.IsCompleted ? "checked" : "")
                                                    onclick="RoadmapDetails.toggleTaskStatus('@task.Id')" />
                                         </div>
@@ -128,10 +129,10 @@
                         }
                     </div>
 
-                    <div class="drop-zone mt-2" id="drop-zone-@currentId" role="button" tabindex="0"
-                         onclick="document.getElementById('file-input-@currentId').click()"
-                         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-input-@currentId').click();}">
-                        <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                    <div class="drop-zone mt-2" id="drop-zone-@currentId">
+                        <button type="button" class="drop-zone__trigger" onclick="document.getElementById('file-input-@currentId').click()">
+                            <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                        </button>
                         <input type="file" id="file-input-@currentId" class="drop-zone__input"
                                onchange="RoadmapResources.uploadFile('@currentId', this.files[0])"
                                style="display:none;">
