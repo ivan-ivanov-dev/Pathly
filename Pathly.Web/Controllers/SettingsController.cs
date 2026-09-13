@@ -8,6 +8,8 @@ namespace Pathly.Web.Controllers
 {
     public class SettingsController : Controller
     {
+        private const string IndexViewName = "Index";
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ISettingsService _settingsService;
@@ -68,12 +70,12 @@ namespace Pathly.Web.Controllers
             if (string.IsNullOrEmpty(model.CurrentPassword) || string.IsNullOrEmpty(model.NewPassword))
             {
                 ModelState.AddModelError("", "Password fields are required.");
-                return View("Index", model);
+                return View(IndexViewName, model);
             }
 
             if (!ModelState.IsValid)
             {
-                return View("Index", model);
+                return View(IndexViewName, model);
             }
 
             var user = await _userManager.GetUserAsync (User);
@@ -92,7 +94,7 @@ namespace Pathly.Web.Controllers
                 ModelState.AddModelError("", error.Description); 
             
             }
-            return View("Index", model);
+            return View(IndexViewName, model);
         }
 
         [HttpPost]
@@ -113,7 +115,7 @@ namespace Pathly.Web.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignOutAsync();
-                return RedirectToAction("Index", "Home", new { area = "" });
+                return RedirectToAction(IndexViewName, "Home", new { area = "" });
             }
 
             return RedirectToAction(nameof(Index));
