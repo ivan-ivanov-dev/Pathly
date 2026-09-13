@@ -29,8 +29,11 @@ namespace Pathly.Web.Controllers
 
             // Clamp paging parameters so untrusted, user-controlled values can never
             // reach PagedList's TotalPages calculation (and the view's page-number loop) unbounded.
-            queryModel.PageNumber = Math.Max(1, queryModel.PageNumber);
-            queryModel.PageSize = Math.Clamp(queryModel.PageSize, 1, 100);
+            if (queryModel != null)
+            {
+                queryModel.PageNumber = Math.Max(1, queryModel.PageNumber);
+                queryModel.PageSize = Math.Clamp(queryModel.PageSize, 1, 100);
+            }
 
             var userId = _userManager.GetUserId(User);
             var goals = await _goalService.GetAllAsync(queryModel ,userId);

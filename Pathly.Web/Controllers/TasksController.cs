@@ -133,7 +133,7 @@ namespace Pathly.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(TaskEditViewModel model, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith)
+        public async Task<IActionResult> EditAsync(TaskEditViewModel model, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith = null)
         {
             var id = model.Id;
             var userId = _userManager.GetUserId(User);
@@ -173,7 +173,7 @@ namespace Pathly.Web.Controllers
         /*Delete Tasks*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(int id, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith)
+        public async Task<IActionResult> DeleteAsync(int id, [FromHeader(Name = "X-Requested-With")] string? xRequestedWith = null)
         {
             if (!ModelState.IsValid)
             {

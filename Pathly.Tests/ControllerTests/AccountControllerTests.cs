@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Pathly.DataModels;
 using Pathly.Tests.Common;
 using Pathly.ViewModels.Authentication;
