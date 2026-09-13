@@ -18,15 +18,14 @@ namespace Pathly.Services.Implementation
     public class BlobService : IBlobService
     {
         private readonly BlobServiceClient _blobServiceClient;
-        private readonly AzureStorageSettings _storageSettings;
-        private readonly ApplicationDbContext _context; 
+        private readonly ApplicationDbContext _context;
         private readonly string _containerName;
 
         public BlobService(IConfiguration configuration, IOptions<AzureStorageSettings> storageSettings,ApplicationDbContext context)
         {
-            _storageSettings = storageSettings.Value;
-            _blobServiceClient = new BlobServiceClient(_storageSettings.ConnectionString);
-            _containerName = _storageSettings.ContainerName;
+            var storageSettingsValue = storageSettings.Value;
+            _blobServiceClient = new BlobServiceClient(storageSettingsValue.ConnectionString);
+            _containerName = storageSettingsValue.ContainerName;
             _context = context;
         }
 

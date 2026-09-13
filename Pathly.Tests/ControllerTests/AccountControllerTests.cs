@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using Pathly.Data;
 using Pathly.DataModels;
 using Pathly.Tests.Common;
 using Pathly.ViewModels.Authentication;
@@ -15,24 +11,14 @@ namespace Pathly.Tests;
 public class AccountControllerTests : IdentityTestBase
 {
     private AccountController _controller;
-    private Mock<ApplicationDbContext> _mockContext;
     [SetUp]
     public override void Setup()
     {
         base.Setup();
 
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .Options;
-
-        var mockConfiguration = new Mock<IConfiguration>();
-
-        _mockContext = new Mock<ApplicationDbContext>(options, mockConfiguration.Object);
-
         _controller = new AccountController(
             MockUserManager.Object,
-            MockSignInManager.Object,
-            _mockContext.Object);
+            MockSignInManager.Object);
     }
 
     [TearDown]

@@ -345,7 +345,7 @@ public class TaskServiceTests: ServiceTestsBase
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _taskService.MarkTaskStatusAsync(8888, "any-user"));
-        Assert.AreEqual(ex.Message, "Task not found");
+        Assert.AreEqual("Task not found", ex.Message);
     }
 
     [Test]
@@ -386,7 +386,7 @@ public class TaskServiceTests: ServiceTestsBase
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _taskService.UpdatePriorityAsync(777, TaskPriority.Medium, "any-user"));
-        Assert.AreEqual(ex.Message, "Task not found");
+        Assert.AreEqual("Task not found", ex.Message);
     }
 
     [Test]
@@ -450,7 +450,7 @@ public class TaskServiceTests: ServiceTestsBase
         // Act & Assert
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _taskService.UpdateWithTagsAsync(7777, new TaskEditViewModel(), "any-user"));
-        Assert.AreEqual(ex.Message, "Task not found");
+        Assert.AreEqual("Task not found", ex.Message);
     }
 
     [Test]

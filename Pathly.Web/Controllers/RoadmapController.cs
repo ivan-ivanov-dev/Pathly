@@ -13,6 +13,8 @@ namespace Pathly.Web.Controllers
     [Authorize]
     public class RoadmapController : Controller
     {
+        private const string RoadmapFormView = "RoadmapForm";
+
         private readonly IRoadmapService _roadmapService;
         private readonly IBlobService _blobService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -63,7 +65,7 @@ namespace Pathly.Web.Controllers
                 });
             }
 
-            return View("RoadmapForm", model);
+            return View(RoadmapFormView, model);
         }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -78,7 +80,7 @@ namespace Pathly.Web.Controllers
 
             if (model == null) return NotFound();
 
-            return View("RoadmapForm", model);
+            return View(RoadmapFormView, model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -107,18 +109,18 @@ namespace Pathly.Web.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return View("RoadmapForm", model);
+                return View(RoadmapFormView, model);
             }
 
             try
             {
-                var roadmapId = await _roadmapService.SaveRoadmapAsync(model, userId);
+                await _roadmapService.SaveRoadmapAsync(model, userId);
                 return RedirectToAction("Selection");
             }
             catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving the roadmap.");
-                return View("RoadmapForm", model);
+                return View(RoadmapFormView, model);
             }
         }
 

@@ -56,7 +56,6 @@ namespace Pathly.Web.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
-            var tags = await _tagService.GetUserTagsAsync(userId);
 
             var model = new TaskCreateViewModel { ActionId = actionId };
             model.AvailableTags = await GetAvailableTagsSelectList(userId);
@@ -86,8 +85,6 @@ namespace Pathly.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                var tags = await _tagService.GetUserTagsAsync(userId);
-
                 model.AvailableTags = await GetAvailableTagsSelectList(userId);
 
                 return PartialView("CreatePartialView", model);
@@ -124,12 +121,11 @@ namespace Pathly.Web.Controllers
                 return NotFound();
             }
 
-            var tags = await _tagService.GetUserTagsAsync(userId);
             var selectedTagIds = await _taskService.GetTaskTagIdsAsync(id, userId);
 
             var editModel = _mapper.Map<TaskEditViewModel>(taskDetails);
 
-            editModel.SelectedTagIds = await _taskService.GetTaskTagIdsAsync(id, userId);
+            editModel.SelectedTagIds = selectedTagIds;
             editModel.AvailableTags = await GetAvailableTagsSelectList(userId);
 
 
@@ -159,8 +155,6 @@ namespace Pathly.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                var tags = await _tagService.GetUserTagsAsync(userId);
-
                 model.AvailableTags = await GetAvailableTagsSelectList(userId);
 
                 return PartialView("EditPartialView", model);

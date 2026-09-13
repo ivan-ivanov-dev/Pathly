@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
 using Pathly.DataModels;
@@ -10,11 +9,9 @@ namespace Pathly.Services.Implementation
 {
     public class TagService : ITagService
     {
-        private readonly ApplicationDbContext _context; 
-        private readonly IMapper _mapper;
-        public TagService(IMapper mapper, ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        public TagService(ApplicationDbContext context)
         {
-            _mapper = mapper;
             _context = context;
         }
         public async Task CreateTagAsync(string name, string userId)

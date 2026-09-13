@@ -28,9 +28,9 @@ namespace Pathly.Services.Implementation
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int goalId, string userId)
+        public async Task<bool> DeleteAsync(int id, string userId)
         {
-            var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == goalId);
+            var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == id);
             if (goal == null)
             {
                 return false;
@@ -42,7 +42,7 @@ namespace Pathly.Services.Implementation
 
             var roadmap = await _context.Roadmaps
                 .Include(r => r.Actions)
-                .FirstOrDefaultAsync(r => r.GoalId == goalId && r.UserId == userId);
+                .FirstOrDefaultAsync(r => r.GoalId == id && r.UserId == userId);
 
             if (roadmap != null)
             {
@@ -128,7 +128,7 @@ namespace Pathly.Services.Implementation
 
         public async Task ToggleGoalStatusAsync(int id, string userId)
         {
-            var goal = _context.Goals.FirstOrDefault(g => g.Id == id);
+            var goal = await _context.Goals.FirstOrDefaultAsync(g => g.Id == id);
             if (goal == null)
             {
                 throw new InvalidOperationException("Goal not found.");

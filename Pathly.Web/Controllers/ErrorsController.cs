@@ -2,6 +2,7 @@
 
 namespace Pathly.Web.Controllers
 {
+    [Route("[controller]")]
     public class ErrorsController : Controller
     {
         [Route("Errors/Error404")]
