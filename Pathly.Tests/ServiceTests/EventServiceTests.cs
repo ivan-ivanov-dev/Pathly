@@ -135,12 +135,12 @@ namespace Pathly.Tests.Services
         public async Task GetForEditAsync_ValidOwner_ReturnsMappedForm()
         {
             // Arrange
-            var ev = new Event { Id = 10, Title = "Edit Me", UserId = _userId };
+            var ev = new Event { Id = 101, Title = "Edit Me", UserId = _userId };
             await _context.Events.AddAsync(ev);
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _eventService.GetForEditAsync(10, _userId);
+            var result = await _eventService.GetForEditAsync(101, _userId);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -151,28 +151,28 @@ namespace Pathly.Tests.Services
         public void GetForEditAsync_WrongUser_ThrowsUnauthorizedAccessException()
         {
             // Arrange
-            var ev = new Event { Id = 10, UserId = "real-owner", Title = "Required Title" };
+            var ev = new Event { Id = 102, UserId = "real-owner", Title = "Required Title" };
             _context.Events.Add(ev);
             _context.SaveChanges();
 
             // Act & Assert
-            Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await _eventService.GetForEditAsync(10, "wrong-user"));
+            Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await _eventService.GetForEditAsync(102, "wrong-user"));
         }
 
         [Test]
         public async Task UpdateAsync_ValidUpdate_PersistsChanges()
         {
             // Arrange
-            var ev = new Event { Id = 5, Title = "Old", UserId = _userId, Start = DateTime.UtcNow.AddDays(1), End = DateTime.UtcNow.AddDays(1).AddHours(1) };
+            var ev = new Event { Id = 103, Title = "Old", UserId = _userId, Start = DateTime.UtcNow.AddDays(1), End = DateTime.UtcNow.AddDays(1).AddHours(1) };
             await _context.Events.AddAsync(ev);
             await _context.SaveChangesAsync();
-            var model = new EventFormViewModel { Id = 5, Title = "Updated", Start = DateTime.UtcNow.AddDays(2), End = DateTime.UtcNow.AddDays(2).AddHours(1) };
+            var model = new EventFormViewModel { Id = 103, Title = "Updated", Start = DateTime.UtcNow.AddDays(2), End = DateTime.UtcNow.AddDays(2).AddHours(1) };
 
             // Act
             await _eventService.UpdateAsync(model, _userId);
 
             // Assert
-            var updated = await _context.Events.FindAsync(5);
+            var updated = await _context.Events.FindAsync(103);
             Assert.That(updated.Title, Is.EqualTo("Updated"));
         }
 
@@ -190,14 +190,14 @@ namespace Pathly.Tests.Services
         public async Task DeleteAsync_ValidOwner_RemovesFromDb()
         {
             // Arrange
-            await _context.Events.AddAsync(new Event { Id = 1, UserId = _userId, Title = "Required Title" });
+            await _context.Events.AddAsync(new Event { Id = 104, UserId = _userId, Title = "Required Title" });
             await _context.SaveChangesAsync();
 
             // Act
-            await _eventService.DeleteAsync(1, _userId);
+            await _eventService.DeleteAsync(104, _userId);
 
             // Assert
-            var exists = await _context.Events.AnyAsync(e => e.Id == 1);
+            var exists = await _context.Events.AnyAsync(e => e.Id == 104);
             Assert.That(exists, Is.False);
         }
 
@@ -205,11 +205,11 @@ namespace Pathly.Tests.Services
         public void DeleteAsync_AccessDenied_ThrowsUnauthorizedAccessException()
         {
             // Arrange
-            _context.Events.Add(new Event { Id = 1, UserId = "owner", Title = "Required Title" });
+            _context.Events.Add(new Event { Id = 105, UserId = "owner", Title = "Required Title" });
             _context.SaveChanges();
 
             // Act & Assert
-            Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await _eventService.DeleteAsync(1, "hacker"));
+            Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await _eventService.DeleteAsync(105, "hacker"));
         }
     }
 }
