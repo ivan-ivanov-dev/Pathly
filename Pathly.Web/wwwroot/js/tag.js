@@ -4,7 +4,7 @@ if (createForm) {
     createForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const form = this;
+        const form = e.currentTarget;
         const formData = new FormData(form);
         const errorSpan = document.getElementById('nameError');
 
@@ -20,7 +20,7 @@ if (createForm) {
         })
             .then(async response => {
                 if (response.ok) {
-                    window.location.reload();
+                    globalThis.location.reload();
                 } else {
                     const errorMessage = await response.text();
                     errorSpan.textContent = errorMessage;

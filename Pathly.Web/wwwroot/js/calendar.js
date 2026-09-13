@@ -214,7 +214,7 @@ $(document).on('change', 'input[name="Start"]', function () {
     let startVal = new Date($(this).val());
     let endInput = $('input[name="End"]');
 
-    if (!isNaN(startVal.getTime())) {
+    if (!Number.isNaN(startVal.getTime())) {
         startVal.setHours(startVal.getHours() + 1);
 
         let year = startVal.getFullYear();
@@ -229,12 +229,12 @@ $(document).on('change', 'input[name="Start"]', function () {
 });
 
 function initializeTooltips() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipTriggerList = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 }
 
-window.addEventListener('unhandledrejection', function (event) {
+globalThis.addEventListener('unhandledrejection', function (event) {
     console.error('Unhandled promise rejection:', event.reason);
 });
