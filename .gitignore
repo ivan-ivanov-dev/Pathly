@@ -7,6 +7,9 @@
 .sonar-token
 .sonar-token.txt
 
+# Claude working notes (not project documentation)
+CLAUDE_PROGRESS_NOTES.md
+
 # User-specific files
 *.rsuser
 *.suo
