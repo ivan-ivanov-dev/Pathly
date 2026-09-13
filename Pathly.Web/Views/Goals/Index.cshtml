@@ -28,18 +28,18 @@
             <form method="get" class="row g-3 align-items-end">
                 @* Search Term *@
                 <div class="col-md-5">
-                    <label class="form-label small fw-bold text-muted ps-2">Search</label>
+                    <label for="SearchTerm" class="form-label small fw-bold text-muted ps-2">Search</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" name="SearchTerm" class="form-control border-0 bg-light shadow-none"
+                        <input type="text" id="SearchTerm" name="SearchTerm" class="form-control border-0 bg-light shadow-none"
                                value="@Model.SearchTerm" placeholder="Goal title..." />
                     </div>
                 </div>
 
                 @* Status Filter *@
                 <div class="col-md-3">
-                    <label class="form-label small fw-bold text-muted ps-2">Status</label>
-                    <select name="ShowCompleted" class="form-select form-select-sm border-0 bg-light shadow-none">
+                    <label for="ShowCompleted" class="form-label small fw-bold text-muted ps-2">Status</label>
+                    <select id="ShowCompleted" name="ShowCompleted" class="form-select form-select-sm border-0 bg-light shadow-none">
                         <option value="">All Statuses</option>
                         <option value="true" selected="@(Context.Request.Query["ShowCompleted"] == "true")">Active</option>
                         <option value="false" selected="@(Context.Request.Query["ShowCompleted"] == "false")">Completed</option>
@@ -48,8 +48,8 @@
 
                 @* Due Date Filter *@
                 <div class="col-md-2">
-                    <label class="form-label small fw-bold text-muted ps-2">Target Date</label>
-                    <input type="date" name="TargetDate" class="form-control form-control-sm border-0 bg-light shadow-none"
+                    <label for="TargetDate" class="form-label small fw-bold text-muted ps-2">Target Date</label>
+                    <input type="date" id="TargetDate" name="TargetDate" class="form-control form-control-sm border-0 bg-light shadow-none"
                            value="@Context.Request.Query["TargetDate"]" />
                 </div>
 
@@ -110,12 +110,9 @@
             {
                 var routes = new Dictionary<string, string> { { "PageNumber", page.ToString() } };
 
-                foreach (var key in Context.Request.Query.Keys)
+                foreach (var key in Context.Request.Query.Keys.Where(key => key != "PageNumber"))
                 {
-                    if (key != "PageNumber")
-                    {
-                        routes[key] = Context.Request.Query[key]!;
-                    }
+                    routes[key] = Context.Request.Query[key]!;
                 }
                 return routes;
             }
@@ -154,12 +151,7 @@
                                                 <span class="small fw-bold text-muted">Progress</span>
                                                 <span class="small fw-800 text-primary">@goal.ProgressPercentage%</span>
                                             </div>
-                                            <div class="progress rounded-pill" style="height: 8px; background-color: rgba(15, 76, 92, 0.1);">
-                                                <div class="progress-bar progress-bar-striped progress-bar-animated rounded-pill"
-                                                     role="progressbar"
-                                                     style="width: @goal.ProgressPercentage%; background-color: var(--pathly-primary);">
-                                                </div>
-                                            </div>
+                                            <progress class="app-progress" value="@goal.ProgressPercentage" max="100" aria-label="@($"{goal.Title} progress")"></progress>
                                             <div class="mt-2 d-flex gap-3">
                                                 <span class="badge bg-soft-info text-info rounded-pill" style="font-size: 0.65rem;">
                                                     <i class="bi bi-check2-circle me-1"></i> @goal.CompletedTasksCount Tasks Done

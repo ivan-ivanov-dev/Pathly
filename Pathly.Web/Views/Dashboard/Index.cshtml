@@ -49,11 +49,7 @@
                         </div>
                         <span class="badge rounded-pill px-3 py-2 bg-primary">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday</span>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated @(todayPct == 100 ? "bg-success" : "bg-primary")"
-                             role="progressbar" style="width: @todayPct%;">
-                        </div>
-                    </div>
+                    <progress class="app-progress @(todayPct == 100 ? "bg-success" : "bg-primary")" value="@todayPct" max="100" aria-label="Today's task progress"></progress>
                 </div>
 
                 @* Overall Momentum *@
@@ -70,11 +66,7 @@
                         </div>
                         <span class="badge rounded-pill px-3 py-2 bg-dark">@totalPct% Complete</span>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
-                             role="progressbar" style="width: @totalPct%;">
-                        </div>
-                    </div>
+                    <progress class="app-progress bg-success" value="@totalPct" max="100" aria-label="Overall Pathly momentum"></progress>
                 </div>
             </div>
         </div>
