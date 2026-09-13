@@ -15,7 +15,7 @@ namespace Pathly.Services.Implementation
     public class AdminService : IAdminService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public AdminService(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
@@ -77,7 +77,7 @@ namespace Pathly.Services.Implementation
             {
                 TotalUsers = await _userManager.Users.CountAsync(),
                 TotalGoals = await _context.Goals.CountAsync(),
-                CompletedTasks = await _context.Tasks.Where(t => t.IsCompleted == true).CountAsync()
+                CompletedTasks = await _context.Tasks.Where(t => t.IsCompleted).CountAsync()
             };
 
             return model;

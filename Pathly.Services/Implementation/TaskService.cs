@@ -144,7 +144,7 @@ namespace Pathly.Services.Implementation
 
             if (task == null)
             {
-                throw new InvalidOperationException("Task not found");
+                throw new InvalidOperationException(ErrorMessages.TaskNotFound);
             }
 
             return await _context.TaskTags
@@ -159,7 +159,7 @@ namespace Pathly.Services.Implementation
 
             if (task == null)
             {
-                throw new InvalidOperationException("Task not found");
+                throw new InvalidOperationException(ErrorMessages.TaskNotFound);
             }
             if (task.UserId != userId)
             {
@@ -182,7 +182,7 @@ namespace Pathly.Services.Implementation
 
             if (task == null)
             {
-                throw new InvalidOperationException("Task not found");
+                throw new InvalidOperationException(ErrorMessages.TaskNotFound);
             }
             if (task.UserId != userId)
             {
@@ -201,7 +201,7 @@ namespace Pathly.Services.Implementation
                 var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
                 if (task == null)
                 {
-                    throw new InvalidOperationException("Task not found");
+                    throw new InvalidOperationException(ErrorMessages.TaskNotFound);
                 }
 
                 var oldStatus = task.Status;
@@ -255,7 +255,7 @@ namespace Pathly.Services.Implementation
                 .FirstOrDefaultAsync(t=>t.Id == id );
             if(task == null)
             {
-                throw new InvalidOperationException("Task not found");
+                throw new InvalidOperationException(ErrorMessages.TaskNotFound);
             }
 
             if(task.UserId != userId)

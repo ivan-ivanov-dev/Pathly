@@ -36,7 +36,7 @@
 
         @* Due Date *@
         <div class="mb-4">
-            <label class="form-label text-muted small fw-bold mb-1 uppercase-label">Target Completion</label>
+            <label asp-for="DueDate" class="form-label text-muted small fw-bold mb-1 uppercase-label">Target Completion</label>
             <div class="input-group">
                 <span class="input-group-text border-0 bg-light"><i class="bi bi-calendar-event"></i></span>
                 <input asp-for="DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
@@ -46,10 +46,10 @@
 
         @* Tag Cloud Selection *@
         <div class="mb-4">
-            <label class="form-label text-muted small fw-bold mb-2 uppercase-label d-flex justify-content-between">
+            <div class="form-label text-muted small fw-bold mb-2 uppercase-label d-flex justify-content-between">
                 <span><i class="bi bi-tags-fill me-1 text-primary"></i> Categorization</span>
                 <span class="badge bg-soft-primary text-primary border-0 rounded-pill px-2">Max 4</span>
-            </label>
+            </div>
 
             @if (Model.AvailableTags != null && Model.AvailableTags.Any())
             {

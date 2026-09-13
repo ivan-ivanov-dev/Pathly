@@ -160,9 +160,12 @@ public class AdminServiceTests: ServiceTestsBase
         {
             Assert.That(result.TotalUsers, Is.EqualTo(2), "Users count is wrong");
 
-            //the number is different than 1 because there is data left in the InMemory database
+            // Higher than the 1 goal / 1 completed task added above because EventConfiguration,
+            // GoalConfiguration, TaskItemConfiguration etc. seed demo data via HasData(), which
+            // EF Core applies to every fresh InMemory database on EnsureCreated() — 3 seeded
+            // goals + this test's 1 = 4; 9 seeded completed tasks + this test's 1 = 10.
             Assert.That(result.TotalGoals, Is.EqualTo(4), "Goals count is wrong");
-            Assert.That(result.CompletedTasks, Is.EqualTo(15), "Completed tasks count is wrong");
+            Assert.That(result.CompletedTasks, Is.EqualTo(10), "Completed tasks count is wrong");
         });
     }
 

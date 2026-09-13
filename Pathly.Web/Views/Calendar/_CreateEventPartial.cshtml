@@ -38,7 +38,7 @@
         <!-- Date & Time Row -->
         <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <label class="form-label small fw-bold text-muted">Starts</label>
+                <label asp-for="Start" class="form-label small fw-bold text-muted">Starts</label>
                 <input asp-for="Start"
                        type="datetime-local"
                        step="60"
@@ -46,7 +46,7 @@
                        class="form-control border-0 shadow-sm rounded-3 modern-date-picker" />
             </div>
             <div class="col-md-6">
-                <label class="form-label small fw-bold text-muted">Ends</label>
+                <label asp-for="End" class="form-label small fw-bold text-muted">Ends</label>
                 <input asp-for="End"
                        type="datetime-local"
                        step="60"
@@ -55,7 +55,7 @@
             </div>
             <div class="col-12 mt-2">
                 <div class="form-check form-switch custom-switch">
-                    <input asp-for="IsAllDay" class="form-check-input" type="checkbox" role="switch">
+                    <input asp-for="IsAllDay" class="form-check-input" type="checkbox">
                     <label class="form-check-label small fw-semibold text-secondary" asp-for="IsAllDay">This is an all-day event</label>
                 </div>
             </div>

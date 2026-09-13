@@ -12,6 +12,8 @@ namespace Pathly.Services.Mappings
 {
     public class MappingProfile : Profile
     {
+        private const string EventDateTimeFormat = "yyyy-MM-ddTHH:mm:ss";
+
         public MappingProfile()
         {
             // --- GOALS ---
@@ -178,16 +180,16 @@ namespace Pathly.Services.Mappings
 
             // --- EVENTS ---
             CreateMap<Event, EventCalendarViewModel>()
-                .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
-                .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
+                .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString(EventDateTimeFormat)))
+                .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString(EventDateTimeFormat)))
                 .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.ColorHex))
                 .ForMember(dest => dest.AllDay, opt => opt.MapFrom(src => src.IsAllDay));
 
             CreateMap<Event, EventFormViewModel>()
             .ForMember(dest => dest.AvailableTasks, opt => opt.Ignore())
             .ForMember(dest => dest.AvailableGoals, opt => opt.Ignore())
-            .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString("yyyy-MM-ddTHH:mm:ss")))
-            .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString("yyyy-MM-ddTHH:mm:ss")))
+            .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Start.ToString(EventDateTimeFormat)))
+            .ForMember(dest => dest.End, opt => opt.MapFrom(src => src.End.ToString(EventDateTimeFormat)))
             .ForMember(dest => dest.ColorHex, opt => opt.MapFrom(src => src.ColorHex))
             .ForMember(dest => dest.IsAllDay, opt => opt.MapFrom(src => src.IsAllDay))
             .ReverseMap()

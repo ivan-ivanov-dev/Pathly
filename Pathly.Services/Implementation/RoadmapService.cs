@@ -23,94 +23,10 @@ namespace Pathly.Services.Implementation
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                Roadmap roadmap;
+                var roadmap = model.IsEditing && model.RoadmapId.HasValue
+                    ? await UpdateExistingRoadmapAsync(model, userId)
+                    : await CreateNewRoadmapAsync(model, userId);
 
-                if (model.IsEditing && model.RoadmapId.HasValue)
-                {
-                    roadmap = await _context.Roadmaps
-                        .Include(r => r.Actions)
-                        .FirstOrDefaultAsync(r => r.Id == model.RoadmapId && r.UserId == userId);
-
-                    if (roadmap == null) throw new UnauthorizedAccessException();
-
-                    _mapper.Map(model, roadmap);
-
-                    var incomingActionIds = model.Actions.Select(a => a.Id).Where(id => id.HasValue).ToList();
-                    var actionsToRemove = roadmap.Actions.Where(a => !incomingActionIds.Contains(a.Id)).ToList();
-                    _context.Actions.RemoveRange(actionsToRemove);
-
-                    foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
-                    {
-                        if (actionVm.Id.HasValue && actionVm.Id > 0)
-                        {
-                            var existingAction = roadmap.Actions.FirstOrDefault(a => a.Id == actionVm.Id);
-                            if (existingAction != null)
-                            {
-                                existingAction.Title = actionVm.Title;
-                                existingAction.Resources = actionVm.Resources;
-                                existingAction.DueDate = actionVm.DueDate;
-                            }
-                        }
-                        else
-                        {
-                            var newAction = _mapper.Map<ActionItem>(actionVm);
-                            newAction.RoadmapId = roadmap.Id;
-                            newAction.UserId = userId;
-
-                            _context.Actions.Add(newAction);
-                        }
-                    }
-                }
-                else
-                {
-                    int goalId;
-
-                    if (model.SelectedGoalId.HasValue && model.SelectedGoalId.Value > 0)
-                    {
-                        goalId = model.SelectedGoalId.Value;
-                        var existingGoal = await _context.Goals.FindAsync(goalId);
-                        if (existingGoal != null && existingGoal.UserId == userId)
-                        {
-                            if (!string.IsNullOrWhiteSpace(model.NewGoalTitle))
-                            {
-                                existingGoal.Title = model.NewGoalTitle;
-
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(model.NewGoalDescription))
-                            {
-                                existingGoal.ShortDescription = model.NewGoalDescription;
-
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var newGoal = _mapper.Map<Goal>(model);
-                        newGoal.UserId = userId;
-                        newGoal.IsActive = true;
-
-                        _context.Goals.Add(newGoal);
-                        await _context.SaveChangesAsync();
-                        goalId = newGoal.Id;
-                    }
-
-                    roadmap = _mapper.Map<Roadmap>(model);
-                    roadmap.UserId = userId;
-                    roadmap.GoalId = goalId;
-
-                    _context.Roadmaps.Add(roadmap);
-                    await _context.SaveChangesAsync();
-
-                    foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
-                    {
-                        var newAction = _mapper.Map<ActionItem>(actionVm);
-                        newAction.RoadmapId = roadmap.Id;
-                        newAction.UserId = userId;
-
-                        _context.Actions.Add(newAction);
-                    }
-                }
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -121,6 +37,112 @@ namespace Pathly.Services.Implementation
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        private async Task<Roadmap> UpdateExistingRoadmapAsync(RoadmapCreateViewModel model, string userId)
+        {
+            var roadmap = await _context.Roadmaps
+                .Include(r => r.Actions)
+                .FirstOrDefaultAsync(r => r.Id == model.RoadmapId && r.UserId == userId);
+
+            if (roadmap == null) throw new UnauthorizedAccessException();
+
+            _mapper.Map(model, roadmap);
+
+            SyncExistingActionItems(model, roadmap, userId);
+
+            return roadmap;
+        }
+
+        private void SyncExistingActionItems(RoadmapCreateViewModel model, Roadmap roadmap, string userId)
+        {
+            var incomingActionIds = model.Actions.Select(a => a.Id).Where(id => id.HasValue).ToList();
+            var actionsToRemove = roadmap.Actions.Where(a => !incomingActionIds.Contains(a.Id)).ToList();
+            _context.Actions.RemoveRange(actionsToRemove);
+
+            foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
+            {
+                if (actionVm.Id.HasValue && actionVm.Id > 0)
+                {
+                    UpdateExistingActionItem(roadmap, actionVm);
+                }
+                else
+                {
+                    AddNewActionItem(roadmap, actionVm, userId);
+                }
+            }
+        }
+
+        private static void UpdateExistingActionItem(Roadmap roadmap, ActionItemCreateViewModel actionVm)
+        {
+            var existingAction = roadmap.Actions.FirstOrDefault(a => a.Id == actionVm.Id);
+            if (existingAction == null)
+            {
+                return;
+            }
+
+            existingAction.Title = actionVm.Title;
+            existingAction.Resources = actionVm.Resources;
+            existingAction.DueDate = actionVm.DueDate;
+        }
+
+        private void AddNewActionItem(Roadmap roadmap, ActionItemCreateViewModel actionVm, string userId)
+        {
+            var newAction = _mapper.Map<ActionItem>(actionVm);
+            newAction.RoadmapId = roadmap.Id;
+            newAction.UserId = userId;
+
+            _context.Actions.Add(newAction);
+        }
+
+        private async Task<Roadmap> CreateNewRoadmapAsync(RoadmapCreateViewModel model, string userId)
+        {
+            var goalId = await ResolveGoalIdAsync(model, userId);
+
+            var roadmap = _mapper.Map<Roadmap>(model);
+            roadmap.UserId = userId;
+            roadmap.GoalId = goalId;
+
+            _context.Roadmaps.Add(roadmap);
+            await _context.SaveChangesAsync();
+
+            foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
+            {
+                AddNewActionItem(roadmap, actionVm, userId);
+            }
+
+            return roadmap;
+        }
+
+        private async Task<int> ResolveGoalIdAsync(RoadmapCreateViewModel model, string userId)
+        {
+            if (!model.SelectedGoalId.HasValue || model.SelectedGoalId.Value <= 0)
+            {
+                var newGoal = _mapper.Map<Goal>(model);
+                newGoal.UserId = userId;
+                newGoal.IsActive = true;
+
+                _context.Goals.Add(newGoal);
+                await _context.SaveChangesAsync();
+                return newGoal.Id;
+            }
+
+            var goalId = model.SelectedGoalId.Value;
+            var existingGoal = await _context.Goals.FindAsync(goalId);
+            if (existingGoal != null && existingGoal.UserId == userId)
+            {
+                if (!string.IsNullOrWhiteSpace(model.NewGoalTitle))
+                {
+                    existingGoal.Title = model.NewGoalTitle;
+                }
+
+                if (!string.IsNullOrWhiteSpace(model.NewGoalDescription))
+                {
+                    existingGoal.ShortDescription = model.NewGoalDescription;
+                }
+            }
+
+            return goalId;
         }
 
 

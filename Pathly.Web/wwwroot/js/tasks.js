@@ -3,52 +3,55 @@ const connection = new signalR.HubConnectionBuilder()
     .withUrl("/kanbanHub")
     .build();
 
+function positionCardInColumn(taskElement, targetColumn, newPosition) {
+    const siblings = Array.from(targetColumn.querySelectorAll('.task-card-wrapper'));
+    if (newPosition >= siblings.length) {
+        targetColumn.appendChild(taskElement);
+    } else {
+        targetColumn.insertBefore(taskElement, siblings[newPosition]);
+    }
+}
+
+function setTaskCompletedUI(taskCard, checkBtn, icon, isDone) {
+    taskCard?.classList.toggle('task-completed', isDone);
+    if (checkBtn) {
+        checkBtn.classList.toggle('btn-outline-secondary', !isDone);
+        checkBtn.classList.toggle('btn-success', isDone);
+    }
+    if (icon) {
+        icon.classList.toggle('bi-circle', !isDone);
+        icon.classList.toggle('bi-check-lg', isDone);
+    }
+}
+
 connection.on("ReceiveTaskMove", (taskId, newStatus, newPosition) => {
     const taskElement = document.querySelector(`.task-card-wrapper[data-id='${taskId}']`);
     const targetColumn = document.querySelector(`.kanban-column-body[data-status='${newStatus}']`);
 
-    if (taskElement && targetColumn) {
-        taskElement.style.opacity = '0.5';
+    if (!taskElement || !targetColumn) return;
 
-        const siblings = Array.from(targetColumn.querySelectorAll('.task-card-wrapper'));
-        if (newPosition >= siblings.length) {
-            targetColumn.appendChild(taskElement);
-        } else {
-            targetColumn.insertBefore(taskElement, siblings[newPosition]);
-        }
+    taskElement.style.opacity = '0.5';
+    positionCardInColumn(taskElement, targetColumn, newPosition);
 
-        const taskCard = taskElement.querySelector('.task-card');
-        const checkBtn = taskElement.querySelector('.btn-status-pill');
-        const icon = checkBtn?.querySelector('i');
+    const taskCard = taskElement.querySelector('.task-card');
+    const checkBtn = taskElement.querySelector('.btn-status-pill');
+    const icon = checkBtn?.querySelector('i');
 
-        const statusStr = String(newStatus);
+    setTaskCompletedUI(taskCard, checkBtn, icon, String(newStatus) === "2");
 
-        if (statusStr === "2") {
-            taskCard?.classList.add('task-completed');
-            if (checkBtn) {
-                checkBtn.classList.replace('btn-outline-secondary', 'btn-success');
-            }
-            if (icon) {
-                icon.classList.replace('bi-circle', 'bi-check-lg');
-            }
-        } else { 
-            taskCard?.classList.remove('task-completed');
-            if (checkBtn) {
-                checkBtn.classList.replace('btn-success', 'btn-outline-secondary');
-            }
-            if (icon) {
-                icon.classList.replace('bi-check-lg', 'bi-circle');
-            }
-        }
-
-        setTimeout(() => {
-            taskElement.style.opacity = '1';
-            KanbanBoard.filterTasks();
-        }, 50);
-    }
+    setTimeout(() => {
+        taskElement.style.opacity = '1';
+        KanbanBoard.filterTasks();
+    }, 50);
 });
 
-connection.start().catch(err => console.error(err.toString()));
+(async () => {
+    try {
+        await connection.start();
+    } catch (err) {
+        console.error(err.toString());
+    }
+})();
 
 
 const TaskManager = {
@@ -85,7 +88,7 @@ const TaskManager = {
 
         const btn = e.currentTarget;
         const cardWrapper = btn.closest('.task-card-wrapper');
-        const taskId = cardWrapper.getAttribute('data-id');
+        const taskId = cardWrapper.dataset.id;
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
         fetch(`/Tasks/MarkTaskStatus/${taskId}`, {
@@ -148,33 +151,39 @@ const TaskManager = {
                 cancelButton: 'rounded-pill px-4'
             }
         }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `/Tasks/Delete/${taskId}`,
-                    type: 'POST',
-                    data: { __RequestVerificationToken: token },
-                    success: (response) => {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: response.message || 'Task removed.',
-                                icon: 'success',
-                                confirmButtonColor: '#0F4C5C',
-                                timer: 1500
-                            }).then(() => {
-                                const roadmapItem = document.getElementById(`task-item-${taskId}`) || document.getElementById(`task-wrapper-${taskId}`);
-                                if (roadmapItem) {
-                                    $(roadmapItem).fadeOut(300, () => roadmapItem.remove());
-                                } else {
-                                    location.reload();
-                                }
-                            });
-                        }
-                    },
-                    error: () => Swal.fire('Error!', 'Could not delete task.', 'error')
-                });
-            }
+            if (result.isConfirmed) this.deleteTask(taskId, token);
         });
+    },
+
+    deleteTask: function (taskId, token) {
+        $.ajax({
+            url: `/Tasks/Delete/${taskId}`,
+            type: 'POST',
+            data: { __RequestVerificationToken: token },
+            success: (response) => this.handleDeleteResponse(response, taskId),
+            error: () => Swal.fire('Error!', 'Could not delete task.', 'error')
+        });
+    },
+
+    handleDeleteResponse: function (response, taskId) {
+        if (!response.success) return;
+
+        Swal.fire({
+            title: 'Deleted!',
+            text: response.message || 'Task removed.',
+            icon: 'success',
+            confirmButtonColor: '#0F4C5C',
+            timer: 1500
+        }).then(() => this.removeTaskFromDom(taskId));
+    },
+
+    removeTaskFromDom: function (taskId) {
+        const roadmapItem = document.getElementById(`task-item-${taskId}`) || document.getElementById(`task-wrapper-${taskId}`);
+        if (roadmapItem) {
+            $(roadmapItem).fadeOut(300, () => roadmapItem.remove());
+        } else {
+            location.reload();
+        }
     },
 
     initModalFocus: function () {
@@ -193,8 +202,8 @@ const TaskManager = {
         e.preventDefault();
         e.stopPropagation();
 
-        const url = btn.getAttribute("data-modal-url");
-        const title = btn.getAttribute("data-modal-title") || "Task Details";
+        const url = btn.dataset.modalUrl;
+        const title = btn.dataset.modalTitle || "Task Details";
 
         fetch(url)
             .then(r => r.text())
@@ -231,7 +240,7 @@ const TaskManager = {
 
                     select.className = `form-select form-select-sm priority-select-direct pathly-dropdown bg-soft-${newTheme}`;
 
-                    card.setAttribute('data-priority-theme', newTheme);
+                    card.dataset.priorityTheme = newTheme;
                 }
             });
     },
@@ -252,10 +261,10 @@ const TaskManager = {
                 const isHtml = response.headers.get("content-type")?.includes("text/html");
 
                 if (response.ok && !isHtml) {
-                    if (window.location.pathname.includes("Roadmap")) {
+                    if (globalThis.location.pathname.includes("Roadmap")) {
                         location.reload();
                     } else {
-                        window.location.href = '/Tasks/Index';
+                        globalThis.location.href = '/Tasks/Index';
                     }
                 } else if (isHtml) {
                     const html = await response.text();
@@ -266,7 +275,7 @@ const TaskManager = {
     },
 
     rebindValidation: function () {
-        if (window.jQuery && $.validator) {
+        if (globalThis.jQuery && $.validator) {
             const form = document.querySelector("#taskModalBody form");
             if (form) $.validator.unobtrusive.parse(form);
         }
@@ -306,13 +315,14 @@ const TaskManager = {
 const KanbanBoard = {
     init: function () {
         const columns = document.querySelectorAll('.kanban-column-body');
+        this.sortableInstances = [];
         columns.forEach(column => {
-            new Sortable(column, {
+            this.sortableInstances.push(new Sortable(column, {
                 group: 'kanban',
                 animation: 250,
                 ghostClass: 'bg-light',
                 onEnd: (evt) => this.handleTaskMove(evt)
-            });
+            }));
         });
         this.filterTasks(); // Initial run
     },
@@ -324,8 +334,8 @@ const KanbanBoard = {
         let matches = 0;
 
         cards.forEach(card => {
-            const title = (card.getAttribute('data-title') || "").toLowerCase();
-            const cardPriority = card.getAttribute('data-priority');
+            const title = (card.dataset.title || "").toLowerCase();
+            const cardPriority = card.dataset.priority;
 
             const matchesSearch = title.includes(query);
             const matchesPriority = priority === "" || cardPriority === priority;
@@ -369,8 +379,8 @@ const KanbanBoard = {
     },
 
     handleTaskMove: function (evt) {
-        const taskId = evt.item.getAttribute('data-id');
-        const newStatus = evt.to.getAttribute('data-status');
+        const taskId = evt.item.dataset.id;
+        const newStatus = evt.to.dataset.status;
         const newPosition = evt.newIndex;
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
@@ -382,8 +392,8 @@ const KanbanBoard = {
                 'RequestVerificationToken': token
             },
             body: JSON.stringify({
-                id: parseInt(taskId),
-                newStatus: parseInt(newStatus),
+                id: Number.parseInt(taskId),
+                newStatus: Number.parseInt(newStatus),
                 newPosition: newPosition
             })
         })
@@ -392,7 +402,7 @@ const KanbanBoard = {
 
                 // SignalR Integration
                 if (connection && connection.state === signalR.HubConnectionState.Connected) {
-                    connection.invoke("NotifyTaskMoved", taskId, parseInt(newStatus), newPosition)
+                    connection.invoke("NotifyTaskMoved", taskId, Number.parseInt(newStatus), newPosition)
                         .catch(err => console.error("SignalR Invoke Error:", err));
                 }
 

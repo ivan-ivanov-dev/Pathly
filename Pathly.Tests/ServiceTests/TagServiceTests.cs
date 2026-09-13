@@ -20,7 +20,7 @@ public class TagServiceTests: ServiceTestsBase
     public void SetupTagService()
     {
         BaseSetup();
-        _tagService = new TagService(_mapper,_context);
+        _tagService = new TagService(_context);
     }
 
     [TearDown]

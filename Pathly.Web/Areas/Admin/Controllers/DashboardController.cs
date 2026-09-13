@@ -27,6 +27,11 @@ namespace Pathly.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string userId)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
             var success = await _adminService.DeleteUserAsync(userId);
 
             if (success)
@@ -40,6 +45,11 @@ namespace Pathly.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeRole(string userId, string newRole)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
             var success = await _adminService.ChangeUserRoleAsync(userId, newRole);
 
             if (success)
@@ -54,6 +64,11 @@ namespace Pathly.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleLockout(string userId)
         {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
             var success = await _adminService.ToggleUserLockoutAsync(userId);
 
             if (success)

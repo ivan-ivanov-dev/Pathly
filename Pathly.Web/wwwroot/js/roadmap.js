@@ -32,7 +32,7 @@ function showDeleteModal() {
     new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
 }
 
-var RoadmapDetails = {
+const RoadmapDetails = {
     unlinkTask: function (taskId, url) {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
         const element = document.getElementById(`task-item-${taskId}`);
@@ -94,7 +94,7 @@ var RoadmapDetails = {
         });
     }
 };
-var RoadmapResources = {
+const RoadmapResources = {
     uploadFile: function (actionId, file) {
         if (!file) return;
 
@@ -104,8 +104,7 @@ var RoadmapResources = {
 
         const zone = document.getElementById(`drop-zone-${actionId}`);
         const prompt = zone.querySelector(".drop-zone__prompt");
-        const progressBar = zone.querySelector(".progress");
-        const bar = zone.querySelector(".progress-bar");
+        const progressBar = zone.querySelector(".upload-progress-bar");
 
         prompt.textContent = "Uploading: " + file.name;
         progressBar.classList.remove("d-none");

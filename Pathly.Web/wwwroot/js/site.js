@@ -5,7 +5,7 @@
     // HIGHLIGHT ACTIVE NAV LINK
     // ============================================
     function highlightActiveNavLink() {
-        const currentPath = window.location.pathname;
+        const currentPath = globalThis.location.pathname;
         const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
 
         navLinks.forEach(link => {

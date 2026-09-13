@@ -12,7 +12,7 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class RoadmapConfiguration : IEntityTypeConfiguration<Roadmap>
     {
-        string userId = SeedConstants.DemoUserId;
+        private readonly string userId = SeedConstants.DemoUserId;
         public void Configure(EntityTypeBuilder<Roadmap> builder)
         {
             builder.HasData(

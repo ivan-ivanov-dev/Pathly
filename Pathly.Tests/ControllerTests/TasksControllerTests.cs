@@ -202,11 +202,10 @@ public class TasksControllerTests: ControllerTestsBase
         // Arrange
         var model = new TaskEditViewModel { Id = 1, Title = "Updated Task", SelectedTagIds = new List<int>() };
 
-        // Simulate AJAX Header
-        _controller.ControllerContext.HttpContext.Request.Headers["X-Requested-With"] = "XMLHttpRequest";
-
-        // Act
-        var result = await _controller.EditAsync(model);
+        // Act — the "X-Requested-With" header is now bound via [FromHeader], so simulate
+        // it by passing the value directly rather than setting it on HttpContext (a direct
+        // unit-test call bypasses ASP.NET Core's model binding pipeline entirely).
+        var result = await _controller.EditAsync(model, "XMLHttpRequest");
 
         // Assert
         Assert.IsInstanceOf<OkResult>(result);
@@ -285,11 +284,10 @@ public class TasksControllerTests: ControllerTestsBase
         // Arrange
         _mockTaskService.Setup(s => s.DeleteAsync(1, _userId)).ReturnsAsync(true);
 
-        // Simulate AJAX Header
-        _controller.ControllerContext.HttpContext.Request.Headers["X-Requested-With"] = "XMLHttpRequest";
-
-        // Act
-        var result = await _controller.DeleteAsync(1);
+        // Act — the "X-Requested-With" header is now bound via [FromHeader], so simulate
+        // it by passing the value directly rather than setting it on HttpContext (a direct
+        // unit-test call bypasses ASP.NET Core's model binding pipeline entirely).
+        var result = await _controller.DeleteAsync(1, "XMLHttpRequest");
 
         // Assert
         Assert.IsInstanceOf<JsonResult>(result);
