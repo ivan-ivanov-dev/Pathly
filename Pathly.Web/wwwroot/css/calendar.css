@@ -57,7 +57,7 @@
 .btn-cancel-modal {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    color: #6c757d;
+    color: #495057;
     font-weight: 600;
     transition: all 0.2s;
 }
@@ -69,7 +69,7 @@
 
 .btn-outline-danger:hover {
     background-color: #fff5f5;
-    color: #dc3545;
+    color: #b02a37;
 }
 
 /* ==========================================================================
@@ -164,13 +164,13 @@
 }
 
 .goal-link {
-    background: rgba(15, 76, 92, 0.1) !important;
+    background: #E7EDEF !important;
     color: #0F4C5C !important;
 }
 
 .task-link {
-    background: rgba(227, 100, 20, 0.1) !important;
-    color: #E36414 !important;
+    background: #FCEFE7 !important;
+    color: #b34d0e !important;
 }
 
 .event-link-info {
@@ -263,19 +263,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.event-location-text {
-    font-size: 0.65rem;
-    color: #718096;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-}
-
-.fc-daygrid-event-harness {
-    margin: 4px 6px !important;
 }
 
 /* ==========================================================================
@@ -478,12 +465,12 @@
 
     .linked-icon.goal {
         color: #0F4C5C;
-        background: rgba(15, 76, 92, 0.1);
+        background: #E7EDEF;
     }
 
     .linked-icon.task {
-        color: #E36414;
-        background: rgba(227, 100, 20, 0.1);
+        color: #b34d0e;
+        background: #FCEFE7;
     }
 
 /* Fix for Week view event overlapping */

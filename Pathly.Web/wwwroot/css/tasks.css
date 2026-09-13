@@ -58,14 +58,6 @@ body {
     border: 1px solid #dee2e6 !important;
 }
 
-.kanban-column {
-    background-color: #f4f6f8;
-    border: var(--border-weight) dashed #ced4da !important;
-    border-radius: var(--border-radius-lg);
-    min-height: 75vh;
-    padding: 1.25rem !important;
-}
-
 .kanban-column-title {
     font-size: 0.75rem;
     font-weight: 800;
@@ -177,8 +169,8 @@ body {
 
 /* Soft Backgrounds for Priority Labels */
 .bg-soft-success { background: #e6f4ea; color: #1e7e34; }
-.bg-soft-warning { background: #fff8e1; color: #b25e09; }
-.bg-soft-orange  { background: #fff0e6; color: #d9480f; }
+.bg-soft-warning { background: #fff8e1; color: #a15007; }
+.bg-soft-orange  { background: #fff0e6; color: #a83a0a; }
 .bg-soft-danger  { background: #fbe9eb; color: #b02a37; }
 
 .task-tag {
@@ -202,12 +194,6 @@ body {
 
 .btn-details:hover {
     color: var(--pathly-primary);
-}
-
-.modal-content {
-    border-radius: var(--border-radius-lg);
-    border: none;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .modal-header {
@@ -255,7 +241,8 @@ body {
     height: 100%;
     background-color: #f8f9fa;
     border-radius: 1rem;
-    padding: 1.25rem;
+    min-height: 75vh;
+    padding: 1.25rem !important;
     transition: all 0.3s ease;
     border: 2px solid transparent !important;
 }
@@ -281,7 +268,7 @@ body {
     }
 
     .kanban-column-header .column-count-badge {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.3);
         color: white;
     }
@@ -317,13 +304,9 @@ body {
     }
 
 .modal-content {
+    border-radius: var(--border-radius-lg);
     border: none !important;
     box-shadow: none !important;
-}
-
-.sortable-ghost {
-    opacity: 0.4;
-    transform: scale(0.95);
 }
 
 .sortable-chosen {
@@ -519,6 +502,8 @@ body {
 
 /* The empty space left behind where the card will land */
 .sortable-ghost {
+    opacity: 0.4;
+    transform: scale(0.95);
     background: rgba(15, 76, 92, 0.05) !important;
     border: 2px dashed var(--pathly-primary) !important;
     border-radius: var(--border-radius-md);

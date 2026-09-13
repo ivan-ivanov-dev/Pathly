@@ -75,7 +75,7 @@
 }
 
 .btn-delete-tag {
-    background: rgba(239, 68, 68, 0.8) !important; /* Soft Red */
+    background: #c53030 !important; /* Soft Red, darkened for AA contrast with the white icon */
     color: white !important;
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
