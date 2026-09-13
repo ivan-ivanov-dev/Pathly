@@ -82,7 +82,8 @@
                         </li>
 
                         @* Page Number *@
-                        @for (int i = 1; i <= Model.Goals.Goals.TotalPages; i++)
+                        @{ var maxPageLink = Math.Min(Model.Goals.Goals.TotalPages, 100); }
+                        @for (int i = 1; i <= maxPageLink; i++)
                         {
                             <li class="page-item @(i == Model.Goals.Goals.CurrentPage ? "active" : "")">
                                 <a class="page-link border-0 shadow-sm rounded-circle mx-1"
