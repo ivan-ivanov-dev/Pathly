@@ -22,7 +22,6 @@
        var isAuthPage = controller == "Account" && (action == "Login" || action == "Register");
        var isDashboard = controller == "Dashboard" && action == "Index";
        var isLandingPage = controller == "Home" && action == "Index";
-       var isRoadmap = controller == "Roadmap" && (action == "Create" || action == "Details"|| action == "Edit"|| action == "Selection");
 }
 
 <body class="@(isAuthPage ? "auth-page-body" : "") @(isDashboard ? "dashboard-page-body" : "")">
@@ -30,7 +29,7 @@
     @if (!User.Identity.IsAuthenticated && isLandingPage)
     {
         <header>
-            <nav class="navbar navbar-expand-sm py-4 border-0 shadow-none" style="background-color: transparent !important;">
+            <nav class="navbar navbar-expand-sm py-4 border-0 shadow-none" style="background-color: transparent !important;" aria-label="Main navigation">
                 <div class="container-fluid px-4 px-md-5">
 
                     @* Left Corner: Brand/Logo *@
@@ -88,7 +87,7 @@
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <nav class="sidebar-nav">
+                    <nav class="sidebar-nav" aria-label="Mobile sidebar navigation">
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
                            asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Calendar" ? "active" : "")"
@@ -151,7 +150,7 @@
                     </button>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" aria-label="Sidebar navigation">
                     <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
                        asp-controller="Dashboard" asp-action="Index">
                         <span class="sidebar-link-text">Dashboard</span>
