@@ -1,6 +1,6 @@
 ﻿namespace Pathly.GCommon
 {
-    public class ValidationConstants
+    public static class ValidationConstants
     {
         public const int MinPasswordLength = 6;
         public const int MaxPasswordLength = 100;

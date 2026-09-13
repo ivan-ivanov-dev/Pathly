@@ -8,7 +8,7 @@ using Pathly.Services.Implementation;
 using Pathly.Web.Hubs;
 namespace Pathly.Web
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

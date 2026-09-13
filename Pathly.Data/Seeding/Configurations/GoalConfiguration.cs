@@ -4,6 +4,7 @@ using Pathly.DataModels;
 using Pathly.GCommon;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,16 +16,14 @@ namespace Pathly.Data.Seeding.Configurations
         public void Configure(EntityTypeBuilder<Goal> builder)
         {
             string userId = SeedConstants.DemoUserId;
-            builder.HasData(new Goal[]
-            {
-                      
+            builder.HasData(
                 // Goal1
                 new Goal
                 {
                     Id = 1,
                     Title = "Become a Senior .NET Developer",
                     ShortDescription = "Mastering advanced architecture and cloud services in the .NET ecosystem.",
-                    TargetDate = DateTime.Parse("2026-12-31"),
+                    TargetDate = DateTime.Parse("2026-12-31", CultureInfo.InvariantCulture),
                     IsActive = true,
                     UserId = userId 
                 },
@@ -50,7 +49,7 @@ namespace Pathly.Data.Seeding.Configurations
                     IsActive = false,
                     UserId = userId
                 }
-            });
+            );
         }
     }
 }

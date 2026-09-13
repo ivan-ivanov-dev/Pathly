@@ -7,7 +7,7 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
     {
-        string userId = SeedConstants.DemoUserId;
+        private readonly string userId = SeedConstants.DemoUserId;
 
         public void Configure(EntityTypeBuilder<TaskItem> builder)
         {

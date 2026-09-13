@@ -12,7 +12,7 @@ namespace Pathly.Data.Seeding.Configurations
 {
     public class ActionItemConfiguration : IEntityTypeConfiguration<ActionItem>
     {
-        string userId = SeedConstants.DemoUserId;
+        private readonly string userId = SeedConstants.DemoUserId;
         public void Configure(EntityTypeBuilder<ActionItem> builder)
         {
             builder.HasData(

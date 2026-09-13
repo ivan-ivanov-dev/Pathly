@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pathly.GCommon
 {
-    public class ErrorMessages
+    public static class ErrorMessages
     {
         // User registration and login
         public const string EmailIsRequired = "Email is required.";
@@ -44,6 +44,7 @@ namespace Pathly.GCommon
         // Task validation
         public const string TaskItemTitleCannotExceed100Characters = "Task title cannot exceed 100 characters.";
         public const string TaskItemDescriptionCannotExceed500Characters = "Task description cannot exceed 500 characters.";
+        public const string TaskNotFound = "Task not found";
 
         // General validation
         public const string TitleIsRequired = "Title is required.";
