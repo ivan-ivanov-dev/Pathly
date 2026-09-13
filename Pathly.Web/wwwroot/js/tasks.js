@@ -45,13 +45,11 @@ connection.on("ReceiveTaskMove", (taskId, newStatus, newPosition) => {
     }, 50);
 });
 
-(async () => {
-    try {
-        await connection.start();
-    } catch (err) {
-        console.error(err.toString());
-    }
-})();
+try {
+    await connection.start();
+} catch (err) {
+    console.error(err.toString());
+}
 
 
 const TaskManager = {

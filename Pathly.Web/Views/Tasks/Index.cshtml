@@ -54,16 +54,17 @@
                         <span class="input-group-text bg-transparent border-0 pe-2 text-muted">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input type="text" name="SearchByTitle"
+                        <input type="text" id="SearchByTitle" name="SearchByTitle"
                                class="form-control border-0 bg-transparent shadow-none py-2 fw-semibold"
                                placeholder="Search initiatives..."
+                               aria-label="Search tasks by title"
                                value="@Context.Request.Query["SearchByTitle"]" />
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-md-3">
-                    <div class="uppercase-label mb-1 ms-1">Priority</div>
-                    <select name="Priority" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
+                    <label for="PriorityFilter" class="uppercase-label mb-1 ms-1 d-block">Priority</label>
+                    <select id="PriorityFilter" name="Priority" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
                         <option value="">All Levels</option>
                         @foreach (var p in Enum.GetValues<TaskPriority>())
                         {
@@ -73,8 +74,8 @@
                 </div>
 
                 <div class="col-lg-2 col-md-3">
-                    <div class="uppercase-label mb-1 ms-1">Tags</div>
-                    <select name="SelectedTagIds" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
+                    <label for="SelectedTagIdsFilter" class="uppercase-label mb-1 ms-1 d-block">Tags</label>
+                    <select id="SelectedTagIdsFilter" name="SelectedTagIds" class="form-select form-select-sm border-0 bg-light-subtle fw-bold text-muted py-2">
                         <option value="">All Tags</option>
                         @foreach (var tag in Model.AvailableFilterTags)
                         {
@@ -86,8 +87,8 @@
                 </div>
 
                 <div class="col-lg-2 col-md-3">
-                    <div class="uppercase-label mb-1 ms-1">Deadline</div>
-                    <input type="date" name="DueDate"
+                    <label for="DueDateFilter" class="uppercase-label mb-1 ms-1 d-block">Deadline</label>
+                    <input type="date" id="DueDateFilter" name="DueDate"
                            class="form-control form-control-sm border-0 bg-light-subtle fw-bold text-muted py-2"
                            value="@Context.Request.Query["DueDate"]" />
                 </div>
@@ -151,5 +152,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/tasks.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/tasks.js" asp-append-version="true"></script>
 }

@@ -44,6 +44,7 @@
                                 <div class="d-flex justify-content-end align-items-center gap-2">
                                     <select class="form-select form-select-sm shadow-sm"
                                             onchange="updateRole('@user.Id', this.value)"
+                                            aria-label="Change role for @user.Email"
                                             style="width: 160px; border-radius: 8px;">
                                         <option value="User" selected="@(user.Roles.Contains("User"))">User</option>
                                         <option value="Administrator" selected="@(user.Roles.Contains("Administrator"))">Administrator</option>
